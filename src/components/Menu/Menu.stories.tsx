@@ -4,7 +4,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import Menu from "./Menu";
 
 const meta: Meta<typeof Menu> = {
-  title: "Componentes/Menu",
+  title: "Components/Menu",
   component: Menu,
   tags: ["autodocs"],
 };
@@ -24,7 +24,7 @@ export const Administrator: Story = {
   },
 };
 
-export const Hidden: Story = {
+export const Colapsado: Story = {
   args: {
     variant: "hidden",
   },
