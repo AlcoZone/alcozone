@@ -1,7 +1,7 @@
 // src/components/Menu/Menu.stories.tsx
 // variants
 import type { Meta, StoryObj } from "@storybook/react";
-import Menu from "./Menu";
+import { Menu } from "@/components/Menu/Menu";
 
 const meta: Meta<typeof Menu> = {
   title: "Components/Menu",

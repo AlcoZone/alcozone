@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import Menu from "@/components/Menu/Menu";
+import { Menu } from "@/components/Menu/Menu";
 
 export default function DemoMenuPage() {
   const [variant, setVariant] = useState<"user" | "admin" | "hidden">("user");
@@ -17,7 +17,7 @@ export default function DemoMenuPage() {
     }
   };
   console.log("Pasando onToggle al menú ");
-  
+
   return (
     <div className="flex min-h-screen">
       <Menu variant={variant} onToggle={toggleMenu} />

@@ -16,11 +16,16 @@ type MenuProps = {
   onToggle?: () => void;
 };
 
-export default function Menu({ variant = "user", onToggle }: MenuProps) {
+export const Menu = ({ variant = "user", onToggle }: MenuProps) => {
   const isHidden = variant === "hidden";
   const isAdmin = variant === "admin";
-  console.log("ONTOGGLE prop en Menu.tsx:", onToggle, "window:", typeof window !== "undefined");
-;
+
+  console.log(
+    "ONTOGGLE prop en Menu.tsx:",
+    onToggle,
+    "window:",
+    typeof window !== "undefined"
+  );
 
   return (
     <SidebarProvider>
