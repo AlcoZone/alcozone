@@ -46,7 +46,7 @@ export const ActiveDashboard: Story = {
 export const DefaultMap: Story = {
   args: {
     variant: "map",
-    color: "active",
+    color: "default",
   },
 };
 

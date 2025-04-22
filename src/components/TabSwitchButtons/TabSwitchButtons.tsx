@@ -28,8 +28,8 @@ const TabSwitchButtons = ({ variant, color = "default" }: TabSwitchButtonsProps)
     const { icon, text } = TabSwitchButtonsVariants[variant];
 
     const textColorMap: Record<string, string> = {
-        default: "#656565",
-        active: "#001391",
+        default: "text-neutral-550",
+        active: "text-blue-850",
     };
 
     const iconColorMap: Record<string, string> = {
@@ -38,7 +38,7 @@ const TabSwitchButtons = ({ variant, color = "default" }: TabSwitchButtonsProps)
     };
 
     return (
-        <Button className="bg-transparent hover:bg-transparent text-lg transition duration-200 hover:brightness-125" style={{ color: textColorMap[color] }}>
+        <Button className={cn("bg-transparent hover:bg-transparent hover:text-blue-850 text-lg transition duration-300 hover:brightness-125", textColorMap[color])}>
             <span className={cn(iconColorMap[color])}>
                 {icon}
             </span>
