@@ -1,4 +1,6 @@
-type IconVariant = "user" | "lock" | "custom";
+import Image from "next/image";
+
+type IconVariant = "user" | "lock" | "logo";
 
 type IconsProps = {
   variant: IconVariant;
@@ -20,8 +22,10 @@ export const Icons = ({ variant }: IconsProps) => {
         </svg>
       );
 
-    case "custom":
-      return <div>Custom</div>;
+    case "logo":
+      return (
+        <Image src="/logo.png" alt="Alcozone logo" width={32} height={32} />
+      );
 
     default:
       return null;
