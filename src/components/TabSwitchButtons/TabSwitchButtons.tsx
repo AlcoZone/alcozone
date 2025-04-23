@@ -38,8 +38,8 @@ const TabSwitchButtons = ({ variant, color = "default" }: TabSwitchButtonsProps)
     };
 
     return (
-        <Button className={cn("bg-transparent hover:bg-transparent hover:text-blue-850 text-lg transition duration-300 hover:brightness-125", textColorMap[color])}>
-            <span className={cn(iconColorMap[color])}>
+        <Button variant="ghost" className={cn("w-full justify-start text-sm gap-2 font-normal px-2 py-1 bg-transparent hover:bg-transparent hover:text-blue-850 transition-all", textColorMap[color])}>
+            <span className={cn(iconColorMap[color], "text-base")}>
                 {icon}
             </span>
             {text}
