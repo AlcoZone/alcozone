@@ -3,18 +3,7 @@ import Image from "next/image";
 
 export const Banner = () => {
   return (
-    <div
-      style={{
-        width: "100%",
-        backgroundColor: "#04138b",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        padding: "12px 0",
-        position: "relative",
-        bottom: 0,
-      }}
-    >
+    <div className="w-full bg-[#04138b] flex justify-center items-center py-3 relative bottom-0">
       <Image
         src="/eic.png"
         alt="Tecnológico de Monterrey Banner"
