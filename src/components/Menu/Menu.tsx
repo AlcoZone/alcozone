@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/sidebar";
 import { User } from "lucide-react";
 import Link from "next/link";
+import { Icon } from "@/components/Icon/Icon";
 
 type MenuProps = {
   variant?: "user" | "admin" | "hidden";
@@ -55,12 +56,13 @@ export const Menu = ({ variant = "user", onToggle }: MenuProps) => {
         </div>
           {/* Logo y nombre */}
           <div className="flex items-center justify-center py-2">
-            <img src="/link/logo.png" alt="Logo" className="h-10 w-10 rounded-full" />
-            {!isHidden && (
-              <span className="ml-2 text-xl font-bold text-blue-800">AlcoZone</span>
-            )}
+          <div className="h-10 w-10 rounded-full overflow-hidden">
+            <Icon variant="logo" width={50} height={50} />
           </div>
-
+          {!isHidden && (
+            <span className="ml-2 text-xl font-bold text-blue-800">AlcoZone</span>
+          )}
+        </div>
           {/* Menú principal */}
           <div className="px-4 mt-4">
             {!isHidden && (

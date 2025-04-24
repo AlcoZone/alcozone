@@ -9,7 +9,7 @@ type IconProps = {
   height?: number;
 };
 
-export const Icon = ({ variant, width = 32, height = 32 }: IconProps) => {
+export const Icon = ({ variant, width = 40, height = 40 }: IconProps) => {
   switch (variant) {
     case "user":
       return <UserIcon width={width} height={height} />;
