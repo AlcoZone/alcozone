@@ -57,4 +57,9 @@ export const Contraseña: Story = {
     args: {
       text: 'Cambiar Contraseña',
     },
+  }
+    export const Rol: Story = {
+      args: {
+        text: 'Rol',
+      },
   };

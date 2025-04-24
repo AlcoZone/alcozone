@@ -12,6 +12,7 @@ const TabSwitchButtonsVariants: Record<string, { icon: ReactNode; text: string }
     home: { icon: <IoHome/>, text: "Inicio" },
     dashboard: { icon: <FaChartColumn/>, text: "Dashboard" },
     database: { icon: <FaDatabase/>, text: "Base de datos" },
+    users: { icon: <FaDatabase />, text: "Base de datos usuarios" },
     map: { icon: <FaMapMarkedAlt/>, text: "Mapa interactivo" },
     account: { icon: <IoPersonSharp/>, text: "Mi cuenta" },
     upload: { icon: <RiFileUploadFill/>, text: "Cargar archivo" },
