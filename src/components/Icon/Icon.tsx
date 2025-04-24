@@ -33,8 +33,5 @@ export const Icon = ({ variant, width = 32, height = 32 }: IconProps) => {
           height={height}
         />
       );
-
-    default:
-      return null;
   }
 };
