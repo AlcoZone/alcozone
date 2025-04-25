@@ -12,23 +12,37 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 
-// Datos de ejemplo
-const chartData = [
-  { category: "Alcohol", visitors: 430, fill: "#C7CEFF" }, 
-  { category: "Other", visitors: 695, fill: "#5A6ACF" }, // azul
-]
+type DonutChartProps = {
+  /** Title of the chart */
+  title: string;
+  /** Description shown below the title */
+  footer: string;
+  /** Text shown in the center of the chart */
+  centerLabel: string;
+  /** Data for the pie chart */
+  chartData: Array<{
+    category: string;
+    visitors: number;
+    fill: string;
+  }>;
+}
 
-export function DonutChartWidget() {
+export function DonutChartWidget({
+  title,
+  footer,
+  centerLabel,
+  chartData,
+}: DonutChartProps) {
   const totalVisitors = React.useMemo(() => {
     return chartData.reduce((acc, curr) => acc + curr.visitors, 0)
-  }, [])
+  }, [chartData])
 
   return (
-    <div style={{ paddingTop: "500px" }}>
+    <div style={{ paddingTop: "1px" }}>
       <Card className="flex flex-col">
         <CardHeader className="items-center pb-0">
-          <CardTitle>Accidentes</CardTitle>
-          <CardDescription>Causados por alcohol vs otras causas</CardDescription>
+          <CardTitle>{title}</CardTitle>
+          <CardDescription>{footer}</CardDescription>
         </CardHeader>
 
         <CardContent className="flex justify-center items-center">
@@ -69,7 +83,7 @@ export function DonutChartWidget() {
                         y={cy + 24}
                         className="fill-muted-foreground text-sm"
                       >
-                        Accidentes
+                        {centerLabel}
                       </tspan>
                     </text>
                   )
@@ -99,7 +113,4 @@ export function DonutChartWidget() {
   )
 }
 
-
-
-
-export default DonutChartWidget;
+export default DonutChartWidget

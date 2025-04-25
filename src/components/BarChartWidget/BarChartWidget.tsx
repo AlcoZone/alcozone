@@ -1,7 +1,6 @@
-"use client"
+'use client'
 
 import { Bar, BarChart, Tooltip } from "recharts"
-
 import {
   Card,
   CardContent,
@@ -11,30 +10,27 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 
+
+export type BarChartWidgetProps = {
+  title: string
+  description: string
+  chartData: { month: string; "Causa: Alcohol": number; "Otras causas": number }[]
+}
+
 const causaAlcoholColor = "#0095FF"
 const OtrasCausasColor = "#00E096"  
 
-const chartData = [
-  { month: "January", "Causa: Alcohol": 186, "Otras causas": 80 },
-  { month: "February", "Causa: Alcohol": 305, "Otras causas": 200 },
-  { month: "March", "Causa: Alcohol": 237, "Otras causas": 120 },
-  { month: "April", "Causa: Alcohol": 73, "Otras causas": 190 },
-  { month: "May", "Causa: Alcohol": 209, "Otras causas": 130 },
-  { month: "June", "Causa: Alcohol": 214, "Otras causas": 140 },
-]
 
-//added this to calculate the bottom part of how many accidents of each type exist.
-const totalAlcohol = chartData.reduce((acc, item) => acc + item["Causa: Alcohol"], 0)
-const totalOtras = chartData.reduce((acc, item) => acc + item["Otras causas"], 0)
+export function BarChartWidget({ title, description, chartData }: BarChartWidgetProps) {
+  const totalAlcohol = chartData.reduce((acc, item) => acc + item["Causa: Alcohol"], 0)
+  const totalOtras = chartData.reduce((acc, item) => acc + item["Otras causas"], 0)
 
-export function BarChartWidget() {
   return (
-    <div style={{ paddingTop: "500px" }}>
+    <div style={{ paddingTop: "1px" }}>
       <Card className="w-[600px]">
-        
         <CardHeader className="text-center">
-          <CardTitle>Accidentes causados por alcohol</CardTitle>
-          <CardDescription>Enero a Junio 2024</CardDescription>
+          <CardTitle>{title}</CardTitle>
+          <CardDescription>{description}</CardDescription>
         </CardHeader>
         <CardContent>
           <BarChart width={500} height={250} data={chartData}>
@@ -53,7 +49,6 @@ export function BarChartWidget() {
             </div>
           </div>
         </CardContent>
-
         
         <CardFooter className="flex-col items-center gap-2 text-sm text-center">
           <div className="flex gap-2 font-medium leading-none">
@@ -68,7 +63,7 @@ export function BarChartWidget() {
   )
 }
 
-export default BarChartWidget;
+export default BarChartWidget
 
 
-//<div style={{paddingTop: "500px"}}>
+
