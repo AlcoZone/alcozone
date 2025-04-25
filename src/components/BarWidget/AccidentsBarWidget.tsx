@@ -7,7 +7,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -17,46 +16,24 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
-const chartData = [
-  { month: "Enero", desktop: 186, mobile: 80 },
-  { month: "Febrero", desktop: 305, mobile: 200 },
-  { month: "Marzo", desktop: 237, mobile: 120 },
-  { month: "Abril", desktop: 73, mobile: 190 },
-  { month: "Mayo", desktop: 209, mobile: 130 },
-  { month: "Junio", desktop: 214, mobile: 140 },
-  { month: "Julio", desktop: 214, mobile: 140 },
-  { month: "Agosto", desktop: 214, mobile: 140 },
-  { month: "Septiembre", desktop: 214, mobile: 140 },
-  { month: "Octubre", desktop: 214, mobile: 140 },
-  { month: "Noviembre", desktop: 200, mobile: 57 },
-  { month: "Diciembre", desktop: 214, mobile: 140 },
-]
 
-const chartConfig = {
-  desktop: {
-    label: "2022",
-    color: "hsl(var(--chart-1))",
-    
-  },
-  mobile: {
-    label: "2021",
-    color: "hsl(var(--chart-2))",
-  },
-} satisfies ChartConfig
-
-export function Component() {
+type Props = {
+  data: { month: string; desktop: number; mobile: number }[]
+  config: ChartConfig
+}
+function AccidentsBarChart({ data, config }: Props) {
   return (
-    <Card>
+    <Card className="w-full max-w-md p-4 rounded-2xl shadow-md bg-white max-h-[350px] overflow-y-auto">
       <CardHeader>
-        <CardTitle>Accidentes</CardTitle>
+        <CardTitle className="text-2xl" style={{ color: "#001391" }}>Accidentes</CardTitle>
         <CardDescription>Enero - Diciembre 2022</CardDescription>
-        <div className="flex gap-2 font-medium leading-none ">
+        <div className="flex items-center gap-2 text-sm text-green-600">
           2.1% vs el año pasado <TrendingUp className="h-4 w-4" />
         </div>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig}>
-          <BarChart accessibilityLayer data={chartData}>
+        <ChartContainer config={config}>
+          <BarChart data={data}>
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="month"
@@ -78,4 +55,4 @@ export function Component() {
   )
 }
 
-export default Component
+export default AccidentsBarChart

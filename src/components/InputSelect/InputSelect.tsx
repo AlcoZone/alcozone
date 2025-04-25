@@ -14,13 +14,27 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
+type Props = {
+  className?: string
+  defaultDate?: DateRange
+  onChange?: (range: DateRange | undefined) => void
+  placeholder?: string
+}
+
 export function DatePickerWithRange({
   className,
-}: React.HTMLAttributes<HTMLDivElement>) {
-  const [date, setDate] = React.useState<DateRange | undefined>({
+  defaultDate = {
     from: new Date(2022, 0, 20),
     to: addDays(new Date(2022, 0, 20), 20),
-  })
+  },
+  onChange,
+  placeholder = "Pick a date",
+}: Props) {
+  const [date, setDate] = React.useState<DateRange | undefined>(defaultDate)
+
+  React.useEffect(() => {
+    if (onChange) onChange(date)
+  }, [date, onChange])
 
   return (
     <div className={cn("grid gap-2", className)}>
@@ -28,24 +42,23 @@ export function DatePickerWithRange({
         <PopoverTrigger asChild>
           <Button
             id="date"
-            variant={"outline"}
+            variant="outline"
             className={cn(
               "w-[300px] justify-start text-left font-normal",
               !date && "text-muted-foreground"
             )}
           >
-            <CalendarIcon />
+            <CalendarIcon className="mr-2 h-4 w-4" />
             {date?.from ? (
               date.to ? (
                 <>
-                  {format(date.from, "LLL dd, y")} -{" "}
-                  {format(date.to, "LLL dd, y")}
+                  {format(date.from, "LLL dd, y")} - {format(date.to, "LLL dd, y")}
                 </>
               ) : (
                 format(date.from, "LLL dd, y")
               )
             ) : (
-              <span>Pick a date</span>
+              <span>{placeholder}</span>
             )}
           </Button>
         </PopoverTrigger>
@@ -65,3 +78,4 @@ export function DatePickerWithRange({
 }
 
 export default DatePickerWithRange
+
