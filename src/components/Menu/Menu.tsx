@@ -42,7 +42,7 @@ export const Menu = ({ variant = "user", onToggle }: MenuProps) => {
           {/* Logo y nombre */}
           <div className="flex items-center justify-center py-2">
           <div className="h-10 w-10 rounded-full overflow-hidden">
-            <Icon variant="logo" width={50} height={50} />
+            <Icon variant="logo" width={80} height={80} />
           </div>
           {!isHidden && (
           <span
