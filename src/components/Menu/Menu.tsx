@@ -7,7 +7,7 @@ import {
   Sidebar,
   SidebarContent,
 } from "@/components/ui/sidebar";
-import { Icon } from "@/components/Icon/Icon"
+import { Icon } from "@/components/Icon/Icon";
 import HamburgerButton from "@/components/HamburgerButton/HamburgerButton"
 import Link from "next/link";
 import TabSwitchButtons from "@/components/TabSwitchButtons/TabSwitchButtons";
@@ -20,13 +20,6 @@ type MenuProps = {
 export const Menu = ({ variant = "user", onToggle }: MenuProps) => {
   const isHidden = variant === "hidden";
   const isAdmin = variant === "admin";
-
-  console.log(
-    "ONTOGGLE prop en Menu.tsx:",
-    onToggle,
-    "window:",
-    typeof window !== "undefined"
-  );
 
   return (
     <SidebarProvider>
