@@ -10,13 +10,16 @@ const ConfirmButtonsVariants: Record<string, { text: string; color: string; roun
 
 type ConfirmButtonsProps = {
     variant: keyof typeof ConfirmButtonsVariants;
+    onClick?: () => void;
 };
 
-const ConfirmButtons = ({ variant }: ConfirmButtonsProps) => {
+const ConfirmButtons = ({ variant, onClick }: ConfirmButtonsProps) => {
     const { text, color, rounded } = ConfirmButtonsVariants[variant];
 
     return (
-        <Button className={cn("text-lg transition duration-500", color, { "rounded-full": rounded })}>
+        <Button
+            onClick={onClick}
+            className={cn("text-lg transition duration-500", color, { "rounded-full": rounded })}>
             {text}
         </Button>
     );

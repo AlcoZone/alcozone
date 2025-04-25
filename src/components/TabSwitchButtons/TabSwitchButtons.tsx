@@ -12,6 +12,7 @@ const TabSwitchButtonsVariants: Record<string, { icon: ReactNode; text: string }
     home: { icon: <IoHome/>, text: "Inicio" },
     dashboard: { icon: <FaChartColumn/>, text: "Dashboard" },
     database: { icon: <FaDatabase/>, text: "Base de datos" },
+    users: { icon: <FaDatabase/>, text: "Base de datos usuarios" },
     map: { icon: <FaMapMarkedAlt/>, text: "Mapa interactivo" },
     account: { icon: <IoPersonSharp/>, text: "Mi cuenta" },
     upload: { icon: <RiFileUploadFill/>, text: "Cargar archivo" },
@@ -22,9 +23,10 @@ const TabSwitchButtonsVariants: Record<string, { icon: ReactNode; text: string }
 type TabSwitchButtonsProps = {
     variant: keyof typeof TabSwitchButtonsVariants;
     color?: "default" | "active";
+    onClick?: () => void;
 };
 
-const TabSwitchButtons = ({ variant, color = "default" }: TabSwitchButtonsProps) => {
+const TabSwitchButtons = ({ variant, color = "default", onClick }: TabSwitchButtonsProps) => {
     const { icon, text } = TabSwitchButtonsVariants[variant];
 
     const textColorMap: Record<string, string> = {
@@ -38,7 +40,9 @@ const TabSwitchButtons = ({ variant, color = "default" }: TabSwitchButtonsProps)
     };
 
     return (
-        <Button variant="ghost" className={cn("w-full justify-start text-sm gap-2 font-normal px-2 py-1 bg-transparent hover:bg-transparent hover:text-blue-850 transition-all", textColorMap[color])}>
+        <Button variant="ghost"
+            onClick={onClick}
+            className={cn("w-full justify-start text-sm gap-2 font-normal px-2 py-1 bg-transparent hover:bg-transparent hover:text-blue-850 transition-all", textColorMap[color])}>
             <span className={cn(iconColorMap[color], "text-base")}>
                 {icon}
             </span>
