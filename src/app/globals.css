@@ -3,6 +3,13 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@theme {
+  --color-lime-750: oklch(0.53 0.153 138.22);
+  --color-neutral-550: oklch(0.51 0 0);
+  --color-gray-450: oklch(0.65 0.0065 239.87);
+  --color-blue-850: oklch(0.31 0.1953 264.2);
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
