@@ -1,4 +1,3 @@
-// src/components/Menu/Menu.tsx
 "use client";
 
 import React from "react";
