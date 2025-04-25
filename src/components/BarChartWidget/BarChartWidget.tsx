@@ -1,6 +1,5 @@
-'use client'
-
-import { Bar, BarChart, Tooltip } from "recharts"
+import React from "react";
+import { Bar, BarChart, Tooltip } from "recharts";
 import {
   Card,
   CardContent,
@@ -8,22 +7,27 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-
+} from "@/components/ui/card";
 
 export type BarChartWidgetProps = {
-  title: string
-  description: string
-  chartData: { month: string; "Causa: Alcohol": number; "Otras causas": number }[]
-}
+  title: string;
+  description: string;
+  data: { month: string; [key: string]: number }[];
+  categories: string[];
+  categoryColors: string[];
+};
 
-const causaAlcoholColor = "#0095FF"
-const OtrasCausasColor = "#00E096"  
-
-
-export function BarChartWidget({ title, description, chartData }: BarChartWidgetProps) {
-  const totalAlcohol = chartData.reduce((acc, item) => acc + item["Causa: Alcohol"], 0)
-  const totalOtras = chartData.reduce((acc, item) => acc + item["Otras causas"], 0)
+export const BarChartWidget = ({
+  title,
+  description,
+  data,
+  categories,
+  categoryColors,
+}: BarChartWidgetProps) => {
+  const totals = categories.reduce((acc, category) => {
+    acc[category] = data.reduce((sum, item) => sum + item[category], 0);
+    return acc;
+  }, {} as Record<string, number>);
 
   return (
     <div style={{ paddingTop: "1px" }}>
@@ -33,37 +37,47 @@ export function BarChartWidget({ title, description, chartData }: BarChartWidget
           <CardDescription>{description}</CardDescription>
         </CardHeader>
         <CardContent>
-          <BarChart width={500} height={250} data={chartData}>
+          <BarChart width={500} height={250} data={data}>
             <Tooltip />
-            <Bar dataKey="Causa: Alcohol" stackId="a" fill={causaAlcoholColor} radius={[4, 4, 0, 0]} />
-            <Bar dataKey="Otras causas" stackId="a" fill={OtrasCausasColor} radius={[0, 0, 4, 4]} />
+            {categories.map((category, index) => (
+              <Bar
+                key={category}
+                dataKey={category}
+                stackId="a"
+                fill={categoryColors[index]}
+                radius={index === 0 ? [4, 4, 0, 0] : [0, 0, 4, 4]}
+              />
+            ))}
           </BarChart>
           <div className="flex gap-4 justify-center mt-4 text-sm">
-            <div className="flex items-center gap-2">
-              <div style={{ width: "12px", height: "12px", backgroundColor: causaAlcoholColor}} />
-              <span>Causa: Alcohol</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div style={{ width: "12px", height: "12px", backgroundColor: OtrasCausasColor }} />
-              <span>Otras causas</span>
-            </div>
+            {categories.map((category, index) => (
+              <div key={category} className="flex items-center gap-2">
+                <div
+                  style={{
+                    width: "12px",
+                    height: "12px",
+                    backgroundColor: categoryColors[index],
+                  }}
+                />
+                <span>{category}</span>
+              </div>
+            ))}
           </div>
         </CardContent>
-        
         <CardFooter className="flex-col items-center gap-2 text-sm text-center">
-          <div className="flex gap-2 font-medium leading-none">
-            Total por alcohol: {totalAlcohol}
-          </div>
-          <div className="leading-none text-muted-foreground">
-            Total por otras causas: {totalOtras}
-          </div>
+          {categories.map((category) => (
+            <div key={category} className="flex gap-2 font-medium leading-none">
+              Total por {category}: {totals[category]}
+            </div>
+          ))}
         </CardFooter>
       </Card>
     </div>
-  )
-}
+  );
+};
 
-export default BarChartWidget
+
+
 
 
 

@@ -1,5 +1,3 @@
-"use client"
-
 import { TrendingUp } from "lucide-react"
 import {
   Label,
@@ -24,32 +22,34 @@ const MAX_VALUE = 100
 export type RadialChartProps = {
   title: string
   footer?: string
-  chartDataList: {
+  data: {
     label: string
     value: number
     fill: string
   }[]
+  description?: string 
 }
 
-export function RadialChartWidget({
+export const RadialChartWidget = ({
   title,
   footer,
-  chartDataList,
-}: RadialChartProps) {
+  data,
+  description = "Porcentaje de accidentes", 
+}: RadialChartProps) => {
   return (
     <div style={{ paddingTop: "1px" }}>
       <Card className="flex flex-col w-full max-w-1xl mx-auto p-6">
         <CardHeader className="items-center pb-4">
           <CardTitle className="text-2xl">{title}</CardTitle>
-          <CardDescription>Porcentaje de accidentes</CardDescription>
+          <CardDescription>{description}</CardDescription> 
         </CardHeader>
         <CardContent className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1 pb-6">
-          {chartDataList.map((data, index) => {
+          {data.map((item, index) => {
             const translateClass = index === 1 ? "translate-y-6" : "translate-y-0"
 
             const chartData = [
-              { name: data.label, value: data.value, fill: data.fill },
-              { name: "Resto", value: MAX_VALUE - data.value, fill: "#eee" },
+              { name: item.label, value: item.value, fill: item.fill },
+              { name: "Resto", value: MAX_VALUE - item.value, fill: "#eee" },
             ]
 
             return (
@@ -83,14 +83,14 @@ export function RadialChartWidget({
                                   y={viewBox.cy}
                                   className="fill-foreground text-3xl font-bold"
                                 >
-                                  {data.value.toLocaleString()}%
+                                  {item.value.toLocaleString()}%
                                 </tspan>
                                 <tspan
                                   x={viewBox.cx}
                                   y={(viewBox.cy || 0) + 30}
                                   className="fill-muted-foreground text-base"
                                 >
-                                  {data.label}
+                                  {item.label}
                                 </tspan>
                               </text>
                             )
@@ -114,4 +114,3 @@ export function RadialChartWidget({
   )
 }
 
-export default RadialChartWidget

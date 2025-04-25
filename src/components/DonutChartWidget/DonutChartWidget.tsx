@@ -1,5 +1,3 @@
-"use client"
-
 import * as React from "react"
 import { PieChart, Pie, Cell, Label } from "recharts"
 
@@ -20,22 +18,22 @@ type DonutChartProps = {
   /** Text shown in the center of the chart */
   centerLabel: string;
   /** Data for the pie chart */
-  chartData: Array<{
+  data: Array<{
     category: string;
     visitors: number;
     fill: string;
   }>;
 }
 
-export function DonutChartWidget({
+export const DonutChartWidget: React.FC<DonutChartProps> = ({
   title,
   footer,
   centerLabel,
-  chartData,
-}: DonutChartProps) {
+  data,
+}) => {
   const totalVisitors = React.useMemo(() => {
-    return chartData.reduce((acc, curr) => acc + curr.visitors, 0)
-  }, [chartData])
+    return data.reduce((acc, curr) => acc + curr.visitors, 0)
+  }, [data])
 
   return (
     <div style={{ paddingTop: "1px" }}>
@@ -48,14 +46,14 @@ export function DonutChartWidget({
         <CardContent className="flex justify-center items-center">
           <PieChart width={250} height={250}>
             <Pie
-              data={chartData}
+              data={data}
               dataKey="visitors"
               nameKey="category"
               innerRadius={60}
               outerRadius={100}
               stroke="none"
             >
-              {chartData.map((entry, index) => (
+              {data.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={entry.fill} />
               ))}
 
@@ -94,7 +92,7 @@ export function DonutChartWidget({
         </CardContent>
 
         <CardFooter className="flex flex-col gap-2 text-sm pt-4">
-          {chartData.map((entry) => {
+          {data.map((entry) => {
             const percentage = ((entry.visitors / totalVisitors) * 100).toFixed(1)
             return (
               <div key={entry.category} className="flex items-center gap-2">
@@ -112,5 +110,3 @@ export function DonutChartWidget({
     </div>
   )
 }
-
-export default DonutChartWidget
