@@ -7,8 +7,7 @@ import {
   Sidebar,
   SidebarContent,
 } from "@/components/ui/sidebar";
-import { User } from "lucide-react";
-import { Icon } from "@/components/Icon/Icon";
+import { Icon } from "@/components/Icon/Icon"
 import HamburgerButton from "@/components/HamburgerButton/HamburgerButton"
 import Link from "next/link";
 import TabSwitchButtons from "@/components/TabSwitchButtons/TabSwitchButtons";
@@ -97,13 +96,13 @@ export const Menu = ({ variant = "user", onToggle }: MenuProps) => {
         </SidebarContent>
         {/* Footer */}
         <div className="p-4 border-t text-sm text-muted-foreground flex flex-col items-center justify-center">
-          <div className="flex items-center gap-2">
-            <User className="w-5 h-5 text-gray-500" />
-            {!isHidden && (
-              <span className="text-sm font-medium text-gray-700">Usuario prueba</span>
-            )}
-          </div>
+        <div className="flex items-center gap-2">
+          <Icon variant="user" width={20} height={20} />
+          {!isHidden && (
+            <span className="text-sm font-medium text-gray-700">Usuario prueba</span>
+          )}
         </div>
+      </div>
       </Sidebar>
     </SidebarProvider>
   );
