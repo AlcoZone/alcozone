@@ -1,4 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { action } from "@storybook/addon-actions";
+
 
 import TabSwitchButtons from "./TabSwitchButtons";
 
@@ -9,6 +11,7 @@ const meta: Meta<typeof TabSwitchButtons> = {
   args: {
     variant: "home",
     color: "default",
+    onClick: action("TabSwitchButton clicked"),
   },
   argTypes: {
     variant: {
@@ -17,6 +20,7 @@ const meta: Meta<typeof TabSwitchButtons> = {
         "home",
         "dashboard",
         "database",
+        "users",
         "map",
         "account",
         "upload",
