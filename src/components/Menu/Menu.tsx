@@ -9,8 +9,8 @@ import {
 } from "@/components/ui/sidebar";
 import { Icon } from "@/components/Icon/Icon";
 import HamburgerButton from "@/components/HamburgerButton/HamburgerButton"
-import Link from "next/link";
 import TabSwitchButtons from "@/components/TabSwitchButtons/TabSwitchButtons";
+import Link from "next/link";
 
 type MenuProps = {
   variant?: "user" | "admin" | "hidden";
