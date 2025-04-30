@@ -6,10 +6,19 @@ const meta: Meta<typeof TextInput> = {
   component: TextInput,
   tags: ['autodocs'],
   argTypes: {
-    text: {
+    placeholder: {
       control: 'text',
-      description: 'Texto del placeholder del input',
+      description: 'Texto que se muestra como ayuda en el input',
       defaultValue: 'Escribe aquí...',
+    },
+    type: {
+      control: 'text',
+      description: 'Tipo de input (text/password)',
+      defaultValue: 'text',
+    },
+    onChange: {
+      action: 'changed',
+      description: 'Función que se ejecuta al cambiar el valor del input',
     },
   },
 };
@@ -19,47 +28,58 @@ type Story = StoryObj<typeof TextInput>;
 
 export const Usuario: Story = {
   args: {
-    text: 'Nombre de usuario',
+    placeholder: 'Nombre de usuario',
+    value: '',
   },
 };
 
 export const Correo: Story = {
   args: {
-    text: 'Correo electrónico',
+    placeholder: 'Correo electrónico',
+    value: '',
   },
 };
 
 export const Contraseña: Story = {
-    args: {
-      text: 'Contraseña',
-    },
-  };
+  args: {
+    placeholder: 'Contraseña',
+    value: '',
+    type: 'password',
+  },
+};
 
-  export const NuevaContraseña: Story = {
-    args: {
-      text: 'Nueva Contraseña',
-    },
-  };
+export const NuevaContraseña: Story = {
+  args: {
+    placeholder: 'Nueva Contraseña',
+    value: '',
+    type: 'password'
+  },
+};
 
-  export const CambiarUsuario: Story = {
-    args: {
-      text: 'Cambiar Usuario',
-    },
-  };
+export const CambiarUsuario: Story = {
+  args: {
+    placeholder: 'Cambiar Usuario',
+    value: '',
+  },
+};
 
-  export const CambiarCorreoElectronico: Story = {
-    args: {
-      text: 'Cambiar Correo Electronico',
-    },
-  };
+export const CambiarCorreoElectronico: Story = {
+  args: {
+    placeholder: 'Cambiar Correo Electrónico',
+    value: '',
+  },
+};
 
-  export const CambiarContrasena: Story = {
-    args: {
-      text: 'Cambiar Contraseña',
-    },
-  }
-    export const Rol: Story = {
-      args: {
-        text: 'Rol',
-      },
-  };
+export const CambiarContrasena: Story = {
+  args: {
+    placeholder: 'Cambiar Contraseña',
+    value: '',
+  },
+};
+
+export const Rol: Story = {
+  args: {
+    placeholder: 'Rol',
+    value: '',
+  },
+};
