@@ -11,11 +11,15 @@ const meta: Meta<typeof TextInput> = {
       description: 'Texto que se muestra como ayuda en el input',
       defaultValue: 'Escribe aquí...',
     },
-    value: {
+    type: {
       control: 'text',
-      description: 'Valor del input',
+      description: 'Tipo de input (text/password)',
+      defaultValue: 'text',
     },
-    onChange: { action: 'changed' }, 
+    onChange: {
+      action: 'changed',
+      description: 'Función que se ejecuta al cambiar el valor del input',
+    },
   },
 };
 
@@ -40,6 +44,7 @@ export const Contraseña: Story = {
   args: {
     placeholder: 'Contraseña',
     value: '',
+    type: 'password',
   },
 };
 
@@ -47,6 +52,7 @@ export const NuevaContraseña: Story = {
   args: {
     placeholder: 'Nueva Contraseña',
     value: '',
+    type: 'password'
   },
 };
 
