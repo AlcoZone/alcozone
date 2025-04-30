@@ -37,6 +37,7 @@ export const Correo: Story = {
   args: {
     placeholder: 'Correo electrónico',
     value: '',
+    type: 'email',
   },
 };
 
