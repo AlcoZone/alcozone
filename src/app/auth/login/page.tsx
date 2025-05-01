@@ -9,14 +9,13 @@ import { Icon } from "@/components/Icon/Icon";
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <div className="flex min-h-screen flex-col justify-between bg-gray-242 pb-20">
       {/* Layout en dos columnas */}
       <div className="flex flex-1 items-center justify-center">
         <div className="flex w-full max-w-7xl items-stretch">
-          {/* Columna izquiera con imagen de pantalla */}
+          {/* Columna izquiera */}
           <div className="w-1/2 flex items-center justify-center p-6">
             <Image
               src="/pantalla.png"
@@ -64,7 +63,7 @@ const LoginPage = () => {
           </div>
         </div>
       </div>
-      {/* Banner inferior */}
+      {/* Banner abajo*/}
       <Banner />
     </div>
   );
