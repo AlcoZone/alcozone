@@ -13,8 +13,17 @@ const meta: Meta<typeof TextInput> = {
     },
     type: {
       control: 'text',
-      description: 'Tipo de input (text/password)',
+      description: 'Tipo de input (text/password/email)',
       defaultValue: 'text',
+    },
+    value: {
+      control: 'text',
+      description: 'Valor del input',
+    },
+    showPasswordToggle: {
+      control: 'boolean',
+      description: 'Muestra un botón para alternar la visibilidad de la contraseña',
+      defaultValue: false,
     },
     onChange: {
       action: 'changed',
@@ -30,6 +39,7 @@ export const Usuario: Story = {
   args: {
     placeholder: 'Nombre de usuario',
     value: '',
+    type: 'text',
   },
 };
 
@@ -46,6 +56,7 @@ export const Contraseña: Story = {
     placeholder: 'Contraseña',
     value: '',
     type: 'password',
+    showPasswordToggle: true,
   },
 };
 
@@ -53,7 +64,8 @@ export const NuevaContraseña: Story = {
   args: {
     placeholder: 'Nueva Contraseña',
     value: '',
-    type: 'password'
+    type: 'password',
+    showPasswordToggle: true,
   },
 };
 
@@ -61,6 +73,7 @@ export const CambiarUsuario: Story = {
   args: {
     placeholder: 'Cambiar Usuario',
     value: '',
+    type: 'text',
   },
 };
 
@@ -68,6 +81,7 @@ export const CambiarCorreoElectronico: Story = {
   args: {
     placeholder: 'Cambiar Correo Electrónico',
     value: '',
+    type: 'email',
   },
 };
 
@@ -75,6 +89,8 @@ export const CambiarContrasena: Story = {
   args: {
     placeholder: 'Cambiar Contraseña',
     value: '',
+    type: 'password',
+    showPasswordToggle: true,
   },
 };
 
@@ -82,5 +98,6 @@ export const Rol: Story = {
   args: {
     placeholder: 'Rol',
     value: '',
+    type: 'text',
   },
 };

@@ -5,9 +5,6 @@ import { TextInput } from '@/components/TextInput/TextInput';
 import ConfirmButtons from '@/components/ConfirmButtons/ConfirmButtons';
 import { Banner } from '@/components/Banner/Banner';
 import { Icon } from "@/components/Icon/Icon";
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -45,19 +42,13 @@ const LoginPage = () => {
               type="email"
             />
             <div className="relative w-full">
-              <TextInput
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Contraseña"
-                type={showPassword ? 'text' : 'password'}
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600"
-              >
-                {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
-              </button>
+            <TextInput
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Contraseña"
+              type="password"
+              showPasswordToggle
+            />
             </div>
           </div>
             {/* Botón grande */}
