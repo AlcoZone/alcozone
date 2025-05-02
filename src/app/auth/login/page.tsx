@@ -17,11 +17,25 @@ const LoginPage = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      router.push('/dashboard');
-    }
-  }, []);
+    const validateToken = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+  
+      try {
+        await axios.get('http://localhost:8080/api/v1/auth/login', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        router.push('/dashboard');
+      } catch (error) {
+        console.warn('Token inválido o expirado');
+        localStorage.removeItem('token'); 
+      }
+    };
+  
+    validateToken();
+  }, []);  
 
   const handleLogin = async () => {
     try {
