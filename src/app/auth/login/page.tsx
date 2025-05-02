@@ -1,14 +1,43 @@
 "use client";
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { TextInput } from '@/components/TextInput/TextInput';
+import axios from 'axios'
 import ConfirmButtons from '@/components/ConfirmButtons/ConfirmButtons';
+import { TextInput } from '@/components/TextInput/TextInput';
 import { Banner } from '@/components/Banner/Banner';
 import { Icon } from "@/components/Icon/Icon";
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '@/lib/firebaseClient';
+import { useRouter } from 'next/navigation';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const router = useRouter();
+
+  const handleLogin = async () => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const token = await userCredential.user.getIdToken();
+  
+      localStorage.setItem('token', token);
+  
+      const response = await axios.get('http://localhost:8080/api/v1/auth/login', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+  
+      console.log('Respuesta del backend:', response.data);
+  
+      router.push('/dashboard');
+  
+    } catch (error) {
+      console.error('Error al iniciar sesión:', error);
+      setError('Correo o contraseña incorrectos')
+    }
+  };
 
   return (
     <div className="flex min-h-screen flex-col justify-between bg-gray-242 pb-20">
@@ -50,11 +79,17 @@ const LoginPage = () => {
             />
             </div>
           </div>
-            {/* Botón grande */}
+            {/* Botón */}
             <div className="w-full h-14">
-            <div className="w-full h-full scale-y-120 origin-top [&_button]:w-full [&_button]:h-full [&_button]:scale-y-[0.75]">
-                <ConfirmButtons variant="login" onClick={() => console.log("Iniciar sesión")} />
-            </div>
+              <div className="w-full h-full scale-y-120 origin-top [&_button]:w-full [&_button]:h-full [&_button]:scale-y-[0.75]">
+                <ConfirmButtons variant="login" onClick={handleLogin} />
+              </div>
+            {/* Mensaje de error */}
+              {error && (
+                <p className="text-red-600 font-medium text-sm mt-2 text-center">
+                  {error}
+                </p>
+              )}
             </div>
             {/* Enlace */}
             <p className="mt-20 text-base text-gray-700 cursor-pointer hover:font-semibold">
