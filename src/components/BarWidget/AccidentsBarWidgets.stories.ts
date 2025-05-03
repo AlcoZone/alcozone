@@ -11,18 +11,18 @@ export default meta
 type Story = StoryObj<typeof AccidentsBarChart>
 
 const sampleData = [
-  { month: "Enero", mes1: 186, mes2: 80 },
-  { month: "Febrero", mes1: 305, mes2: 200 },
-  { month: "Marzo", mes1: 237, mes2: 120 },
-  { month: "Abril", mes1: 73, mes2: 190 },
-  { month: "Mayo", mes1: 209, mes2: 130 },
-  { month: "Junio", mes1: 214, mes2: 140 },
-  { month: "Julio", mes1: 230, mes2: 300 },
-  { month: "Agosto", mes1: 200, mes2: 50 },
-  { month: "Septiembre", mes1: 214, mes2: 140 },
-  { month: "Octubre", mes1: 214, mes2: 69 },
-  { month: "Noviembre", mes1: 200, mes2: 57 },
-  { month: "Diciembre", mes1: 214, mes2: 140 },
+  { month: "Enero", month1: 186, month2: 80 },
+  { month: "Febrero", month1: 305, month2: 200 },
+  { month: "Marzo", month1: 237, month2: 120 },
+  { month: "Abril", month1: 73, month2: 190 },
+  { month: "Mayo", month1: 209, month2: 130 },
+  { month: "Junio", month1: 214, month2: 140 },
+  { month: "Julio", month1: 230, month2: 300 },
+  { month: "Agosto", month1: 200, month2: 50 },
+  { month: "Septiembre", month1: 214, month2: 140 },
+  { month: "Octubre", month1: 214, month2: 69 },
+  { month: "Noviembre", month1: 200, month2: 57 },
+  { month: "Diciembre", month1: 214, month2: 140 },
 ]
 
 const sampleConfig = {

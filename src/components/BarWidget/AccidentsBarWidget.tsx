@@ -18,11 +18,11 @@ import {
 } from "@/components/ui/chart"
 
 type Props = {
-  data: { month: string; mes1: number; mes2: number }[]
+  data: { month: string; month1: number; month2: number }[]
   config: ChartConfig
-  title?: string
-  subtitle?: string
-  description?: string
+  title: string
+  subtitle: string
+  description: string
 }
 
 const AccidentsBarChart = ({
@@ -56,8 +56,9 @@ const AccidentsBarChart = ({
               cursor={false}
               content={<ChartTooltipContent indicator="dashed" />}
             />
-            <Bar dataKey="mes1" fill="var(--color-desktop)" radius={4} />
-            <Bar dataKey="mes2" fill="var(--color-mobile)" radius={4} />
+<Bar dataKey="month1" fill="var(--color-desktop)" radius={4} />
+<Bar dataKey="month2" fill="var(--color-mobile)" radius={4} />
+
           </BarChart>
         </ChartContainer>
       </CardContent>
