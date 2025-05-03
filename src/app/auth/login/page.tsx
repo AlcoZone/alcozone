@@ -61,7 +61,7 @@ const LoginPage: React.FC = () => {
         <div className="flex w-full max-w-7xl items-stretch">
           <div className="w-1/2 flex items-center justify-center p-6">
             <Image
-              src="/pantalla.png"
+              src="/images/pantalla.png"
               alt="Dashboard preview"
               width={550}
               height={550}
