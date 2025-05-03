@@ -1,13 +1,13 @@
 import { getAuth } from 'firebase/auth';
-import { initializeApp } from "firebase/app";
+import { initializeApp } from 'firebase/app';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBqAu4eNE3WTRBBJMT0xx6Q0FjSA7iJT7E",
-  authDomain: "alcozone-e21b0.firebaseapp.com",
-  projectId: "alcozone-e21b0",
-  storageBucket: "alcozone-e21b0.firebasestorage.app",
-  messagingSenderId: "903424406013",
-  appId: "1:903424406013:web:8479ff3d4bb30b33c56994"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY!,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN!,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID!,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET!,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID!,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID!,
 };
 
 const app = initializeApp(firebaseConfig);
