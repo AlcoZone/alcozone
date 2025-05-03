@@ -1,13 +1,12 @@
 "use client"
 
-import { TrendingDown, TrendingUp } from "lucide-react"
+import { TrendingDown } from "lucide-react"
 import { CartesianGrid, Line, LineChart, XAxis } from "recharts"
 
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -19,7 +18,7 @@ import {
 } from "@/components/ui/chart"
 
 type Props = {
-  data: { month: string; desktop: number; mobile: number }[]
+  data: { month: string; fecha1: number; fecha2: number }[]
   config: ChartConfig
   title?: string
   description?: string
@@ -27,26 +26,23 @@ type Props = {
   accidents?: string
 }
 
-function LineChartMultiple({
+const LineChartMultiple = ({
   data,
   config,
   title = "Accidentes por alcoholismo",
   description = "2023 vs 2024",
   summary = "2.1% vs año pasado",
   accidents = "56, 799",
-}: Props) {
+}: Props) => {
   return (
     <Card className="w-full max-w-md p-4 rounded-2xl shadow-md bg-white max-h-[350px] overflow-y-auto">
       <CardHeader>
         <CardTitle className="text-2xl" style={{ color: "#001391" }}>{title}</CardTitle>
-        
         <div className="text-xl font-bold">{accidents}</div>
-        
         <div className="flex items-center gap-2 text-sm text-red-600">
           {summary}
           <TrendingDown className="h-4 w-4" />
         </div>
-
         <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent>
@@ -65,14 +61,14 @@ function LineChartMultiple({
             />
             <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
             <Line
-              dataKey="desktop"
+              dataKey="fecha1"
               type="monotone"
               stroke="var(--color-desktop)"
               strokeWidth={2}
               dot={false}
             />
             <Line
-              dataKey="mobile"
+              dataKey="fecha2"
               type="monotone"
               stroke="var(--color-mobile)"
               strokeWidth={2}

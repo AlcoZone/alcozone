@@ -1,6 +1,6 @@
 "use client"
 
-import * as React from "react"
+import React, { useEffect, useState } from "react"
 import { addDays, format } from "date-fns"
 import { Calendar as CalendarIcon } from "lucide-react"
 import { DateRange } from "react-day-picker"
@@ -21,7 +21,7 @@ type Props = {
   placeholder?: string
 }
 
-export function DatePickerWithRange({
+const DatePickerWithRange = ({
   className,
   defaultDate = {
     from: new Date(2022, 0, 20),
@@ -29,10 +29,10 @@ export function DatePickerWithRange({
   },
   onChange,
   placeholder = "Pick a date",
-}: Props) {
-  const [date, setDate] = React.useState<DateRange | undefined>(defaultDate)
+}: Props) => {
+  const [date, setDate] = useState<DateRange | undefined>(defaultDate)
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (onChange) onChange(date)
   }, [date, onChange])
 

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react"
-import LineChartMultiple from "./AlcoholRelatedAccidentsLineGraphWidget"
+import LineChartMultiple from "./LineGraphWidget"
 
 const meta: Meta<typeof LineChartMultiple> = {
   title: "Components/LineChartMultiple",
@@ -11,21 +11,21 @@ export default meta
 type Story = StoryObj<typeof LineChartMultiple>
 
 const sampleData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
+  { month: "January", fecha1: 186, fecha2: 80 },
+  { month: "February", fecha1: 305, fecha2: 200 },
+  { month: "March", fecha1: 237, fecha2: 120 },
+  { month: "April", fecha1: 73, fecha2: 190 },
+  { month: "May", fecha1: 209, fecha2: 130 },
+  { month: "June", fecha1: 214, fecha2: 140 },
 ]
 
 const sampleConfig = {
   desktop: {
-    label: "Desktop",
+    label: "fecha1",
     color: "#8950FC",
   },
   mobile: {
-    label: "Mobile",
+    label: "Fecha2",
     color: "#F64E60",
   },
 }
