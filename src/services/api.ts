@@ -1,9 +1,7 @@
 import axios from "axios";
-import Config from "@/config"
-
 const api = axios.create({
-    baseURL: Config.NEXT_PUBLIC_API_URL,
-    timeout: 5000,
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  timeout: 5000,
 });
 
 api.interceptors.request.use(
