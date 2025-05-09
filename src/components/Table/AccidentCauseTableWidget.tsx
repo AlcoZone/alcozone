@@ -1,13 +1,8 @@
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableRow,
-} from "@/components/ui/table"
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table"
 import { Card } from "@/components/ui/card"
+import { Car, Bike,LifeBuoy, User } from "lucide-react"
 
 type Accidente = {
-  img: string
   type: string
   number: string
 }
@@ -23,6 +18,18 @@ const AccidentesTable = ({
   title = "Tipos de accidentes",
   subtitle = "Año 2024",
 }: AccidentesTableProps) => {
+  const getIconForType = (type: string) => {
+    switch (type.toLowerCase()) {
+      case "vehiculo":
+        return <Car className="w-6 h-6" />
+      case "motocicleta":
+        return <LifeBuoy className="w-6 h-6" />
+      case "bicicleta":
+        return <Bike className="w-6 h-6" />
+      case "persona":
+        return <User className="w-6 h-6" />
+    }
+  }
   return (
     <Card className="w-full max-w-md p-4 rounded-2xl shadow-md bg-white max-h-[350px] overflow-y-auto">
       <div className="flex items-center justify-between mb-4">
@@ -43,7 +50,7 @@ const AccidentesTable = ({
                       className="w-10 h-10 flex items-center justify-center rounded-full overflow-hidden"
                       style={{ backgroundColor: "#c4c4c4" }}
                     >
-                      <img src={item.img} alt={item.type} className="w-10 h-10 object-cover" />
+                      {getIconForType(item.type)}
                     </div>
                     <span>{item.type}</span>
                   </div>
@@ -59,5 +66,3 @@ const AccidentesTable = ({
 }
 
 export default AccidentesTable
-
-

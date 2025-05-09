@@ -18,11 +18,11 @@ import {
 } from "@/components/ui/chart"
 
 type Props = {
-  data: { month: string; mes1: number; mes2: number }[]
+  data: { month: string; month1: number; month2: number }[]
   config: ChartConfig
-  title?: string
-  subtitle?: string
-  description?: string
+  title: string
+  subtitle: string
+  description: string
 }
 
 const AccidentsBarChart = ({

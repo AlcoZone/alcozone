@@ -15,8 +15,8 @@ import {
 } from "@/components/ui/popover"
 
 type Props = {
-  className?: string
-  defaultDate?: DateRange
+  className: string
+  defaultDate: DateRange
   onChange?: (range: DateRange | undefined) => void
   placeholder?: string
 }
@@ -28,7 +28,7 @@ const DatePickerWithRange = ({
     to: addDays(new Date(2022, 0, 20), 20),
   },
   onChange,
-  placeholder = "Pick a date",
+  placeholder = "Selecciona una fecha",
 }: Props) => {
   const [date, setDate] = useState<DateRange | undefined>(defaultDate)
 

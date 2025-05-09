@@ -20,10 +20,10 @@ import {
 type Props = {
   data: { month: string; fecha1: number; fecha2: number }[]
   config: ChartConfig
-  title?: string
-  description?: string
-  summary?: string
-  accidents?: string
+  title: string
+  description: string
+  summary: string
+  accidents: string
 }
 
 const LineChartMultiple = ({

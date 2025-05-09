@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 7, "column": 0}, "map": {"version":3,"sources":["file:///Users/agsolano/Documents/alcozone/src/app/BaseUsuarios/page.tsx"],"sourcesContent":["// app/BaseUsuarios/page.tsx\n\n\"use client\";\n\nimport React from \"react\";\nimport { Menu } from \"@/components/Menu\"; \n\nexport default function BaseUsuariosPage() {\n  return (\n    <Menu variant=\"admin\">\n      <div className=\"p-6\">\n        <h1 className=\"text-2xl font-bold mb-4\">Base de Usuarios</h1>\n        <p>Esta es la nueva pestaña donde irá la información de usuarios.</p>\n      </div>\n    </Menu>\n  );\n}\n"],"names":[],"mappings":"AAAA,4BAA4B;;;;;;;;;;AAE5B;;;AAKe,SAAS;IACtB,qBACE,8OAAC;QAAK,SAAQ;kBACZ,cAAA,8OAAC;YAAI,WAAU;;8BACb,8OAAC;oBAAG,WAAU;8BAA0B;;;;;;8BACxC,8OAAC;8BAAE;;;;;;;;;;;;;;;;;AAIX","debugId":null}},
+    {"offset": {"line": 58, "column": 0}, "map": {"version":3,"sources":["file:///Users/agsolano/Documents/alcozone/node_modules/next/src/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.ts"],"sourcesContent":["module.exports = require('../../module.compiled').vendored[\n  'react-ssr'\n].ReactJsxDevRuntime\n"],"names":["module","exports","require","vendored","ReactJsxDevRuntime"],"mappings":";AAAAA,OAAOC,OAAO,GAAGC,QAAQ,4HAAyBC,QAAQ,CACxD,YACD,CAACC,kBAAkB","ignoreList":[0],"debugId":null}}]
+}
