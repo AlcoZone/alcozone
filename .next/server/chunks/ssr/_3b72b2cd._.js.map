@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 7, "column": 0}, "map": {"version":3,"sources":["file:///Users/agsolano/Documents/alcozone/src/app/database/page.tsx"],"sourcesContent":["\"use client\";\n\nimport { Menu } from \"@/components/Menu/Menu\";\nimport React from \"react\";\n\nexport default function DatabasePage() {\n    return (\n      <>\n        {/* <Menu variant=\"admin\"> */}\n        <div className=\"pl-0 p-6\">\n          <h1 className=\"text-2xl font-bold\">Base de datos</h1>\n          <section className=\"grid grid-cols-2 gap-4\">\n            <div className=\"bg-white p-4\">Resumen</div>\n            <div className=\"bg-white p-4\">Estadísticas</div>\n          </section>\n        </div>\n        {/* </Menu> */}\n      </>\n    );\n  }\n  \n  \n"],"names":[],"mappings":";;;;AAAA;;AAKe,SAAS;IACpB,qBACE;kBAEE,cAAA,8OAAC;YAAI,WAAU;;8BACb,8OAAC;oBAAG,WAAU;8BAAqB;;;;;;8BACnC,8OAAC;oBAAQ,WAAU;;sCACjB,8OAAC;4BAAI,WAAU;sCAAe;;;;;;sCAC9B,8OAAC;4BAAI,WAAU;sCAAe;;;;;;;;;;;;;;;;;;;AAMxC","debugId":null}},
+    {"offset": {"line": 64, "column": 0}, "map": {"version":3,"sources":["file:///Users/agsolano/Documents/alcozone/node_modules/next/src/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.ts"],"sourcesContent":["module.exports = require('../../module.compiled').vendored[\n  'react-ssr'\n].ReactJsxDevRuntime\n"],"names":["module","exports","require","vendored","ReactJsxDevRuntime"],"mappings":";AAAAA,OAAOC,OAAO,GAAGC,QAAQ,4HAAyBC,QAAQ,CACxD,YACD,CAACC,kBAAkB","ignoreList":[0],"debugId":null}}]
+}

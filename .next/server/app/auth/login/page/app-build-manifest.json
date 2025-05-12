@@ -1,0 +1,25 @@
+{
+  "pages": {
+    "/auth/login/page": [
+      "static/chunks/src_app_globals_b805903d.css",
+      "static/chunks/node_modules_next_dist_1a6ee436._.js",
+      "static/chunks/src_app_layout_tsx_f0e4c1a2._.js",
+      "static/chunks/node_modules_next_5966ccb8._.js",
+      "static/chunks/node_modules_axios_lib_99999129._.js",
+      "static/chunks/node_modules_tailwind-merge_dist_bundle-mjs_mjs_b854acb4._.js",
+      "static/chunks/node_modules_@mui_material_esm_daec36ec._.js",
+      "static/chunks/node_modules_@mui_system_esm_9208743a._.js",
+      "static/chunks/node_modules_@firebase_auth_dist_esm2017_6fb6ec2f._.js",
+      "static/chunks/node_modules_68947338._.js",
+      "static/chunks/src_589982cf._.js",
+      "static/chunks/src_app_auth_login_page_tsx_53a94a7d._.js",
+      "static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_49a6ea35._.js",
+      "static/chunks/node_modules_next_dist_compiled_2ce9398a._.js",
+      "static/chunks/node_modules_next_dist_client_43e3ffb8._.js",
+      "static/chunks/node_modules_next_dist_3bfaed20._.js",
+      "static/chunks/node_modules_@swc_helpers_cjs_00636ac3._.js",
+      "static/chunks/_e69f0d32._.js",
+      "static/chunks/_be317ff2._.js"
+    ]
+  }
+}
