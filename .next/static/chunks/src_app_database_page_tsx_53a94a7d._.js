@@ -5,7 +5,7 @@
 (globalThis.TURBOPACK_CHUNK_LISTS = globalThis.TURBOPACK_CHUNK_LISTS || []).push({
   "path": "static/chunks/src_app_database_page_tsx_53a94a7d._.js",
   "chunks": [
-    "static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_8641db42._.js",
+    "static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_d4f685a1._.js",
     "static/chunks/src_ea79f8ee._.js",
     "static/chunks/node_modules_next_2992067f._.js",
     "static/chunks/node_modules_tailwind-merge_dist_bundle-mjs_mjs_b854acb4._.js",
@@ -16,7 +16,7 @@
     "static/chunks/node_modules_react-icons_ri_index_mjs_0e2ec0a5._.js",
     "static/chunks/node_modules_react-icons_sl_index_mjs_f0cdce93._.js",
     "static/chunks/node_modules_react-icons_lib_74ccc930._.js",
-    "static/chunks/node_modules_ad2b1f9c._.js"
+    "static/chunks/node_modules_d06169e2._.js"
   ],
   "source": "dynamic"
 });

@@ -56,8 +56,9 @@ const AccidentsBarChart = ({
               cursor={false}
               content={<ChartTooltipContent indicator="dashed" />}
             />
-            <Bar dataKey="mes1" fill="var(--color-desktop)" radius={4} />
-            <Bar dataKey="mes2" fill="var(--color-mobile)" radius={4} />
+<Bar dataKey="month1" fill="var(--color-desktop)" radius={4} />
+<Bar dataKey="month2" fill="var(--color-mobile)" radius={4} />
+
           </BarChart>
         </ChartContainer>
       </CardContent>
