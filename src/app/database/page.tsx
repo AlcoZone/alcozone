@@ -193,7 +193,7 @@ export default function DatabasePage() {
   return (
     <>
       <Banner />
-      <Menu variant="admin" onToggle={setMenuHidden}>
+      <Menu variant="user" onToggle={setMenuHidden}>
         <div
           className="bg-white shadow-xl rounded-xl p-6 space-y-4 transition-all duration-300"
           style={{

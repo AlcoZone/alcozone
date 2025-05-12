@@ -10,7 +10,7 @@ interface InputWithLabelProps {
   placeholder: string;
 }
 
-export function InputWithLabel({
+export function TableInput({
   label,
   type,
   id,

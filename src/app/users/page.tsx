@@ -4,9 +4,9 @@ import { Banner } from "@/components/Banner/Banner";
 import ConfirmButtons from "@/components/ConfirmButtons/ConfirmButtons";
 import { Menu } from "@/components/Menu/Menu";
 import { Table } from "@/components/Table/Table";
-import { InputWithLabel } from "@/components/TableInputs/tableInputs";
+import { TableInput } from "@/components/TableInputs/tableInputs";
 import React, { useState } from "react";
-import { auth } from "@/firebase";
+import { auth } from "@/lib/firebaseClient";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 const actions = [
   {
@@ -101,7 +101,7 @@ export default function DatabasePage() {
           <h1 className="text-1xl font-bold text-gray-600 text-center">Registrar nuevo usuario</h1>
 
           <div className="mt-4 flex justify-center">
-            <InputWithLabel
+            <TableInput
               label="Usuario"
               type="text"
               id="user"
@@ -109,7 +109,7 @@ export default function DatabasePage() {
               onChange={handleInputChange}
               placeholder="Nombre de usuario"
             />
-            <InputWithLabel
+            <TableInput
               label="Correo electrónico"
               type="email"
               id="email"
@@ -117,7 +117,7 @@ export default function DatabasePage() {
               onChange={handleInputChange}
               placeholder="Email"
             />
-            <InputWithLabel
+            <TableInput
               label="Contraseña"
               type="password"
               id="password"
@@ -125,7 +125,7 @@ export default function DatabasePage() {
               onChange={handleInputChange}
               placeholder="Contraseña"
             />
-            <InputWithLabel
+            <TableInput
               label="Rol"
               type="text"
               id="role"

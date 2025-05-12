@@ -13,7 +13,7 @@ type AccidentesTableProps = {
   subtitle?: string
 }
 
-const AccidentesTable = ({
+const AccidentCauseTableWidget = ({
   data,
   title = "Tipos de accidentes",
   subtitle = "Año 2024",
@@ -65,4 +65,4 @@ const AccidentesTable = ({
   )
 }
 
-export default AccidentesTable
+export default AccidentCauseTableWidget

@@ -1,41 +1,50 @@
-import type { Meta, StoryObj } from "@storybook/react"
-import AccidentesTable from "./AccidentCauseTableWidget"
 import React from "react"
+import type { Meta, StoryObj } from "@storybook/react"
+import AccidentCauseTableWidget from "./AccidentCauseTableWidget"
 
-const meta: Meta<typeof AccidentesTable> = {
+
+const meta: Meta<typeof AccidentCauseTableWidget> = {
   title: "Components/AccidentesTable",
-  component: AccidentesTable,
+  component: AccidentCauseTableWidget,
   tags: ["autodocs"],
+  argTypes: {
+    title: { control: "text" },
+    subtitle: { control: "text" },
+    data: { control: "object" },
+  },
 }
 
 export default meta
-type Story = StoryObj<typeof AccidentesTable>
-
-const sampleData = [
-  {
-    img: "/icons/carro.png",
-    type: "Automóvil",
-    number: "86,850",
-  },
-  {
-    img: "/icons/motorcycle.png",
-    type: "Motocicleta",
-    number: "34,580",
-  },
-  {
-    img: "/icons/pedestrian.png",
-    type: "Peatones",
-    number: "14,009",
-  },
-  {
-    img: "/icons/bike.png",
-    type: "Bicicleta",
-    number: "6,949",
-  },
-]
+type Story = StoryObj<typeof AccidentCauseTableWidget>
 
 export const Default: Story = {
   args: {
-    data: sampleData,
+    title: "Tipos de accidentes",
+    subtitle: "Año 2024",
+    data: [
+      { type: "Vehiculo", number: "120" },
+      { type: "Motocicleta", number: "85" },
+      { type: "Bicicleta", number: "34" },
+      { type: "Persona", number: "18" },
+    ],
+  },
+}
+
+export const EmptyData: Story = {
+  args: {
+    title: "Tipos de accidentes",
+    subtitle: "Sin datos",
+    data: [],
+  },
+}
+
+export const CustomTitleAndSubtitle: Story = {
+  args: {
+    title: "Reporte mensual de incidentes",
+    subtitle: "Abril 2024",
+    data: [
+      { type: "Vehiculo", number: "45" },
+      { type: "Persona", number: "12" },
+    ],
   },
 }
