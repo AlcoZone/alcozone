@@ -9,6 +9,7 @@ import {
 import { Icon } from "@/components/Icon/Icon";
 import HamburgerButton from "@/components/HamburgerButton/HamburgerButton";
 import TabSwitchButtons from "@/components/TabSwitchButtons/TabSwitchButtons";
+import DownloadCsvModal from "@/components/DownloadCsvModal/DownloadCsvModal";
 import Link from "next/link";
 
 type MenuProps = {
@@ -18,10 +19,16 @@ type MenuProps = {
 
 export const Menu = ({ variant = "user", onToggle, children }: MenuProps) => {
   const [isHidden, setIsHidden] = useState(false);
+  const [showDownloadModal, setShowDownloadModal] = useState(false);
   const isAdmin = variant === "admin";
 
   const handleToggle = () => {
     setIsHidden((prev) => !prev);
+  };
+
+  const handleDownload = (selectedReport: string) => {
+    console.log("Descargando revisión:", selectedReport);
+    setShowDownloadModal(false);
   };
 
   const firstRender = useRef(true);
@@ -94,10 +101,10 @@ export const Menu = ({ variant = "user", onToggle, children }: MenuProps) => {
                     </Link>
                     <Link href="/upload">
                       <TabSwitchButtons variant="upload" />
-                    </Link>
-                    <Link href="/download">
+                      </Link>
+                    <div onClick={() => setShowDownloadModal(true)} className="w-full cursor-pointer">
                       <TabSwitchButtons variant="download" />
-                    </Link>
+                    </div>
                     <Link href="/logout">
                       <TabSwitchButtons variant="logout" />
                     </Link>
@@ -126,7 +133,14 @@ export const Menu = ({ variant = "user", onToggle, children }: MenuProps) => {
         />
         {/* Contenido principal */}
         <div className="flex-1">{children}</div>
-      </div>
-    </SidebarProvider>
+        </div>
+        {showDownloadModal && (
+          <DownloadCsvModal
+            reports={["Revisión 1", "Revisión 2"]} 
+            onClose={() => setShowDownloadModal(false)}
+            onDownload={handleDownload}
+          />
+        )}
+     </SidebarProvider>
   );
 };
