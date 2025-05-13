@@ -24,6 +24,6 @@ export const Administrator: Story = {
 
 export const Colapsado: Story = {
   args: {
-    variant: "hidden",
+    variant: "user",
   },
 };
