@@ -117,6 +117,17 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+.scrollbar-rounded::-webkit-scrollbar {
+  width: 10px;
+}
+
+.scrollbar-rounded::-webkit-scrollbar-thumb {
+  background-color: rgba(54, 53, 53, 0.729);
+  border-radius: 9999px;
+  background-clip: content-box;
+  padding: 2px;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
