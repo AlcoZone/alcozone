@@ -31,7 +31,7 @@ export const BarChartWidget = ({
 
   return (
     <div style={{ paddingTop: "1px" }}>
-      <Card className="w-[600px]">
+      <Card className="w-full">
         <CardHeader className="text-center">
           <CardTitle>{title}</CardTitle>
           <CardDescription>{description}</CardDescription>
