@@ -1,5 +1,10 @@
 import React from "react";
-import { Bar, BarChart, Tooltip } from "recharts";
+import {
+  Bar,
+  BarChart,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 import {
   Card,
   CardContent,
@@ -25,30 +30,35 @@ export const BarChartWidget = ({
   categoryColors,
 }: BarChartWidgetProps) => {
   const totals = categories.reduce((acc, category) => {
-    acc[category] = data.reduce((sum, item) => sum + item[category], 0);
+    acc[category] = data.reduce((sum, item) => sum + (item[category] || 0), 0);
     return acc;
   }, {} as Record<string, number>);
 
   return (
     <div style={{ paddingTop: "1px" }}>
-      <Card className="w-[600px]">
+      <Card className="w-full">
         <CardHeader className="text-center">
           <CardTitle>{title}</CardTitle>
           <CardDescription>{description}</CardDescription>
         </CardHeader>
         <CardContent>
-          <BarChart width={500} height={250} data={data}>
-            <Tooltip />
-            {categories.map((category, index) => (
-              <Bar
-                key={category}
-                dataKey={category}
-                stackId="a"
-                fill={categoryColors[index]}
-                radius={index === 0 ? [4, 4, 0, 0] : [0, 0, 4, 4]}
-              />
-            ))}
-          </BarChart>
+          <div style={{ width: "100%", height: "250px" }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={data}>
+                <Tooltip />
+                {categories.map((category, index) => (
+                  <Bar
+                    key={category}
+                    dataKey={category}
+                    stackId="a"
+                    fill={categoryColors[index]}
+                    radius={index === 0 ? [4, 4, 0, 0] : [0, 0, 4, 4]}
+                  />
+                ))}
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+
           <div className="flex gap-4 justify-center mt-4 text-sm">
             {categories.map((category, index) => (
               <div key={category} className="flex items-center gap-2">
@@ -64,6 +74,7 @@ export const BarChartWidget = ({
             ))}
           </div>
         </CardContent>
+
         <CardFooter className="flex-col items-center gap-2 text-sm text-center">
           {categories.map((category) => (
             <div key={category} className="flex gap-2 font-medium leading-none">

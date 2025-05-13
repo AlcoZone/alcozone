@@ -28,25 +28,28 @@ const radialChartData = [
 ];
 
 const barChartData = [
-  { month: 'Enero', Autos: 30, Motos: 20 },
-  { month: 'Febrero', Autos: 45, Motos: 25 },
-  { month: 'Marzo', Autos: 40, Motos: 30 },
+  { month: "January", "Causa: Alcohol": 400, "Otras causas": 300, "Otro": 150 },
+  { month: "February", "Causa: Alcohol": 300, "Otras causas": 200, "Otro": 100 },
+  { month: "March", "Causa: Alcohol": 500, "Otras causas": 450, "Otro": 200 },
+  { month: "April", "Causa: Alcohol": 200, "Otras causas": 100, "Otro": 50 },
 ];
 
-const barCategories = ['Autos', 'Motos'];
-const barColors = ['#60a5fa', '#facc15'];
+const BarCategories = ["Causa: Alcohol", "Otras causas"];
+const BarColors = ["#0095FF", "#00E096", "#FF9900"];
 
 const comparisonData = [
-  { month: 'Enero', alcoholRelated: 20, nonAlcoholRelated: 50 },
-  { month: 'Febrero', alcoholRelated: 25, nonAlcoholRelated: 55 },
-  { month: 'Marzo', alcoholRelated: 15, nonAlcoholRelated: 60 },
+  { month: "January", alcoholRelated: 120, nonAlcoholRelated: 200 },
+  { month: "February", alcoholRelated: 160, nonAlcoholRelated: 230 },
+  { month: "March", alcoholRelated: 110, nonAlcoholRelated: 220 },
+  { month: "April", alcoholRelated: 90, nonAlcoholRelated: 170 },
+  { month: "May", alcoholRelated: 130, nonAlcoholRelated: 210 },
+  { month: "June", alcoholRelated: 150, nonAlcoholRelated: 200 },
 ];
 
 const comparisonConfig = {
-  alcoholRelated: { label: 'Alcohol', color: '#f87171' },
-  nonAlcoholRelated: { label: 'No alcohol', color: '#60a5fa' },
+  alcoholRelated: { label: "Relacionado al alcohol", color: "#07E098" },
+  nonAlcoholRelated: { label: "No relacionado al alcohol", color: "#0095FF" },
 };
-
 
 const MainPage = () => {
   const [selectedOption, setSelectedOption] = useState('');
@@ -60,7 +63,6 @@ const MainPage = () => {
           width: menuHidden ? 'calc(100vw - 150px)' : 'calc(100vw - 300px)',
         }}
       >
-
         <div className="mb-4 w-full max-w-sm">
           <Select onValueChange={(value) => setSelectedOption(value)} value={selectedOption}>
             <SelectTrigger className="w-full">
@@ -94,28 +96,29 @@ const MainPage = () => {
         </div>
 
         {/* tres widgets de abajo */}
-        <div className="flex flex-wrap gap-6 mb-4 justify-between">
-          <div className="w-[100px] m-0 p-0">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-1">
+          <div className="w-full">
             <BarChartWidget
-              title="Accidentes por vehículo"
-              description="Comparativa mensual entre autos y motos"
+              title="Incidentes causados por alcohol"
+              description="Comparación mensual por categoría"
               data={barChartData}
-              categories={barCategories}
-              categoryColors={barColors}
+              categories={BarCategories}
+              categoryColors={BarColors}
             />
           </div>
 
-          <div className="w-[100px] m-0 p-0">
+          <div className="w-full">
             <ComparisonWidget
-              title="Comparativa de accidentes"
+              title="Accidentes por Mes"
               data={comparisonData}
               config={comparisonConfig}
-              footer="Comparación entre accidentes con y sin alcohol"
+              footer="Enero - Junio 2024"
             />
           </div>
 
-          <div className="w-full sm:w-[300px] p-4 border rounded bg-gray-100 text-center">
-            Widget 5
+          <div className="w-full">
+            widget 5 
+
           </div>
         </div>
 
@@ -126,6 +129,7 @@ const MainPage = () => {
 };
 
 export default MainPage;
+
 
 
 
