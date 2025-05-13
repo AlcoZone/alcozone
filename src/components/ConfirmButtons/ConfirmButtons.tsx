@@ -19,7 +19,7 @@ const ConfirmButtons = ({ variant, onClick }: ConfirmButtonsProps) => {
     return (
         <Button
             onClick={onClick}
-            className={cn("text-lg transition duration-500", color, { "rounded-full": rounded })}>
+            className={cn("cursor-pointer text-lg transition duration-500", color, { "rounded-full": rounded })}>
             {text}
         </Button>
     );
