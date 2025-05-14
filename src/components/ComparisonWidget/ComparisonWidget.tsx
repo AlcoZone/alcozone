@@ -1,3 +1,5 @@
+"use client";
+
 import { TrendingUp } from "lucide-react";
 import { Area, AreaChart, Tooltip } from "recharts";
 
@@ -8,18 +10,19 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  ChartConfig,
-  ChartContainer,
-} from "@/components/ui/chart";
+import { ChartConfig, ChartContainer } from "@/components/ui/chart";
 import React from "react";
 
 type ComparisonWidgetProps = {
-  /** Title of the chart */
   title: string;
-  data: Array<{ month: string, alcoholRelated: number, nonAlcoholRelated: number }>;
-  config: Record<string, { label: string, color: string }>;
+  data: Array<{
+    month: string;
+    alcoholRelated: number;
+    nonAlcoholRelated: number;
+  }>;
+  config: Record<string, { label: string; color: string }>;
   footer: string;
+  chartHeight: number;
 };
 
 export const ComparisonWidget: React.FC<ComparisonWidgetProps> = ({
@@ -27,8 +30,8 @@ export const ComparisonWidget: React.FC<ComparisonWidgetProps> = ({
   data,
   config,
   footer,
+  chartHeight,
 }) => {
-  
   function CustomTooltip({ active, payload }: any) {
     if (active && payload && payload.length) {
       const month = payload[0].payload.month;
@@ -41,8 +44,12 @@ export const ComparisonWidget: React.FC<ComparisonWidgetProps> = ({
               const chartConfig = config[entry.dataKey as keyof typeof config];
               return (
                 <div key={index} className="flex justify-between gap-4">
-                  <span className="text-muted-foreground">{chartConfig.label}:</span>
-                  <span style={{ color: chartConfig.color }}>{entry.value}</span>
+                  <span className="text-muted-foreground">
+                    {chartConfig.label}:
+                  </span>
+                  <span style={{ color: chartConfig.color }}>
+                    {entry.value}
+                  </span>
                 </div>
               );
             })}
@@ -55,17 +62,17 @@ export const ComparisonWidget: React.FC<ComparisonWidgetProps> = ({
   }
 
   return (
-    <div style={{ paddingTop: "1px" }}>
-      <Card className="w-[700px]">
+    <div className="w-full h-full" style={{ paddingTop: "1px" }}>
+      <Card className="flex flex-col h-full w-full">
         <CardHeader className="text-center">
           <CardTitle>{title}</CardTitle>
         </CardHeader>
-        <CardContent>
-          <ChartContainer config={config}>
-            <AreaChart
-              data={data}
-              margin={{ left: 12, right: 12 }}
-            >
+        <CardContent className="flex-1">
+          <ChartContainer
+            config={config}
+            style={{ width: "100%", height: chartHeight - 130 }}
+          >
+            <AreaChart data={data} margin={{ left: 12, right: 12 }}>
               <Tooltip
                 content={<CustomTooltip />}
                 cursor={{ stroke: "#ccc", strokeWidth: 1 }}
@@ -99,4 +106,3 @@ export const ComparisonWidget: React.FC<ComparisonWidgetProps> = ({
     </div>
   );
 };
-

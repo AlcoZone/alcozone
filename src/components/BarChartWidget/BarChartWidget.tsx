@@ -1,5 +1,5 @@
 import React from "react";
-import { Bar, BarChart, Tooltip } from "recharts";
+import { Bar, BarChart, ResponsiveContainer, Tooltip } from "recharts";
 import {
   Card,
   CardContent,
@@ -15,6 +15,7 @@ export type BarChartWidgetProps = {
   data: { month: string; [key: string]: number }[];
   categories: string[];
   categoryColors: string[];
+  chartHeight: number;
 };
 
 export const BarChartWidget = ({
@@ -23,6 +24,7 @@ export const BarChartWidget = ({
   data,
   categories,
   categoryColors,
+  chartHeight = 300,
 }: BarChartWidgetProps) => {
   const totals = categories.reduce((acc, category) => {
     acc[category] = data.reduce((sum, item) => sum + item[category], 0);
@@ -30,25 +32,27 @@ export const BarChartWidget = ({
   }, {} as Record<string, number>);
 
   return (
-    <div style={{ paddingTop: "1px" }}>
-      <Card className="w-full">
+    <div className="w-full h-full" style={{ paddingTop: "1px" }}>
+      <Card className="flex flex-col h-full w-full">
         <CardHeader className="text-center">
           <CardTitle>{title}</CardTitle>
           <CardDescription>{description}</CardDescription>
         </CardHeader>
-        <CardContent>
-          <BarChart width={500} height={250} data={data}>
-            <Tooltip />
-            {categories.map((category, index) => (
-              <Bar
-                key={category}
-                dataKey={category}
-                stackId="a"
-                fill={categoryColors[index]}
-                radius={index === 0 ? [4, 4, 0, 0] : [0, 0, 4, 4]}
-              />
-            ))}
-          </BarChart>
+        <CardContent className="flex-1">
+          <ResponsiveContainer width="100%" height={chartHeight - 150}>
+            <BarChart data={data}>
+              <Tooltip />
+              {categories.map((category, index) => (
+                <Bar
+                  key={category}
+                  dataKey={category}
+                  stackId="a"
+                  fill={categoryColors[index]}
+                  radius={index === 0 ? [4, 4, 0, 0] : [0, 0, 4, 4]}
+                />
+              ))}
+            </BarChart>
+          </ResponsiveContainer>
           <div className="flex gap-4 justify-center mt-4 text-sm">
             {categories.map((category, index) => (
               <div key={category} className="flex items-center gap-2">
@@ -75,9 +79,3 @@ export const BarChartWidget = ({
     </div>
   );
 };
-
-
-
-
-
-
