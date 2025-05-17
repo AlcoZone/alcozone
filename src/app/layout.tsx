@@ -1,9 +1,14 @@
 import "./globals.css";
+import { AuthProvider } from "@/providers/AuthProvider"
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="bg-[#F2F2F2]">{children}</body>
+      <body>
+        <AuthProvider>
+          {children}
+        </AuthProvider>
+      </body>
     </html>
   );
 }
