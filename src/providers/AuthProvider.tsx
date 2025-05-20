@@ -28,24 +28,21 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-        setUser(firebaseUser);
-        console.log("=== [AUTH] Firebase user en AuthProvider:", firebaseUser);
-
+      setUser(firebaseUser);
+  
       if (firebaseUser) {
         try {
           const token = await getIdToken(firebaseUser);
           setIdToken(token);
-
-          // Axios ya agrega el token automáticamente por el interceptor
-          const res = await api.get("/user"); // no se si se quedará o usare el que haga alondra
+  
+          // Aquí tienes usuario Y token: ahora sí pide tu backend
+          const res = await api.get("/user");
           const data = res.data;
           setRole(ROLE_MAP[data.role_id] || null);
-
+  
         } catch (error) {
-          console.error(error);
           setIdToken(null);
           setRole(null);
-          setUser(null);
         }
       } else {
         setIdToken(null);
@@ -53,9 +50,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       }
       setLoading(false);
     });
-
+  
     return () => unsubscribe();
-  }, []);
+  }, []);  
 
   return (
     <AuthContext.Provider value={{ user, loading, idToken, role }}>

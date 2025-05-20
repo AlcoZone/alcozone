@@ -1,3 +1,4 @@
+import { AuthGuard } from "@/components/AuthGuard/AuthGuard";
 import "./globals.css";
 import { AuthProvider } from "@/providers/AuthProvider"
 
@@ -6,7 +7,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body>
         <AuthProvider>
-          {children}
+          <AuthGuard>
+            {children}
+          </AuthGuard>
         </AuthProvider>
       </body>
     </html>

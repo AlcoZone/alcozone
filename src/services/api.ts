@@ -1,6 +1,5 @@
 import axios from "axios";
 import { getAuth, signOut } from "firebase/auth";
-import Router from "next/router";
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
