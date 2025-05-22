@@ -34,6 +34,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         try {
           const token = await getIdToken(firebaseUser);
           setIdToken(token);
+          console.log("TOKEN OBTENIDO DE FIREBASE:", token);
   
           // Aquí tienes usuario Y token: ahora sí pide tu backend
           const res = await api.get("/user");
