@@ -1,39 +1,53 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Banner } from "@/components/Banner/Banner";
 import { Menu } from "@/components/Menu/Menu";
 import { Table } from "@/components/Table/Table";
-import React, { useState } from "react";
+import api from "@/services/api";
 
-// Datos de ejemplo
-const data = [
-  {
-    name: "Dataset accidentes mayo",
-    data_quantity: 320,
-    date: "2024-05-01",
-    csvContent: `id,date,incidente\n1,2024-05-01,"Accidente de tránsito"\n2,2024-05-01,"Accidente de motocicleta"`,
-  },
-  {
-    name: "Dataset infracciones abril",
-    data_quantity: 180,
-    date: "2024-04-17",
-    csvContent: `id,date,incidente\n1,2024-04-17,"Infracción velocidad"\n2,2024-04-17,"Infracción luz roja"`,
-  },
-];
-
-// Función utilitaria para descargar CSV
-function downloadCSV(name: string, contenido: string) {
-  const blob = new Blob([contenido], { type: "text/csv" });
-  const url = window.URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `${name}.csv`;
-  a.click();
-  window.URL.revokeObjectURL(url);
+interface DatasetItem {
+  uuid: string;
+  name: string;
+  data_quantity: number;
+  date: string;
 }
 
 export default function CsvPage() {
   const [menuHidden, setMenuHidden] = useState(false);
+  const [datasets, setDatasets] = useState<DatasetItem[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { data } = await api.get("/revision/csv/list");
+        setDatasets(data);
+      } catch (error) {
+        console.error("Error al obtener la lista de revisiones:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const downloadCSV = async (name: string, uuid: string) => {
+    try {
+      const response = await api.get("/revision/csv?uuid=${uuid}&withData=true", {
+        responseType: "blob",
+      });
+
+      const blob = new Blob([response.data], { type: "text/csv" });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${name}.csv`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error al descargar CSV:", error);
+      alert("No se pudo descargar el archivo.");
+    }
+  };
 
   return (
     <>
@@ -60,12 +74,12 @@ export default function CsvPage() {
                 { header: "Registros", accessor: "data_quantity" },
                 { header: "Fecha de carga", accessor: "date" },
               ]}
-              data={data}
+              data={datasets}
               actions={[
                 {
                   label: "Descargar",
-                  onClick: (row) => downloadCSV(row.name, row.csvContent),
-                  className: "text-blue-850 font-semibold", 
+                  onClick: (row) => downloadCSV(row.name, row.uuid),
+                  className: "text-blue-850 font-semibold",
                 },
               ]}
             />
