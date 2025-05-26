@@ -9,7 +9,7 @@ import api from "@/services/api";
 interface DatasetItem {
   uuid: string;
   name: string;
-  data_quantity: number;
+  dataQuantity: number;
   date: string;
 }
 
@@ -32,8 +32,11 @@ export default function CsvPage() {
 
   const downloadCSV = async (name: string, uuid: string) => {
     try {
-      const response = await api.get("/revision/csv?uuid=${uuid}&withData=true", {
+      const response = await api.get(`http://localhost:8080/api/v1/revision/csv?uuid=${uuid}&withData=true`, {
         responseType: "blob",
+        headers: {
+          Accept: "text/csv", 
+        },
       });
 
       const blob = new Blob([response.data], { type: "text/csv" });
@@ -71,7 +74,7 @@ export default function CsvPage() {
               variant="withActions"
               columns={[
                 { header: "Archivo", accessor: "name" },
-                { header: "Registros", accessor: "data_quantity" },
+                { header: "Registros", accessor: "dataQuantity" },
                 { header: "Fecha de carga", accessor: "date" },
               ]}
               data={datasets}

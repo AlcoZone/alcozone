@@ -33,6 +33,15 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
     //   router.push("/auth/login");
     //   return;
     // }
+
+    // Todos tienen acceso al login
+    // Base de datos de usuarios (admin) y base normal (datamanager y admin)
+    // /dashboard (todos) y /forgotpassword (todos)
+    // / mapa (todos)
+    // /home  (todos) y /myaccount (todos)
+    // /uploadcsv (datamanager y admin)
+    // / downloadcsv (datamanager y admin)
+
   }, [user, loading, pathname, router, role]);
 
   // Sólo muestra el spinner si loading es true (previene loops)

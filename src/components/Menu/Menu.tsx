@@ -7,6 +7,8 @@ import {
   SidebarContent,
 } from "@/components/ui/sidebar";
 import { Icon } from "@/components/Icon/Icon";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/providers/AuthProvider";
 import HamburgerButton from "@/components/HamburgerButton/HamburgerButton";
 import TabSwitchButtons from "@/components/TabSwitchButtons/TabSwitchButtons";
 import Link from "next/link";
@@ -24,6 +26,14 @@ export const Menu = ({ variant = "user", onToggle, children }: MenuProps) => {
     setIsHidden((prev) => !prev);
   };
 
+  const { logout } = useAuth();
+  const router = useRouter();
+  
+  const handleLogout = async () => {
+    await logout(); 
+    router.push("/auth/login"); 
+  };
+  
   const firstRender = useRef(true);
   useEffect(() => {
     if (firstRender.current) {
@@ -98,9 +108,7 @@ export const Menu = ({ variant = "user", onToggle, children }: MenuProps) => {
                     <Link href="/download">
                       <TabSwitchButtons variant="download" />
                     </Link>
-                    <Link href="/logout">
-                      <TabSwitchButtons variant="logout" />
-                    </Link>
+                    <TabSwitchButtons variant="logout" onClick={handleLogout} />
                   </nav>
                 </>
               )}
