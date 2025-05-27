@@ -4,14 +4,9 @@ import { useEffect, useState } from "react";
 import { Banner } from "@/components/Banner/Banner";
 import { Menu } from "@/components/Menu/Menu";
 import { Table } from "@/components/Table/Table";
-import api from "@/services/api";
-
-interface DatasetItem {
-  uuid: string;
-  name: string;
-  dataQuantity: number;
-  date: string;
-}
+import { getRevisionCsv } from "@/services/csv/getRevisionCSV";
+import { getRevisionCsvList } from "@/services/csv/getRevisionCSVlist"; 
+import type { DatasetItem } from "@/types/DataSetItem";
 
 export default function CsvPage() {
   const [menuHidden, setMenuHidden] = useState(false);
@@ -19,38 +14,12 @@ export default function CsvPage() {
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const { data } = await api.get("/revision/csv/list");
-        setDatasets(data);
-      } catch (error) {
-        console.error("Error al obtener la lista de revisiones:", error);
-      }
+      const data = await getRevisionCsvList(); 
+      setDatasets(data);
     };
 
     fetchData();
   }, []);
-
-  const downloadCSV = async (name: string, uuid: string) => {
-    try {
-      const response = await api.get(`http://localhost:8080/api/v1/revision/csv?uuid=${uuid}&withData=true`, {
-        responseType: "blob",
-        headers: {
-          Accept: "text/csv", 
-        },
-      });
-
-      const blob = new Blob([response.data], { type: "text/csv" });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `${name}.csv`;
-      a.click();
-      window.URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error("Error al descargar CSV:", error);
-      alert("No se pudo descargar el archivo.");
-    }
-  };
 
   return (
     <>
@@ -81,7 +50,7 @@ export default function CsvPage() {
               actions={[
                 {
                   label: "Descargar",
-                  onClick: (row) => downloadCSV(row.name, row.uuid),
+                  onClick: (row) => getRevisionCsv(row.uuid, row.name),
                   className: "text-blue-850 font-semibold",
                 },
               ]}
