@@ -36,15 +36,7 @@ const LoginPage: React.FC = () => {
 
   const handleLogin = async () => {
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const accessToken = await userCredential.user.getIdToken();
-      const refreshToken = userCredential.user.refreshToken;
-
-      localStorage.setItem("token", accessToken);
-      localStorage.setItem("refreshToken", refreshToken);
-
-      await api.get("/auth/login");
-
+      await signInWithEmailAndPassword(auth, email, password);
       router.push("/home");
     } catch (error) {
       console.error("Error al iniciar sesión:", error);

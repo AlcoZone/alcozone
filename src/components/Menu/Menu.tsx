@@ -118,13 +118,6 @@ export const Menu = ({ variant = "user", onToggle, children }: MenuProps) => {
           </div>
         </Sidebar>
         {/* Espaciador */}
-        <div
-          className={`transition-all duration-300 ${
-            isHidden ? "w-20" : "w-56"
-          } shrink-0`}
-          aria-hidden="true"
-        />
-        {/* Contenido principal */}
         <div className="flex-1">{children}</div>
       </div>
     </SidebarProvider>

@@ -4,8 +4,9 @@ import { Car, Bike,LifeBuoy, User } from "lucide-react"
 
 type Accidente = {
   type: string
-  number: string
+  number: number
 }
+//debe ser el mismo nombre 
 
 type AccidentesTableProps = {
   data: Accidente[]
@@ -34,7 +35,7 @@ const AccidentCauseTableWidget = ({
     <Card className="w-full max-w-md p-4 rounded-2xl shadow-md bg-white max-h-[350px] overflow-y-auto">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <p className="text-2xl font-bold" style={{ color: "#001391" }}>{title}</p>
+          <p className="text-m font-bold" style={{ color: "#001391" }}>{title}</p>
           <p className="text-sm" style={{ color: "#0636A7" }}>{subtitle}</p>
         </div>
       </div>

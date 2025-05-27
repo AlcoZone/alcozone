@@ -1,47 +1,241 @@
-"use client";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import api from "@/services/api";
+'use client';
 
-// 🚨 NOTE TO PAGE OWNER:
-// This page is currently used to validate Firebase login and token presence.
-// If the token is invalid or missing, the user is redirected to /auth/login.
-// Right now it shows a placeholder message ("Login funcionando yayyy!!").
-// Please replace this content with the actual dashboard or landing content.
-// This validation ensures only authenticated users can access this route.
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import api from '@/services/api';
+
+import { Banner } from '@/components/Banner/Banner';
+import { Menu } from '@/components/Menu/Menu';
+import { DonutChartWidget } from '@/components/DonutChartWidget/DonutChartWidget';
+import { RadialChartWidget } from '@/components/RadialChartWidget/RadialChartWidget';
+import { BarChartWidget } from '@/components/BarChartWidget/BarChartWidget';
+import { ComparisonWidget } from '@/components/ComparisonWidget/ComparisonWidget';
+import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
+import { Card, CardContent } from '@/components/ui/card';
+import { Car, Bike, LifeBuoy, User } from 'lucide-react';
+import { auth } from '@/lib/firebaseClient';
+import { onAuthStateChanged } from 'firebase/auth';
+
+type Accidente = {
+  type: string;
+  number: string;
+};
+
+type AccidentesTableProps = {
+  data: Accidente[];
+  title?: string;
+  subtitle?: string;
+};
+
+type AccidenteDonut = {
+  town: string 
+  total_accidents: string // this will be a number in string form
+}
+
+type DonutChartProps = {
+  title: string;
+  footer: string;
+  centerLabel: string;
+  data: AccidenteDonut[];
+}
 
 
-const home = () => {
-  const router = useRouter();
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const validateToken = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        router.push("/auth/login");
-        return;
-      }
 
-      try {
-        await api.get("/auth/login"); 
-        setLoading(false);
-      } catch (error) {
-        localStorage.removeItem("token");
-        router.push("/auth/login");
-      }
-    };
-
-    validateToken();
-  }, [router]);
-
-  if (loading) return <p>Cargando...</p>;
+const AccidentCauseTableWidget = ({
+  data,
+  title = 'Tipos de accidentes',
+  subtitle = 'Año 2024',
+}: AccidentesTableProps) => {
+  const getIconForType = (type: string) => {
+    switch (type.toLowerCase()) {
+      case 'vehiculo':
+        return <Car className="w-6 h-6" />;
+      case 'motocicleta':
+        return <LifeBuoy className="w-6 h-6" />;
+      case 'bicicleta':
+        return <Bike className="w-6 h-6" />;
+      case 'persona':
+        return <User className="w-6 h-6" />;
+      default:
+        return null;
+    }
+  };
 
   return (
-    <div className="p-10">
-      <h1 className="text-3xl font-bold">Login funcionando yayyy!!</h1>
-    </div>
+    <Card className="w-full h-full p-6 rounded-2xl shadow-md">
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <p className="text-2xl font-bold" style={{ color: '#001391' }}>
+            {title}
+          </p>
+          <p className="text-sm" style={{ color: '#0636A7' }}>
+            {subtitle}
+          </p>
+        </div>
+      </div>
+
+      <div className="h-[calc(100%-80px)] overflow-y-auto">
+        <Table>
+          <TableBody>
+            {data.map((item, index) => (
+              <TableRow key={index}>
+                <TableCell>
+                  <div className="flex items-center gap-4">
+                    <div
+                      className="w-10 h-10 flex items-center justify-center rounded-full overflow-hidden"
+                      style={{ backgroundColor: '#c4c4c4' }}
+                    >
+                      {getIconForType(item.type)}
+                    </div>
+                    <span>{item.type}</span>
+                  </div>
+                </TableCell>
+                <TableCell className="text-right font-medium">{item.number}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    </Card>
   );
 };
 
-export default home;
+//aqui irian las apis?
+//aqui falta cambiarle el nombre 
+const accidentData: Accidente[] = [
+  { type: 'Vehiculo', number: '120' },
+  { type: 'Motocicleta', number: '85' },
+  { type: 'Bicicleta', number: '34' },
+  { type: 'Persona', number: '18' },
+];
+
+const donutChartData: AccidenteDonut[] = [
+  { town: "Iztapalapa", total_accidents: "2747" },
+  { town: "Alvaro Obregon", total_accidents: "1846" },
+];
+
+//este ya esta bien 
+const radialChartData = [
+  { percentage: 28.47, subType: "Choque con lesionados" },
+  { percentage: 9.72, subType: "Motociclista" },
+  { percentage: 9.43, subType: "Atropellado" }
+]
+
+//este aun falta
+
+const defaultColors = ["#0095FF", "#00E096", "#FF9900", "#FF6699", "#AA00FF", "#FF0066", "#00CC99"];
+
+function generateColors(towns: string[]): Record<string, string> {
+  const uniqueTowns = Array.from(new Set(towns));
+  const colorsMap: Record<string, string> = {};
+
+  uniqueTowns.forEach((town, index) => {
+    colorsMap[town] = defaultColors[index % defaultColors.length];
+  });
+
+  return colorsMap;
+}
+
+
+
+const barChartData = [
+  { month_name: "February", town: "Iztapalapa", total_accidents: 2747 },
+  { month_name: "February", town: "Gustavo A. Madero", total_accidents: 1846 },
+  { month_name: "March", town: "Iztapalapa", total_accidents: 2900 },
+  { month_name: "March", town: "Benito Juárez", total_accidents: 1700 },
+  { month_name: "April", town: "Gustavo A. Madero", total_accidents: 2200 },
+  { month_name: "April", town: "Coyoacán", total_accidents: 1800 },
+];
+
+const townsList = barChartData.map(d => d.town);
+const colors = generateColors(townsList);
+
+
+
+//este ya esta bien 
+const comparisonData = [
+  { month_name: "January", accidents: "1600" },
+  { month_name: "February", accidents: "16208" },
+  { month_name: "March", accidents: "17500" },
+  { month_name: "April", accidents: "16000" },
+  { month_name: "May", accidents: "13000" },
+  { month_name: "June", accidents: "11000" },
+];
+
+const comparisonConfig = {
+  accidents: { label: "Accidentes", color: "#8884d8" },
+};
+
+const MainPage = () => {
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
+  const [selectedOption, setSelectedOption] = useState('');
+  const [menuHidden, setMenuHidden] = useState(false);
+  const [user, setUser] = useState<{ email: string } | null>(null);
+  const [donutChartData, setDonutChartData] = useState<AccidenteDonut[]>([]);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser(user);
+      } else {
+        setUser(null);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  // Para donut chart
+  useEffect(() => {
+
+  },[]);
+
+  return (
+    <div className="flex h-screen gap-4 ">
+      {/* Left Panel */}
+      <Card className="flex-1 bg-transparent -py-4 shadow-none border-none">
+        <CardContent className="h-full p-0">
+          <div className="flex flex-col h-full">
+            <div className="flex-1">
+              { /** {donutChartData ? (Aqui va el componente) : <div>No cargo</div>} */}
+              <DonutChartWidget data={donutChartData} title={"Alcaldías peligrosas"} footer={"Alcaldías con más accidentes"} centerLabel={"example"}  />
+            </div>
+            <div className="flex-1">
+              <BarChartWidget data={barChartData} title="Top 2 alcaldías con más accidentes por mes" description="Comparativa mensual de las alcaldías con más accidentes" colors={colors}/> 
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Right Side Panel with two stacked boxes */}
+      <div className="flex flex-col">
+        {/* Top Box */}
+        <Card className="flex-1 bg-white-200 -py-2 shadow-none border-none">
+          <CardContent className="h-full p-0">
+            <div className="h-full">
+              <RadialChartWidget title={"Causas de accidentes"} data={radialChartData} />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Bottom Box */}
+        <Card className="flex-1 bg-white-100 -py-6 shadow-none border-none">
+          <CardContent className="h-full p-0">
+            <div className="flex h-full">
+              <div className="flex-1 pr-2">
+                <ComparisonWidget title={"Accidentes por mes"} data={comparisonData} footer="Año 2024" config={comparisonConfig} />
+              </div>
+              <div className="flex-1 pl-1">
+                <AccidentCauseTableWidget data={accidentData}/>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  )
+};
+
+export default MainPage;

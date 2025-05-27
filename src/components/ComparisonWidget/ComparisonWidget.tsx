@@ -1,5 +1,4 @@
 import React from "react";
-import { TrendingUp } from "lucide-react";
 import { Area, AreaChart, Tooltip, ResponsiveContainer } from "recharts";
 import {
   Card,
@@ -11,7 +10,7 @@ import {
 
 type ComparisonWidgetProps = {
   title: string;
-  data: Array<{ month: string; alcoholRelated: number; nonAlcoholRelated: number }>;
+  data: Array<{ month_name: string; accidents: string | number }>;
   config: Record<string, { label: string; color: string }>;
   footer: string;
 };
@@ -24,7 +23,7 @@ export const ComparisonWidget: React.FC<ComparisonWidgetProps> = ({
 }) => {
   function CustomTooltip({ active, payload }: any) {
     if (active && payload && payload.length) {
-      const month = payload[0].payload.month;
+      const month = payload[0].payload.month_name;
 
       return (
         <div className="rounded-md border bg-white p-3 shadow-sm">
@@ -54,9 +53,15 @@ export const ComparisonWidget: React.FC<ComparisonWidgetProps> = ({
           <CardTitle>{title}</CardTitle>
         </CardHeader>
         <CardContent>
-          <div style={{ width: "100%", height: 250 }}>
+          <div style={{ width: "100%", height: 170 }}>
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={data} margin={{ left: 12, right: 12 }}>
+              <AreaChart
+                data={data.map((item) => ({
+                  ...item,
+                  accidents: Number(item.accidents),
+                }))}
+                margin={{ left: 12, right: 12 }}
+              >
                 <Tooltip
                   content={<CustomTooltip />}
                   cursor={{ stroke: "#ccc", strokeWidth: 1 }}

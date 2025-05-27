@@ -1,91 +1,97 @@
 import React from "react";
 import {
-  Bar,
   BarChart,
+  Bar,
+  XAxis,
+  YAxis,
   Tooltip,
+  Legend,
   ResponsiveContainer,
 } from "recharts";
 import {
   Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
 } from "@/components/ui/card";
 
+type AccidenteData = {
+  month_name: string;
+  town: string;
+  total_accidents: number;
+};
+
 export type BarChartWidgetProps = {
-  title: string;
-  description: string;
-  data: { month: string; [key: string]: number }[];
-  categories: string[];
-  categoryColors: string[];
+  title?: string;
+  description?: string;
+  data: AccidenteData[];
+  colors?: Record<string, string>; // opcional: colores por town
 };
 
 export const BarChartWidget = ({
   title,
   description,
   data,
-  categories,
-  categoryColors,
+  colors = {},
 }: BarChartWidgetProps) => {
-  const totals = categories.reduce((acc, category) => {
-    acc[category] = data.reduce((sum, item) => sum + (item[category] || 0), 0);
-    return acc;
-  }, {} as Record<string, number>);
+  // Agrupamos datos por mes
+  const groupedByMonth: Record<string, Record<string, number>> = {};
+
+  data.forEach(({ month_name, town, total_accidents }) => {
+    if (!groupedByMonth[month_name]) {
+      groupedByMonth[month_name] = {};
+    }
+    groupedByMonth[month_name][town] = total_accidents;
+  });
+
+  // Convertimos a formato de Recharts
+  const chartData = Object.entries(groupedByMonth).map(([month, towns]) => ({
+    month_name: month,
+    ...towns,
+  }));
+
+  // Obtenemos lista de towns únicos para dibujar una <Bar /> por cada uno
+  const uniqueTowns = Array.from(
+    new Set(data.map((d) => d.town))
+  );
 
   return (
-    <div style={{ paddingTop: "1px" }}>
-      <Card className="w-full">
-        <CardHeader className="text-center">
-          <CardTitle>{title}</CardTitle>
-          <CardDescription>{description}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div style={{ width: "100%", height: "250px" }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={data}>
-                <Tooltip />
-                {categories.map((category, index) => (
-                  <Bar
-                    key={category}
-                    dataKey={category}
-                    stackId="a"
-                    fill={categoryColors[index]}
-                    radius={index === 0 ? [4, 4, 0, 0] : [0, 0, 4, 4]}
-                  />
-                ))}
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
+    <Card className="w-full">
+      <CardHeader className="text-center">
+        <CardTitle>{title}</CardTitle>
+        <CardDescription>{description}</CardDescription>
+      </CardHeader>
 
-          <div className="flex gap-4 justify-center mt-4 text-sm">
-            {categories.map((category, index) => (
-              <div key={category} className="flex items-center gap-2">
-                <div
-                  style={{
-                    width: "12px",
-                    height: "12px",
-                    backgroundColor: categoryColors[index],
-                  }}
+      <CardContent>
+        <div style={{ width: "100%", height: "240px" }}>
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={chartData}>
+              <XAxis dataKey="month_name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              {uniqueTowns.map((town, index) => (
+                <Bar
+                  key={town}
+                  dataKey={town}
+                  fill={colors[town] || defaultColors[index % defaultColors.length]}
                 />
-                <span>{category}</span>
-              </div>
-            ))}
-          </div>
-        </CardContent>
+              ))}
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </CardContent>
 
-        <CardFooter className="flex-col items-center gap-2 text-sm text-center">
-          {categories.map((category) => (
-            <div key={category} className="flex gap-2 font-medium leading-none">
-              Total por {category}: {totals[category]}
-            </div>
-          ))}
-        </CardFooter>
-      </Card>
-    </div>
+      <CardFooter className="text-center text-sm font-medium">
+        Mostrando los dos towns más peligrosos por mes
+      </CardFooter>
+    </Card>
   );
 };
+
+const defaultColors = ["#8884d8", "#82ca9d", "#ffc658", "#ff8042"];
 
 
 
