@@ -15,7 +15,14 @@ import { BarChartWidget } from "@/components/BarChartWidget/BarChartWidget";
 import { ComparisonWidget } from "@/components/ComparisonWidget/ComparisonWidget";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Pencil, ChevronsUpDown, Check, Save, CirclePlus } from "lucide-react";
+import {
+  Pencil,
+  ChevronsUpDown,
+  Check,
+  Save,
+  CirclePlus,
+  X,
+} from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -39,7 +46,7 @@ export default function DashboardPage() {
   const [savedName, setSavedName] = useState("Dashboard principal");
   const [draftName, setDraftName] = useState(savedName);
   const { dashboards, loading, error } = useDashboards(
-    "oh1ntUykRjWWlYSothlaAVtAfG53"
+    "oh1ntUykRjWWlYSothlaAVtAfG53" // TODO remove this hardcoded userUuid string
   );
   const [selectedDashboard, setSelectedDashboard] = useState<string | null>(
     null
@@ -94,6 +101,11 @@ export default function DashboardPage() {
     return item ? item.h * rowHeight : 300;
   };
 
+  const handleRemoveWidget = (widgetName: string) => {
+    setDraftLayout((prev) => prev.filter((w) => w.name !== widgetName));
+    setHasChanges(true);
+  };
+
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newName = e.target.value;
     setDraftName(newName);
@@ -145,8 +157,8 @@ export default function DashboardPage() {
   useEffect(() => {
     const sanitizeLayout = (layout: GridItem[]) =>
       layout
-        .map(({ i, x, y, w, h }) => ({ i, x, y, w, h }))
-        .sort((a, b) => a.i.localeCompare(b.i));
+        .map(({ name, x, y, w, h }) => ({ name, x, y, w, h }))
+        .sort((a, b) => (a.name ?? "").localeCompare(b.name ?? ""));
 
     const changed =
       JSON.stringify(sanitizeLayout(draftLayout)) !==
@@ -175,10 +187,16 @@ export default function DashboardPage() {
 
   if (layoutLoading) return <div>Cargando layout del dashboard...</div>;
 
+  const isWidgetVisible = (name: string) =>
+    (isEditing ? draftLayout : savedLayout).some((w) => w.name === name);
+
   return (
     <main
-      className={cn("p-6 transition-colors", isEditing && "bg-muted")}
-      style={{ cursor: isEditing ? "grab" : "default" }}
+      className={cn("p-6 transition-colors h-100", isEditing && "bg-muted")}
+      style={{
+        cursor: isEditing ? "grab" : "default",
+        minHeight: "calc(100vh - 175px)",
+      }}
     >
       <div className="flex justify-between items-center mb-6 gap-4">
         <div className="flex-1">
@@ -315,6 +333,7 @@ export default function DashboardPage() {
         rowHeight={rowHeight}
         isResizable={isEditing}
         isDraggable={isEditing}
+        draggableCancel=".non-draggable"
         onLayoutChange={(newLayout) => {
           if (isEditing) {
             setDraftLayout((prev) =>
@@ -332,73 +351,134 @@ export default function DashboardPage() {
           }
         }}
       >
-        <div key="accidents-bar" style={{ width: "100%", height: "100%" }}>
-          <AccidentsBarWidget
-            title="Accidentes por alcoholismo"
-            subtitle="2.1% vs el año pasado"
-            description="2023 vs 2024"
-            data={[
-              { month: "Enero", month1: 186, month2: 80 },
-              { month: "Febrero", month1: 305, month2: 200 },
-              { month: "Marzo", month1: 237, month2: 120 },
-              { month: "Abril", month1: 73, month2: 190 },
-              { month: "Mayo", month1: 209, month2: 130 },
-              { month: "Junio", month1: 214, month2: 140 },
-            ]}
-            config={{
-              mes1: { label: "2022", color: "#00E096" },
-              mes2: { label: "2021", color: "#0095FF" },
-            }}
-            chartHeight={getHeight("accidents-bar")}
-          />
-        </div>
+        {isWidgetVisible("accidents-bar") && (
+          <div
+            key="accidents-bar"
+            style={{ width: "100%", height: "100%" }}
+            className="relative overflow-visible"
+          >
+            {isEditing && (
+              <RemoveButton
+                onClick={() => handleRemoveWidget("accidents-bar")}
+              />
+            )}
+            <AccidentsBarWidget
+              title="Accidentes por alcoholismo"
+              subtitle="2.1% vs el año pasado"
+              description="2023 vs 2024"
+              data={[
+                { month: "Enero", month1: 186, month2: 80 },
+                { month: "Febrero", month1: 305, month2: 200 },
+                { month: "Marzo", month1: 237, month2: 120 },
+                { month: "Abril", month1: 73, month2: 190 },
+                { month: "Mayo", month1: 209, month2: 130 },
+                { month: "Junio", month1: 214, month2: 140 },
+              ]}
+              config={{
+                mes1: { label: "2022", color: "#00E096" },
+                mes2: { label: "2021", color: "#0095FF" },
+              }}
+              chartHeight={getHeight("accidents-bar")}
+            />
+          </div>
+        )}
 
-        <div key="bar-chart" style={{ width: "100%", height: "100%" }}>
-          <BarChartWidget
-            title="Incidentes causados por alcohol"
-            description="Comparación mensual por categoría"
-            data={[
-              { month: "January", "Causa: Alcohol": 400, "Otras causas": 300 },
-              { month: "February", "Causa: Alcohol": 300, "Otras causas": 200 },
-              { month: "March", "Causa: Alcohol": 500, "Otras causas": 450 },
-              { month: "April", "Causa: Alcohol": 200, "Otras causas": 100 },
-            ]}
-            categories={["Causa: Alcohol", "Otras causas"]}
-            categoryColors={["#0095FF", "#00E096"]}
-            chartHeight={getHeight("bar-chart")}
-          />
-        </div>
+        {isWidgetVisible("bar-chart") && (
+          <div
+            key="bar-chart"
+            style={{ width: "100%", height: "100%" }}
+            className="relative overflow-visible"
+          >
+            {isEditing && (
+              <RemoveButton onClick={() => handleRemoveWidget("bar-chart")} />
+            )}
+            <BarChartWidget
+              title="Incidentes causados por alcohol"
+              description="Comparación mensual por categoría"
+              data={[
+                {
+                  month: "January",
+                  "Causa: Alcohol": 400,
+                  "Otras causas": 300,
+                },
+                {
+                  month: "February",
+                  "Causa: Alcohol": 300,
+                  "Otras causas": 200,
+                },
+                { month: "March", "Causa: Alcohol": 500, "Otras causas": 450 },
+                { month: "April", "Causa: Alcohol": 200, "Otras causas": 100 },
+              ]}
+              categories={["Causa: Alcohol", "Otras causas"]}
+              categoryColors={["#0095FF", "#00E096"]}
+              chartHeight={getHeight("bar-chart")}
+            />
+          </div>
+        )}
 
-        <div key="comparison" style={{ width: "100%", height: "100%" }}>
-          <ComparisonWidget
-            title="Accidentes por Mes"
-            data={[
-              { month: "January", alcoholRelated: 120, nonAlcoholRelated: 200 },
-              {
-                month: "February",
-                alcoholRelated: 160,
-                nonAlcoholRelated: 230,
-              },
-              { month: "March", alcoholRelated: 110, nonAlcoholRelated: 220 },
-              { month: "April", alcoholRelated: 90, nonAlcoholRelated: 170 },
-              { month: "May", alcoholRelated: 130, nonAlcoholRelated: 210 },
-              { month: "June", alcoholRelated: 150, nonAlcoholRelated: 200 },
-            ]}
-            config={{
-              alcoholRelated: {
-                label: "Relacionado al alcohol",
-                color: "#07E098",
-              },
-              nonAlcoholRelated: {
-                label: "No relacionado al alcohol",
-                color: "#0095FF",
-              },
-            }}
-            footer="Enero - Junio 2024"
-            chartHeight={getHeight("comparison")}
-          />
-        </div>
+        {isWidgetVisible("comparison") && (
+          <div
+            key="comparison"
+            style={{ width: "100%", height: "100%" }}
+            className="relative overflow-visible"
+          >
+            {isEditing && (
+              <RemoveButton onClick={() => handleRemoveWidget("comparison")} />
+            )}
+            <ComparisonWidget
+              title="Accidentes por Mes"
+              data={[
+                {
+                  month: "January",
+                  alcoholRelated: 120,
+                  nonAlcoholRelated: 200,
+                },
+                {
+                  month: "February",
+                  alcoholRelated: 160,
+                  nonAlcoholRelated: 230,
+                },
+                { month: "March", alcoholRelated: 110, nonAlcoholRelated: 220 },
+                { month: "April", alcoholRelated: 90, nonAlcoholRelated: 170 },
+                { month: "May", alcoholRelated: 130, nonAlcoholRelated: 210 },
+                { month: "June", alcoholRelated: 150, nonAlcoholRelated: 200 },
+              ]}
+              config={{
+                alcoholRelated: {
+                  label: "Relacionado al alcohol",
+                  color: "#07E098",
+                },
+                nonAlcoholRelated: {
+                  label: "No relacionado al alcohol",
+                  color: "#0095FF",
+                },
+              }}
+              footer="Enero - Junio 2024"
+              chartHeight={getHeight("comparison")}
+            />
+          </div>
+        )}
       </ResponsiveGridLayout>
     </main>
+  );
+}
+
+export function RemoveButton({
+  onClick,
+  className = "",
+}: {
+  onClick: () => void;
+  className?: string;
+}) {
+  return (
+    <button
+      onClick={(e) => {
+        e.stopPropagation();
+        onClick();
+      }}
+      className={`non-draggable absolute -top-2 -right-2 z-10 ${className} cursor-pointer bg-white rounded-full shadow-md p-0.5 pointer-events-auto`}
+    >
+      <X size={18} />
+    </button>
   );
 }
