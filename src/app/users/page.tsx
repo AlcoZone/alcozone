@@ -5,9 +5,14 @@ import ConfirmButtons from "@/components/ConfirmButtons/ConfirmButtons";
 import { Menu } from "@/components/Menu/Menu";
 import { Table } from "@/components/Table/Table";
 import { TableInput } from "@/components/TableInputs/tableInputs";
-import React, { useState } from "react";
-import { auth } from "@/lib/firebaseClient";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import React, { useState, useEffect } from "react";
+
+const roleMap: { [key: string]: number } = {
+  "Administrador": 1,
+  "Data Visualizer": 2,
+  "Data Manager": 3,
+};
+
 const actions = [
   {
     label: "Modificar",
@@ -21,30 +26,35 @@ const actions = [
   },
 ];
 
-const data = [
-  { name: "Usuario Prueba", email: "Prueba@gmail.com", password: "Prueba123", role: "Data Manager" },
-  { name: "Marcela", email: "Marcela@gmail.com", password: "Marcela123", role: "Data Visualizer" },
-  { name: "Jose", email: "Jose@gmail.com", password: "Jose123", role: "Administrador" },
-  { name: "Mariana", email: "Mariana@gmail.com", password: "Mariana123", role: "Data Visualizer" },
-  { name: "Alondra", email: "Alondra@gmail.com", password: "Alondra123", role: "Data Manager" },
-  { name: "Diego", email: "Diego@gmail.com", password: "Diego123", role: "Data Visualizer" },
-  { name: "Luis", email: "Luis@gmail.com", password: "Luis123", role: "Administrador" },
-  { name: "Montserrat", email: "Montserrat@gmail.com", password: "Montserrat123", role: "Administrador" },
-  { name: "Ricardo", email: "Ricardo@gmail.com", password: "Ricardo123", role: "Data Visualizer" },
-  { name: "Diego", email: "Diego@gmail.com", password: "Diego123", role: "Data Visualizer" },
-  { name: "Luis", email: "Luis@gmail.com", password: "Luis123", role: "Administrador" },
-  { name: "Montserrat", email: "Montserrat@gmail.com", password: "Montserrat123", role: "Administrador" },
-  { name: "Ricardo", email: "Ricardo@gmail.com", password: "Ricardo123", role: "Data Visualizer" },
-];
-
-const users = [
-  { user: "", email: "", password: "", role: "" },
-];
-
 export default function DatabasePage() {
   const [menuHidden, setMenuHidden] = useState(false);
   const [newUser, setNewUser] = useState({ user: "", email: "", password: "", role: "" });
   const [error, setError] = useState<string>("");
+  const [data, setData] = useState<any[]>([]);
+
+  const fetchUsers = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/api/v1/user/all");
+      if (!response.ok) throw new Error("Error al obtener los usuarios");
+
+      const users = await response.json();
+
+      const mappedUsers = users.map((user: any) => ({
+        name: user.username,
+        email: user.email,
+        password: "***************",
+        role: Object.keys(roleMap).find(key => roleMap[key] === user.role_id) || "Desconocido",
+      }));
+
+      setData(mappedUsers);
+    } catch (err) {
+      console.error("Error al cargar usuarios:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -52,20 +62,65 @@ export default function DatabasePage() {
   };
 
   const handleSubmit = async () => {
+    setError("");
+  
     if (!newUser.user || !newUser.email || !newUser.password || !newUser.role) {
       setError("Por favor, complete todos los campos.");
       return;
     }
-
+  
+    if (newUser.password.length < 6) {
+      setError("La contraseña debe tener al menos 6 caracteres.");
+      return;
+    }
+  
+    // 🔍 Verificar si el email ya existe en la base de datos cargada
+    const emailExists = data.some(user => user.email === newUser.email);
+    if (emailExists) {
+      setError("El correo electrónico ya está en uso.");
+      return;
+    }
+    console.log("Rol ingresado:", newUser.role);
+    const roleId = roleMap[newUser.role];
+    console.log("Role ID mapeado:", roleId);
+    if (roleId === undefined) {
+      setError("El rol ingresado no es válido. Usa: Administrador, Data Visualizer o Data Manager.");
+      return;
+    }
+        if (!roleId) {
+      setError("El rol ingresado no es válido. Usa: Administrador, Data Visualizer o Data Manager.");
+      return;
+    }
+  
+    const payload = {
+      username: newUser.user,
+      email: newUser.email,
+      password: newUser.password,
+      role_id: roleId,
+    };
+  
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, newUser.email, newUser.password);
-      const user = userCredential.user;
-      alert("Usuario registrado exitosamente");
+      const response = await fetch("http://localhost:8080/api/v1/user/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Error al registrar el usuario.");
+      }
+  
+      alert("Usuario registrado exitosamente.");
       setNewUser({ user: "", email: "", password: "", role: "" });
+      await fetchUsers();
     } catch (error: any) {
       setError(`Error al registrar el usuario: ${error.message}`);
     }
   };
+  
   return (
     <>
       <Banner />
@@ -82,7 +137,7 @@ export default function DatabasePage() {
             overflowY: "auto",
           }}
         >
-          <h1 className="text-3xl font-bold text-blue-850">Base de datos</h1>
+          <h1 className="text-3xl font-bold text-blue-850">Usuarios</h1>
 
           <div className="w-full max-w-full overflow-y-auto" style={{ maxHeight: "320px" }}>
             <Table
@@ -134,9 +189,16 @@ export default function DatabasePage() {
               placeholder="Rol"
             />
           </div>
+
           <div className="mt-4 flex justify-center">
             <ConfirmButtons variant="registerNewUser" onClick={handleSubmit} />
           </div>
+
+          {error && (
+            <div className="mt-4 text-red-600 text-center font-semibold">
+              {error}
+            </div>
+          )}
         </div>
       </Menu>
     </>
