@@ -103,6 +103,12 @@ const LoginPage: React.FC = () => {
             >
               ¿Olvidaste tu contraseña?
             </p>
+            <p
+              className="mt-4 text-base text-gray-700 cursor-pointer hover:font-semibold"
+              onClick={() => router.push("/legal/privacy")}
+            >
+              Aviso de privacidad
+            </p>
           </div>
         </div>
       </div>

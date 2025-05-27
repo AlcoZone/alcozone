@@ -1,9 +1,15 @@
 "use client";
 import { usePathname, useRouter } from "next/navigation";
-import { useAuth } from "@/providers/AuthProvider";
 import { useEffect } from "react";
+import { useAuth } from "@/providers/AuthProvider";
 import Spinner from "@/components/Spinner/Spinner";
 import { protectedRoutes } from "@/utils/protectedRoutes";
+import { RoleType } from "@/types/Roles"; 
+
+// Type guard para verificar que role sea válido
+function isValidRole(role: string): role is RoleType {
+  return ["admin", "datamanager", "datavisualizer"].includes(role);
+}
 
 export function AuthGuard({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -11,35 +17,51 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
   const { user, loading, role } = useAuth();
 
   useEffect(() => {
-    // NO hacemos nada hasta que loading sea false
     if (loading) return;
 
-    // Si la ruta es protegida y no hay usuario, redirige a login
-    if (protectedRoutes.has(pathname) && !user) {
-      if (pathname !== "/auth/login" && pathname !== "/login") {
-        router.push("/auth/login"); // O "/login" según tu ruta real
+    const allProtectedRoutes = new Set(
+      Object.values(protectedRoutes).flatMap((routes) => Array.from(routes))
+    );
+
+    // Si la ruta es protegida y el usuario no está logueado
+    if (allProtectedRoutes.has(pathname) && !user) {
+      router.push("/auth/login");
+      return;
+    }
+
+    // Si el usuario ya está logueado y entra a /login o /register, lo redirige a /home
+    if (user && ["/auth/login", "/register"].includes(pathname)) {
+      router.push("/home");
+      return;
+    }
+
+    // Si está logueado y hay rol, pero no tiene acceso a la ruta
+    if (user && role && allProtectedRoutes.has(pathname)) {
+      if (isValidRole(role)) {
+        const allowedRoutes = protectedRoutes[role];
+        if (!allowedRoutes.has(pathname)) {
+          router.push("/unauthorized");
+          return;
+        }
+      } else {
+        // Rol no válido o desconocido
+        console.warn("Rol no reconocido:", role);
+        router.push("/unauthorized");
+        return;
       }
-      return;
     }
-
-    // Si el usuario ya está logueado y trata de ir a login, redirige a home
-    if (user && (pathname === "/auth/login" || pathname === "/login" || pathname === "/register")) {
-      router.push("/home"); // O la ruta default para logueados
-      return;
-    }
-
-    // Poner la logica de roles despues 
-    // if (user && routeRoles[pathname] && (!role || !routeRoles[pathname].includes(role))) {
-    //   router.push("/auth/login");
-    //   return;
-    // }
   }, [user, loading, pathname, router, role]);
 
-  // Sólo muestra el spinner si loading es true (previene loops)
+  // Mientras carga, muestra spinner
   if (loading) return <Spinner />;
 
-  // Si el usuario no está logueado en una ruta protegida, no renderices nada (ya redirige el useEffect)
-  if (protectedRoutes.has(pathname) && !user) return null;
+  const allProtectedRoutes = new Set(
+    Object.values(protectedRoutes).flatMap((routes) => Array.from(routes))
+  );
 
+  // Si aún no está logueado y la ruta es protegida, no renderiza nada
+  if (allProtectedRoutes.has(pathname) && !user) return null;
+
+  // Si todo está bien, renderiza el contenido
   return <>{children}</>;
 }
