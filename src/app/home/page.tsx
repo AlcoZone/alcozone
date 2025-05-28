@@ -110,7 +110,7 @@ const accidentData: Accidente[] = [
   { type: "Persona", number: "18" },
 ];
 
-const donutChartData: AccidenteDonut[] = [
+const donutChartDataMock: AccidenteDonut[] = [
   { town: "Iztapalapa", total_accidents: "2747" },
   { town: "Alvaro Obregon", total_accidents: "1846" },
 ];
@@ -177,7 +177,7 @@ const MainPage = () => {
   const [selectedOption, setSelectedOption] = useState("");
   const [menuHidden, setMenuHidden] = useState(false);
   const [user, setUser] = useState<{ email: string } | null>(null);
-  // const [donutChartData, setDonutChartData] = useState<AccidenteDonut[]>([]);
+  const [donutChartData, setDonutChartData] = useState<AccidenteDonut[]>([]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -195,13 +195,13 @@ const MainPage = () => {
   useEffect(() => {}, []);
 
   return (
-    <div className="p-4 h-[calc(100vh-80px)] w-[calc(100vw-16rem)] overflow-auto">
-      <div className="grid grid-cols-1 md:grid-cols-3 md:grid-rows-[1fr_2fr] gap-4 max-h-1/2">
+    <div className="pr-4 pb-4 h-[calc(100vh)] w-[calc(100vw-16rem)] overflow-auto">
+      <div className="grid grid-cols-1 md:grid-cols-3 md:grid-rows-[1fr_2fr] gap-4 max-h-full">
         {/* Card 1 */}
-        <Card className="bg-transparent shadow-none border-none h-full flex flex-col">
-          <CardContent className="p-0 flex-1 flex flex-col">
+        <Card className="bg-transparent shadow-none border-none h-full flex flex-col pt-3 pb-0">
+          <CardContent className="flex-1 flex flex-col px-0">
             <DonutChartWidget
-              data={donutChartData}
+              data={donutChartDataMock}
               title={"Alcaldías peligrosas"}
               footer={"Alcaldías con más accidentes"}
               centerLabel={"example"}
@@ -210,7 +210,7 @@ const MainPage = () => {
         </Card>
 
         {/* Card 2 - ocupa dos columnas */}
-        <Card className="md:col-span-2 bg-transparent shadow-none border-none h-full flex flex-col">
+        <Card className="md:col-span-2 bg-transparent shadow-none border-none h-full flex flex-col pt-3 pb-0">
           <CardContent className="p-0 flex-1 flex flex-col">
             <RadialChartWidget
               title={"Causas de accidentes"}
@@ -220,7 +220,7 @@ const MainPage = () => {
         </Card>
 
         {/* Card 3 */}
-        <Card className="shadow-none bg-transparent border-none h-full flex flex-col">
+        <Card className="shadow-none bg-transparent border-none h-full flex flex-col py-0">
           <CardContent className="h-full p-0 flex flex-col">
             <BarChartWidget
               data={barChartData}
@@ -232,7 +232,7 @@ const MainPage = () => {
         </Card>
 
         {/* Card 4 */}
-        <Card className="shadow-none bg-transparent border-none h-full flex flex-col">
+        <Card className="shadow-none bg-transparent border-none h-full flex flex-col py-0">
           <CardContent className="h-full p-0 flex flex-col">
             <ComparisonWidget
               title={"Accidentes por mes"}
@@ -244,7 +244,7 @@ const MainPage = () => {
         </Card>
 
         {/* Card 5 */}
-        <Card className="shadow-none bg-transparent border-none h-full flex flex-col">
+        <Card className="shadow-none bg-transparent border-none h-full flex flex-col py-0">
           <CardContent className="h-full p-0 flex flex-col">
             <AccidentCauseTableWidget data={accidentData} />
           </CardContent>

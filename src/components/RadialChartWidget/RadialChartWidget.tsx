@@ -37,8 +37,8 @@ export const RadialChartWidget = ({
   const colors = ["#3b82f6", "#f97316", "#ef4444"];
 
   return (
-    <div style={{ paddingTop: "1px" }}>
-      <Card className="flex flex-col max-w-1xl mx-auto">
+    <div>
+      <Card className="flex flex-col max-w-1xl mx-auto gap-0">
         <CardHeader className="items-center py-1 px-2">
           <CardTitle className="text-1xl">{title}</CardTitle>
           <CardDescription>{description}</CardDescription>

@@ -52,84 +52,82 @@ export const DonutChartWidget: React.FC<DonutChartProps> = ({
   }, [chartData]);
 
   return (
-    <div>
-      <Card className="flex flex-col">
-        <CardHeader className="items-center pb-0">
-          <CardTitle>{title}</CardTitle>
-          <CardDescription>{footer}</CardDescription>
-        </CardHeader>
+    <Card className="h-full flex flex-col">
+      <CardHeader className="items-center pb-0">
+        <CardTitle>{title}</CardTitle>
+        <CardDescription>{footer}</CardDescription>
+      </CardHeader>
 
-        <CardContent className="flex justify-center items-center flex-grow">
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={chartData}
-                dataKey="total_accidents"
-                nameKey="town"
-                innerRadius="40%"
-                outerRadius="60%"
-                stroke="none"
-              >
-                {chartData.map((_, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
-                ))}
-                <Label
-                  position="center"
-                  content={({ viewBox }) => {
-                    if (!viewBox) return null;
-                    const { cx, cy } = viewBox;
-                    return (
-                      <text
+      <CardContent className="flex justify-center items-center flex-grow">
+        <ResponsiveContainer width="100%" height="100%">
+          <PieChart>
+            <Pie
+              data={chartData}
+              dataKey="total_accidents"
+              nameKey="town"
+              innerRadius="40%"
+              outerRadius="60%"
+              stroke="none"
+            >
+              {chartData.map((_, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={COLORS[index % COLORS.length]}
+                />
+              ))}
+              <Label
+                position="center"
+                content={({ viewBox }) => {
+                  if (!viewBox) return null;
+                  const { cx, cy } = viewBox;
+                  return (
+                    <text
+                      x={cx}
+                      y={cy}
+                      textAnchor="middle"
+                      dominantBaseline="middle"
+                    >
+                      <tspan
                         x={cx}
                         y={cy}
-                        textAnchor="middle"
-                        dominantBaseline="middle"
+                        className="fill-foreground text-3xl font-bold"
                       >
-                        <tspan
-                          x={cx}
-                          y={cy}
-                          className="fill-foreground text-3xl font-bold"
-                        >
-                          {totalAccidents.toLocaleString()}
-                        </tspan>
-                        <tspan
-                          x={cx}
-                          y={cy + 24}
-                          className="fill-muted-foreground text-sm"
-                        >
-                          {centerLabel}
-                        </tspan>
-                      </text>
-                    );
-                  }}
-                />
-              </Pie>
-            </PieChart>
-          </ResponsiveContainer>
-        </CardContent>
+                        {totalAccidents.toLocaleString()}
+                      </tspan>
+                      <tspan
+                        x={cx}
+                        y={cy + 24}
+                        className="fill-muted-foreground text-sm"
+                      >
+                        {centerLabel}
+                      </tspan>
+                    </text>
+                  );
+                }}
+              />
+            </Pie>
+          </PieChart>
+        </ResponsiveContainer>
+      </CardContent>
 
-        <CardFooter className="flex flex-col gap-2 text-sm pt-4">
-          {chartData.map((entry, index) => {
-            const percentage = (
-              (entry.total_accidents / totalAccidents) *
-              100
-            ).toFixed(1);
-            return (
-              <div key={entry.town} className="flex items-center gap-2">
-                <div
-                  className="h-3 w-3 rounded-full"
-                  style={{ backgroundColor: COLORS[index % COLORS.length] }}
-                />
-                <span className="font-medium">{entry.town}</span>
-                <span className="text-muted-foreground">– {percentage}%</span>
-              </div>
-            );
-          })}
-        </CardFooter>
-      </Card>
-    </div>
+      <CardFooter className="flex flex-col gap-2 text-sm pt-4">
+        {chartData.map((entry, index) => {
+          const percentage = (
+            (entry.total_accidents / totalAccidents) *
+            100
+          ).toFixed(1);
+          return (
+            <div key={entry.town} className="flex items-center gap-2">
+              <div
+                className="h-3 w-3 rounded-full"
+                style={{ backgroundColor: COLORS[index % COLORS.length] }}
+              />
+              <span className="font-medium">{entry.town}</span>
+              <span className="text-muted-foreground">– {percentage}%</span>
+            </div>
+          );
+        })}
+      </CardFooter>
+    </Card>
   );
 };
