@@ -1,5 +1,3 @@
-//export const protectedRoutes = new Set(["/home", "/database", "/users"]); 
-// agregar las rutas de cada quien 
 import { RoleType } from "@/types/Roles";
 
 export const protectedRoutes: Record<RoleType, Set<string>> = {

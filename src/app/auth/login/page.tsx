@@ -19,7 +19,6 @@ const LoginPage: React.FC = () => {
   const router = useRouter();
   const { user, loading } = useAuth();
 
-  // Si ya está logeado, lo mandamos al dashboard/home
   React.useEffect(() => {
     if (!loading && user) {
       router.push("/home");
@@ -31,9 +30,7 @@ const LoginPage: React.FC = () => {
     setLoadingLogin(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      // El AuthProvider escuchará el cambio y redirigirá
     } catch (error: any) {
-      // Firebase error handling mejorada
       if (error.code === "auth/user-disabled") {
         setError("Tu cuenta está deshabilitada.");
       } else {
