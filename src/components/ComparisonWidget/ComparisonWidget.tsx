@@ -1,5 +1,4 @@
-import React from "react";
-import { Area, AreaChart, Tooltip, ResponsiveContainer } from "recharts";
+import { Area, AreaChart, ResponsiveContainer, Tooltip } from "recharts";
 import {
   Card,
   CardContent,
@@ -7,6 +6,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+
+import React from "react";
 
 type ComparisonWidgetProps = {
   title: string;
@@ -33,8 +34,12 @@ export const ComparisonWidget: React.FC<ComparisonWidgetProps> = ({
               const chartConfig = config[entry.dataKey];
               return (
                 <div key={index} className="flex justify-between gap-4">
-                  <span className="text-muted-foreground">{chartConfig.label}:</span>
-                  <span style={{ color: chartConfig.color }}>{entry.value}</span>
+                  <span className="text-muted-foreground">
+                    {chartConfig.label}:
+                  </span>
+                  <span style={{ color: chartConfig.color }}>
+                    {entry.value}
+                  </span>
                 </div>
               );
             })}
@@ -52,36 +57,34 @@ export const ComparisonWidget: React.FC<ComparisonWidgetProps> = ({
         <CardHeader className="text-center">
           <CardTitle>{title}</CardTitle>
         </CardHeader>
-        <CardContent>
-          <div style={{ width: "100%", height: 170 }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart
-                data={data.map((item) => ({
-                  ...item,
-                  accidents: Number(item.accidents),
-                }))}
-                margin={{ left: 12, right: 12 }}
-              >
-                <Tooltip
-                  content={<CustomTooltip />}
-                  cursor={{ stroke: "#ccc", strokeWidth: 1 }}
-                />
-                {Object.keys(config).map((key) => {
-                  const chartConfig = config[key];
-                  return (
-                    <Area
-                      key={key}
-                      dataKey={key}
-                      type="natural"
-                      fill={chartConfig.color}
-                      fillOpacity={0.6}
-                      stroke={chartConfig.color}
-                    />
-                  );
-                })}
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
+        <CardContent className="h-64">
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart
+              data={data.map((item) => ({
+                ...item,
+                accidents: Number(item.accidents),
+              }))}
+              margin={{ left: 12, right: 12 }}
+            >
+              <Tooltip
+                content={<CustomTooltip />}
+                cursor={{ stroke: "#ccc", strokeWidth: 1 }}
+              />
+              {Object.keys(config).map((key) => {
+                const chartConfig = config[key];
+                return (
+                  <Area
+                    key={key}
+                    dataKey={key}
+                    type="natural"
+                    fill={chartConfig.color}
+                    fillOpacity={0.6}
+                    stroke={chartConfig.color}
+                  />
+                );
+              })}
+            </AreaChart>
+          </ResponsiveContainer>
         </CardContent>
         <CardFooter>
           <div className="flex w-full items-start gap-2 text-sm">
@@ -96,5 +99,3 @@ export const ComparisonWidget: React.FC<ComparisonWidgetProps> = ({
     </div>
   );
 };
-
-

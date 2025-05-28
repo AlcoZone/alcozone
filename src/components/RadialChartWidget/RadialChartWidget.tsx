@@ -1,33 +1,32 @@
 import {
-  Label,
-  PolarGrid,
-  PolarRadiusAxis,
-  RadialBar,
-  RadialBarChart,
-  ResponsiveContainer,
-} from "recharts"
-
-import {
   Card,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
+import {
+  Label,
+  PolarGrid,
+  PolarRadiusAxis,
+  RadialBar,
+  RadialBarChart,
+  ResponsiveContainer,
+} from "recharts";
 
-const MAX_VALUE = 100
+const MAX_VALUE = 100;
 
 export type RadialChartProps = {
-  title: string
-  footer?: string
+  title: string;
+  footer?: string;
   data: {
-    percentage?: number
-    subType?: string
-  }[]
-  fill?: string
-  description?: string
-}
+    percentage?: number;
+    subType?: string;
+  }[];
+  fill?: string;
+  description?: string;
+};
 
 export const RadialChartWidget = ({
   title,
@@ -35,7 +34,7 @@ export const RadialChartWidget = ({
   data,
   description = "Porcentaje de accidentes",
 }: RadialChartProps) => {
-  const colors = ["#3b82f6", "#f97316", "#ef4444"]
+  const colors = ["#3b82f6", "#f97316", "#ef4444"];
 
   return (
     <div style={{ paddingTop: "1px" }}>
@@ -44,25 +43,39 @@ export const RadialChartWidget = ({
           <CardTitle className="text-1xl">{title}</CardTitle>
           <CardDescription>{description}</CardDescription>
         </CardHeader>
-        <CardContent className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1">
+
+        <CardContent className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1 h-full">
           {data.map((item, index) => {
-            const translateClass = index === 1 ? "translate-y-6" : "translate-y-0"
+            const translateClass =
+              index === 1 ? "translate-y-6" : "translate-y-0";
 
             // Usa 0 si percentage no está definido
-            const percentage = typeof item.percentage === "number" ? item.percentage : 0
-            const subType = item.subType ?? ""
+            const percentage =
+              typeof item.percentage === "number" ? item.percentage : 0;
+            const subType = item.subType ?? "";
 
             const chartData = [
-              { name: subType, value: percentage, fill: colors[index] ?? "#ccc" },
+              {
+                name: subType,
+                value: percentage,
+                fill: colors[index] ?? "#ccc",
+              },
               { name: "Resto", value: MAX_VALUE - percentage, fill: "#eee" },
-            ]
+            ];
 
             return (
               <div
                 key={index}
-                className={`mx-auto aspect-square w-full max-w-[200px] min-w-[100px] transform ${translateClass}`}
+                className={`mx-auto w-full max-w-full min-w-0 aspect-square transform ${translateClass}`}
+                style={{ height: "100%" }}
               >
-                <div style={{ position: "relative", width: "100%", height: "100%" }}>
+                <div
+                  style={{
+                    position: "relative",
+                    width: "100%",
+                    height: "100%",
+                  }}
+                >
                   <ResponsiveContainer width="100%" height="100%">
                     <RadialBarChart
                       data={chartData}
@@ -71,11 +84,20 @@ export const RadialChartWidget = ({
                       innerRadius="50%"
                       outerRadius="90%"
                     >
-                      <PolarGrid gridType="circle" radialLines={false} stroke="#eee" />
+                      <PolarGrid
+                        gridType="circle"
+                        radialLines={false}
+                        stroke="#eee"
+                      />
                       <RadialBar dataKey="value" background cornerRadius={10} />
-                      <PolarRadiusAxis tick={false} tickLine={false} axisLine={false} />
+                      <PolarRadiusAxis
+                        tick={false}
+                        tickLine={false}
+                        axisLine={false}
+                      />
                     </RadialBarChart>
                   </ResponsiveContainer>
+                  {/* Etiquetas en el centro */}
                   <div
                     style={{
                       position: "absolute",
@@ -87,13 +109,18 @@ export const RadialChartWidget = ({
                     }}
                   >
                     <div className="text-3xl font-bold fill-foreground">
-                      {percentage.toLocaleString(undefined, { minimumFractionDigits: 2 })}%
+                      {percentage.toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                      })}
+                      %
                     </div>
-                    <div className="text-base fill-muted-foreground">{subType}</div>
+                    <div className="text-base fill-muted-foreground">
+                      {subType}
+                    </div>
                   </div>
                 </div>
               </div>
-            )
+            );
           })}
         </CardContent>
 
@@ -102,6 +129,5 @@ export const RadialChartWidget = ({
         </CardFooter>
       </Card>
     </div>
-  )
-}
-
+  );
+};

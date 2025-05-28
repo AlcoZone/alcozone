@@ -1,21 +1,22 @@
-import React from "react";
 import {
-  BarChart,
   Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
+  BarChart,
   Legend,
   ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
 } from "recharts";
 import {
   Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
 } from "@/components/ui/card";
+
+import React from "react";
 
 type AccidenteData = {
   month_name: string;
@@ -53,35 +54,33 @@ export const BarChartWidget = ({
   }));
 
   // Obtenemos lista de towns únicos para dibujar una <Bar /> por cada uno
-  const uniqueTowns = Array.from(
-    new Set(data.map((d) => d.town))
-  );
+  const uniqueTowns = Array.from(new Set(data.map((d) => d.town)));
 
   return (
-    <Card className="w-full">
+    <Card className="h-full flex flex-col">
       <CardHeader className="text-center">
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
 
-      <CardContent>
-        <div style={{ width: "100%", height: "240px" }}>
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={chartData}>
-              <XAxis dataKey="month_name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              {uniqueTowns.map((town, index) => (
-                <Bar
-                  key={town}
-                  dataKey={town}
-                  fill={colors[town] || defaultColors[index % defaultColors.length]}
-                />
-              ))}
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+      <CardContent className="flex-grow">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={chartData}>
+            <XAxis dataKey="month_name" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            {uniqueTowns.map((town, index) => (
+              <Bar
+                key={town}
+                dataKey={town}
+                fill={
+                  colors[town] || defaultColors[index % defaultColors.length]
+                }
+              />
+            ))}
+          </BarChart>
+        </ResponsiveContainer>
       </CardContent>
 
       <CardFooter className="text-center text-sm font-medium">
@@ -92,9 +91,3 @@ export const BarChartWidget = ({
 };
 
 const defaultColors = ["#8884d8", "#82ca9d", "#ffc658", "#ff8042"];
-
-
-
-
-
-
