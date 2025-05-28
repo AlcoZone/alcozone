@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import ConfirmButtons from "@/components/ConfirmButtons/ConfirmButtons";
 import { TextInput } from "@/components/TextInput/TextInput";
@@ -8,6 +8,7 @@ import { Icon } from "@/components/Icon/Icon";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/lib/firebaseClient";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/providers/AuthProvider";
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -16,6 +17,13 @@ const LoginPage: React.FC = () => {
   const [loadingLogin, setLoadingLogin] = useState(false);
 
   const router = useRouter();
+  const { user, loading } = useAuth();
+
+  useEffect(() => {
+    if (!loading && user) {
+      router.push("/home");
+    }
+  }, [loading, user, router]);
 
   const handleLogin = async () => {
     setError("");
