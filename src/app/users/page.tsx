@@ -5,9 +5,26 @@ import ConfirmButtons from "@/components/ConfirmButtons/ConfirmButtons";
 import { Menu } from "@/components/Menu/Menu";
 import { Table } from "@/components/Table/Table";
 import { TableInput } from "@/components/TableInputs/tableInputs";
+import api from "@/services/api";
 import React, { useState, useEffect } from "react";
 
-const roleMap: { [key: string]: number } = {
+type Role = "Administrador" | "Data Visualizer" | "Data Manager";
+
+interface UserRow {
+  name: string;
+  email: string;
+  password: string;
+  role: Role | "Desconocido";
+}
+
+interface NewUser {
+  user: string;
+  email: string;
+  password: string;
+  role: string;
+}
+
+const roleMap: Record<Role, number> = {
   "Administrador": 1,
   "Data Visualizer": 2,
   "Data Manager": 3,
@@ -28,22 +45,20 @@ const actions = [
 
 export default function DatabasePage() {
   const [menuHidden, setMenuHidden] = useState(false);
-  const [newUser, setNewUser] = useState({ user: "", email: "", password: "", role: "" });
+  const [newUser, setNewUser] = useState<NewUser>({ user: "", email: "", password: "", role: "" });
   const [error, setError] = useState<string>("");
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<UserRow[]>([]);
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch("http://localhost:8080/api/v1/user/all");
-      if (!response.ok) throw new Error("Error al obtener los usuarios");
+      const response = await api.get("/user/all");
+      const users = response.data;
 
-      const users = await response.json();
-
-      const mappedUsers = users.map((user: any) => ({
+      const mappedUsers: UserRow[] = users.map((user: any) => ({
         name: user.username,
         email: user.email,
         password: "***************",
-        role: Object.keys(roleMap).find(key => roleMap[key] === user.role_id) || "Desconocido",
+        role: (Object.keys(roleMap) as Role[]).find(key => roleMap[key] === user.role_id) || "Desconocido",
       }));
 
       setData(mappedUsers);
@@ -63,64 +78,46 @@ export default function DatabasePage() {
 
   const handleSubmit = async () => {
     setError("");
-  
+
     if (!newUser.user || !newUser.email || !newUser.password || !newUser.role) {
       setError("Por favor, complete todos los campos.");
       return;
     }
-  
+
     if (newUser.password.length < 6) {
       setError("La contraseña debe tener al menos 6 caracteres.");
       return;
     }
-  
-    // 🔍 Verificar si el email ya existe en la base de datos cargada
+
     const emailExists = data.some(user => user.email === newUser.email);
     if (emailExists) {
       setError("El correo electrónico ya está en uso.");
       return;
     }
-    console.log("Rol ingresado:", newUser.role);
-    const roleId = roleMap[newUser.role];
-    console.log("Role ID mapeado:", roleId);
-    if (roleId === undefined) {
+
+    const roleId = roleMap[newUser.role as Role];
+    if (!roleId) {
       setError("El rol ingresado no es válido. Usa: Administrador, Data Visualizer o Data Manager.");
       return;
     }
-        if (!roleId) {
-      setError("El rol ingresado no es válido. Usa: Administrador, Data Visualizer o Data Manager.");
-      return;
-    }
-  
+
     const payload = {
       username: newUser.user,
       email: newUser.email,
       password: newUser.password,
       role_id: roleId,
     };
-  
+
     try {
-      const response = await fetch("http://localhost:8080/api/v1/user/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-  
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Error al registrar el usuario.");
-      }
-  
+      const response = await api.post("/user/register", payload);
       alert("Usuario registrado exitosamente.");
       setNewUser({ user: "", email: "", password: "", role: "" });
       await fetchUsers();
     } catch (error: any) {
-      setError(`Error al registrar el usuario: ${error.message}`);
+      setError(`Error al registrar el usuario: ${error?.response?.data?.message || error.message}`);
     }
   };
-  
+
   return (
     <>
       <Banner />
@@ -204,3 +201,4 @@ export default function DatabasePage() {
     </>
   );
 }
+
