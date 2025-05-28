@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import ConfirmButtons from "@/components/ConfirmButtons/ConfirmButtons";
 import { TextInput } from "@/components/TextInput/TextInput";
@@ -17,14 +17,7 @@ const LoginPage: React.FC = () => {
   const [loadingLogin, setLoadingLogin] = useState(false);
 
   const router = useRouter();
-  const { user, loading } = useAuth();
-
-  useEffect(() => {
-    if (!loading && user) {
-      router.push("/home");
-    }
-  }, [loading, user, router]);
-
+  
   const handleLogin = async () => {
     setError("");
     setLoadingLogin(true);
