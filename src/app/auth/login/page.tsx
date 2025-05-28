@@ -8,7 +8,6 @@ import { Icon } from "@/components/Icon/Icon";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/lib/firebaseClient";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/providers/AuthProvider";
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -20,17 +19,30 @@ const LoginPage: React.FC = () => {
   
   const handleLogin = async () => {
     setError("");
+  
+    if (!email.trim() || !password.trim()) {
+      setError("Por favor, completa ambos campos.");
+      return;
+    }
+  
     setLoadingLogin(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
     } catch (error: any) {
-      if (error.code === "auth/user-disabled") {
-        setError("Tu cuenta está deshabilitada.");
-      } else {
-        setError("Error al iniciar sesión.");
+      switch (error.code) {
+        case "auth/user-disabled":
+          setError("Tu cuenta ha sido deshabilitada. Contacta al administrador");
+          break;
+        case "auth/invalid-email":
+          setError("El formato del correo es inválido");
+          break;
+        default:
+          setError("Error al iniciar sesión. Intenta más tarde");
+          break;
       }
+    } finally {
+      setLoadingLogin(false);
     }
-    setLoadingLogin(false);
   };
 
   return (
@@ -75,7 +87,8 @@ const LoginPage: React.FC = () => {
               <div className="w-full h-full scale-y-120 origin-top [&_button]:w-full [&_button]:h-full [&_button]:scale-y-[0.75]">
                 <ConfirmButtons
                   variant="login"
-                  onClick={loadingLogin ? () => {} : handleLogin}
+                  onClick={handleLogin}
+                  disabled={loadingLogin}
                 />
               </div>
               {error && (
