@@ -8,7 +8,6 @@ import { Icon } from "@/components/Icon/Icon";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/lib/firebaseClient";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/providers/AuthProvider";
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -17,13 +16,6 @@ const LoginPage: React.FC = () => {
   const [loadingLogin, setLoadingLogin] = useState(false);
 
   const router = useRouter();
-  const { user, loading } = useAuth();
-
-  React.useEffect(() => {
-    if (!loading && user) {
-      router.push("/home");
-    }
-  }, [loading, user, router]);
 
   const handleLogin = async () => {
     setError("");
