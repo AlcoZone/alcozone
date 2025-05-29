@@ -3,32 +3,35 @@
 import api from "@/services/api";
 import dynamic from "next/dynamic";
 import { useMemo, useEffect, useState } from "react";
+import MapConfigModal from "@/components/MapConfigModal/MapConfigModal";
 
 const MapPage = () => {
-    const [loading, setLoading] = useState(true)
-    const [clusters, setClusters] = useState({})
-    const [selectedDay, setSelectedDay] = useState("monday")
+    const [loading, setLoading] = useState(true);
+    const [clusters, setClusters] = useState({});
+    const [selectedDay, setSelectedDay] = useState("monday");
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const InteractiveMap = useMemo(() => dynamic(
         () => import('@/components/InteractiveMap/InteractiveMap'),
         {
             loading: () => <p>A map is loading</p>,
-            ssr: false
+            ssr: false,
         }
-    ), [])
+    ), []);
 
     const getClusters = async () => {
-        setLoading(true)
-        await api.get("/revision/predict")
-            .then((response) => {
-                setClusters(response.data)
-                setLoading(false)
-            })
-    }
+        setLoading(true);
+        try {
+            const response = await api.get("/revision/predict");
+            setClusters(response.data);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        getClusters()
-    }, [])
+        getClusters();
+    }, []);
 
     const dayOptions = [
         { label: "Lunes", value: "monday" },
@@ -38,14 +41,16 @@ const MapPage = () => {
         { label: "Viernes", value: "friday" },
         { label: "Sábado", value: "saturday" },
         { label: "Domingo", value: "sunday" },
-    ]
+    ];
 
     return (
         <>
             <div className="h-full flex flex-col">
-                <div className="basis-[6%]">
+                <div className="basis-[6%] flex items-center justify-between">
                     <h1 className="text-2xl font-bold text-blue-850">Mapa Interactivo</h1>
+                    <MapConfigModal open={isDialogOpen} onOpenChange={setIsDialogOpen} />
                 </div>
+
                 <div className="basis-[6%] flex items-center gap-4">
                     <label htmlFor="day-filter" className="text-sm font-medium">Selecciona un día:</label>
                     <select
@@ -61,7 +66,8 @@ const MapPage = () => {
                         ))}
                     </select>
                 </div>
-                <div className="basis-[88%]">
+
+                <div className="basis-[88%] z-0">
                     <InteractiveMap
                         coordinates={[19.4326, -99.1332]}
                         loading={loading}
@@ -70,7 +76,7 @@ const MapPage = () => {
                 </div>
             </div>
         </>
-    )
-}
+    );
+};
 
-export default MapPage
+export default MapPage;

@@ -8,8 +8,6 @@ import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 
-//TODO There is a bug in the circle coloring that its not working correctly
-
 interface MapProps {
     coordinates: LatLngExpression | LatLngTuple;
     zoom?: number;
@@ -24,20 +22,10 @@ const defaults = {
     loading: true
 };
 
-// Convert score (1–10) to color using HSL interpolation
 function getColorFromScore(score: number): string {
-    const clamped = Math.min(Math.max(Math.round(score), 1), 10); // round score to nearest int first
-    let hue: number;
-
-    if (clamped <= 5) {
-        // 1 (green 120°) → 5 (yellow 60°)
-        hue = 120 - ((clamped - 1) / 4) * 60;
-    } else {
-        // 6 (yellow 60°) → 10 (red 0°)
-        hue = 60 - ((clamped - 6) / 4) * 60;
-    }
-
-    return `hsl(${hue}, 70%, 45%)`;  // keep saturation and lightness from your last version
+    const clamped = Math.min(Math.max(score, 1), 10);
+    const hue = 120 - ((clamped - 1) / 9) * 120;
+    return `hsl(${hue}, 70%, 45%)`;
 }
 
 const InteractiveMap = (props: MapProps) => {
@@ -60,11 +48,11 @@ const InteractiveMap = (props: MapProps) => {
                 <TileLayer url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" />
 
                 {!loading &&
-                    circles.map((circle, index) => {
+                    circles.map((circle) => {
                         const color = getColorFromScore(circle.score)
                         return (
                             <Circle
-                                key={index}
+                                key={`${circle.latitude}-${circle.longitude}-${circle.score}`} // make key unique
                                 center={[circle.latitude, circle.longitude]}
                                 radius={circleRadius}
                                 color="transparent"
@@ -76,6 +64,7 @@ const InteractiveMap = (props: MapProps) => {
                                     <div style={{ fontSize: "12px" }}>
                                         <div><strong>Choques Predichos:</strong> {circle.predictedCrashes}</div>
                                         <div><strong>Score:</strong> {circle.score}</div>
+                                        <div><strong>Color:</strong> {color}</div>
                                     </div>
                                 </Tooltip>
                             </Circle>
