@@ -18,7 +18,7 @@ interface MapProps {
 
 const defaults = {
     zoom: 13,
-    circleRadius: 100,
+    circleRadius: 125,
     loading: true
 };
 
@@ -52,19 +52,18 @@ const InteractiveMap = (props: MapProps) => {
                         const color = getColorFromScore(circle.score)
                         return (
                             <Circle
-                                key={`${circle.latitude}-${circle.longitude}-${circle.score}`} // make key unique
+                                key={`${circle.latitude}-${circle.longitude}-${circle.score}`}
                                 center={[circle.latitude, circle.longitude]}
                                 radius={circleRadius}
                                 color="transparent"
                                 weight={0}
                                 fillColor={color}
-                                fillOpacity={0.5}
+                                fillOpacity={0.6}
                             >
                                 <Tooltip direction="top" offset={[0, -10]} opacity={1} permanent={false}>
                                     <div style={{ fontSize: "12px" }}>
                                         <div><strong>Choques Predichos:</strong> {circle.predictedCrashes}</div>
                                         <div><strong>Score:</strong> {circle.score}</div>
-                                        <div><strong>Color:</strong> {color}</div>
                                     </div>
                                 </Tooltip>
                             </Circle>
@@ -93,8 +92,7 @@ const InteractiveMap = (props: MapProps) => {
                         position: "relative",
                         height: "150px",
                         width: "20px",
-                        background:
-                            "linear-gradient(to top, hsl(0,70%,45%), hsl(60,70%,45%), hsl(120,70%,45%))",
+                        background: "linear-gradient(to top, hsl(0,70%,45%), hsl(60,70%,45%), hsl(120,70%,45%))",
                         borderRadius: "4px",
                         margin: "0 auto",
                     }}

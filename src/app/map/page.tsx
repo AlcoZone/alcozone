@@ -4,10 +4,12 @@ import api from "@/services/api";
 import dynamic from "next/dynamic";
 import { useMemo, useEffect, useState } from "react";
 import MapConfigModal from "@/components/MapConfigModal/MapConfigModal";
+import {MapConfig} from "@/types/MapConfig";
 
 const MapPage = () => {
-    const [loading, setLoading] = useState(true);
+    const [mapConfig, setMapConfig] = useState<MapConfig>();
     const [clusters, setClusters] = useState({});
+    const [loading, setLoading] = useState(true);
     const [selectedDay, setSelectedDay] = useState("monday");
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -30,6 +32,12 @@ const MapPage = () => {
     };
 
     useEffect(() => {
+        const defaultProperties = {
+            type: "Predictivo",
+            data_source: ""
+        }
+
+        setMapConfig(defaultProperties)
         getClusters();
     }, []);
 
@@ -47,7 +55,7 @@ const MapPage = () => {
         <>
             <div className="h-full flex flex-col">
                 <div className="basis-[6%] flex items-center justify-between">
-                    <h1 className="text-2xl font-bold text-blue-850">Mapa Interactivo</h1>
+                    <h1 className="text-2xl font-bold text-blue-850">Mapa Interactivo ({mapConfig?.type})</h1>
                     <MapConfigModal open={isDialogOpen} onOpenChange={setIsDialogOpen} />
                 </div>
 

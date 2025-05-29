@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/dialog";
 
 export default function MapConfigModal({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
-    // const [mapType, setMapType] = useState("revision");
     const [dataSource, setDataSource] = useState("revision");
     const [selectedRevision, setSelectedRevision] = useState("");
     const [selectedDate, setSelectedDate] = useState("");
@@ -31,6 +30,34 @@ export default function MapConfigModal({ open, onOpenChange }: { open: boolean; 
                 <DialogHeader>
                     <DialogTitle>Configuración de Mapa</DialogTitle>
                 </DialogHeader>
+
+                <div className="mt-4 flex items-center gap-6">
+                    <span className="font-medium min-w-[120px]">Tipo de Datos</span>
+
+                    <label className="inline-flex items-center gap-2 cursor-pointer">
+                        <input
+                            type="radio"
+                            name="hotspot"
+                            value="hotspot"
+                            // checked={dataSource === "revision"}
+                            // onChange={() => setDataSource("revision")}
+                            className="form-radio text-blue-600"
+                        />
+                        Puntos Calientes
+                    </label>
+
+                    <label className="inline-flex items-center gap-2 cursor-pointer">
+                        <input
+                            type="radio"
+                            name="data-source"
+                            value="data-range"
+                            // checked={dataSource === "data-range"}
+                            // onChange={() => setDataSource("date-range")}
+                            className="form-radio text-blue-600"
+                        />
+                        Predictivo
+                    </label>
+                </div>
 
                 <div className="mt-4 flex items-center gap-6">
                     <span className="font-medium min-w-[120px]">Fuente de Datos</span>
