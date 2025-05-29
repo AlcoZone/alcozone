@@ -1,13 +1,14 @@
 "use client";
+
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/providers/AuthProvider";
 import Spinner from "@/components/Spinner/Spinner";
 import { protectedRoutes } from "@/utils/protectedRoutes";
-import { RoleType } from "@/types/Roles"; 
+import { RoleType } from "@/types/Roles";
 
-function isValidRole(role: string): role is RoleType {
-  return ["admin", "datamanager", "datavisualizer"].includes(role);
+function isValidRole(role: string | null): role is RoleType {
+  return ["admin", "datamanager", "datavisualizer"].includes(role ?? "");
 }
 
 export function AuthGuard({ children }: { children: React.ReactNode }) {
@@ -24,25 +25,32 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
       Object.values(protectedRoutes).flatMap((routes) => Array.from(routes))
     );
 
-    if (allProtectedRoutes.has(pathname) && !user) {
+    const isProtected = allProtectedRoutes.has(pathname);
+
+    if (user && role === null) {
+      return;
+    }
+
+    if (isProtected && !user) {
       router.push("/auth/login");
       return;
     }
 
-    if (user && ["/auth/login", "/users"].includes(pathname)) {
+    if (user && ["/auth/login"].includes(pathname)) {
       router.push("/home");
       return;
     }
 
-    if (user && role && allProtectedRoutes.has(pathname)) {
-      if (isValidRole(role)) {
-        const allowedRoutes = protectedRoutes[role];
-        if (!allowedRoutes.has(pathname)) {
-          router.push("/home");
-          return;
-        }
-      } else {
-        console.warn("Rol no reconocido:", role);
+    if (user && isProtected) {
+      if (!isValidRole(role)) {
+        console.warn("Rol no válido:", role);
+        router.push("/home");
+        return;
+      }
+
+      const allowedRoutes = protectedRoutes[role];
+      if (!allowedRoutes.has(pathname)) {
+        console.warn("Ruta no permitida para este rol:", pathname);
         router.push("/home");
         return;
       }
@@ -51,7 +59,13 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
     setAuthorized(true);
   }, [user, loading, pathname, router, role]);
 
-  if (loading || !authorized) return <Spinner />;
+  if (loading || !authorized) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Spinner />
+      </div>
+    );
+  }
 
   return <>{children}</>;
 }

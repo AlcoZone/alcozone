@@ -30,13 +30,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         try {
           const token = await getIdToken(firebaseUser);
           setIdToken(token);
-          console.log("TOKEN OBTENIDO DE FIREBASE:", token);
-
+          
           const userLogin = await getUserLogin();
-          setRole(ROLE_MAP[userLogin.roleId] || null);
+
+          if (!userLogin?.role_id || !ROLE_MAP[userLogin.role_id]) {
+            console.warn("roleId inválido o no mapeado:", userLogin?.role_id);
+            setRole(null);
+          } else {
+            setRole(ROLE_MAP[userLogin.role_id]);
+          }
+          
           setEmail(userLogin.email || null);
 
         } catch (error) {
+          console.error("Error obteniendo userLogin:", error);
           setIdToken(null);
           setRole(null);
           setEmail(null);
