@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Banner } from "@/components/Banner/Banner";
 import { Menu } from "@/components/Menu/Menu";
 import { Table } from "@/components/Table/Table";
 import { getRevisionCsv } from "@/services/csv/getRevisionCSV";
@@ -9,7 +8,6 @@ import { getRevisionCsvList } from "@/services/csv/getRevisionCSVlist";
 import type { DatasetItem } from "@/types/DataSetItem";
 
 export default function CsvPage() {
-  const [menuHidden, setMenuHidden] = useState(false);
   const [datasets, setDatasets] = useState<DatasetItem[]>([]);
 
   useEffect(() => {
@@ -23,8 +21,7 @@ export default function CsvPage() {
 
   return (
     <>
-      <Banner />
-      <Menu variant="user" onToggle={setMenuHidden}>
+      <Menu variant="admin">
         <div
           className="bg-white shadow-xl rounded-xl p-6 space-y-4 transition-all duration-300"
           style={{
@@ -32,8 +29,8 @@ export default function CsvPage() {
             marginLeft: "-220px",
             marginRight: "30px",
             bottom: "50px",
-            height: "calc(100vh - 175px)",
-            width: menuHidden ? "calc(100vw - 150px)" : "calc(100vw - 300px)",
+            height: "calc(100vh - 100px)",
+            width: "calc(100vw - 300px)",
             overflowY: "auto",
           }}
         >
