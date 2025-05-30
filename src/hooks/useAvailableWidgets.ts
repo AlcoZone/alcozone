@@ -21,6 +21,8 @@ export function useAvailableWidgets() {
             uuid: w.uuid,
             name: w.name,
             description: w.description,
+            minWidth: w.minWidth,
+            minHeight: w.minHeight,
             preview: entry ? entry.component(null, {}) : null,
           };
         });

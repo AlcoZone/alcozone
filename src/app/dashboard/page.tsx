@@ -119,7 +119,6 @@ export default function DashboardPage() {
 
   // add-widget handler
   const handleAddWidget = (widget: WidgetDetail) => {
-    const entry = widgetRegistry[widget.uuid];
     const newItem: GridItem = {
       id: 0,
       uuid: uuidv4(),
@@ -128,10 +127,10 @@ export default function DashboardPage() {
       i: widget.name,
       x: 0,
       y: 0,
-      w: entry.minWidth,
-      h: entry.minHeight,
-      minW: entry.minWidth,
-      minH: entry.minHeight,
+      w: widget.minWidth,
+      h: widget.minHeight,
+      minW: widget.minWidth,
+      minH: widget.minHeight,
     };
     setDraftLayout((prev) => [...prev, newItem]);
     setHasChanges(true);

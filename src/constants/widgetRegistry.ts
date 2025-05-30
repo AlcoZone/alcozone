@@ -6,23 +6,11 @@ import { ComparisonWidget } from "@/components/ComparisonWidget/ComparisonWidget
 import { BarChartWidget } from "@/components/BarChartWidget/BarChartWidget";
 
 interface RegistryEntry {
-  id: number;
-  uuid: string;
-  name: string;
-  description: string;
-  minWidth: number;
-  minHeight: number;
   component: (data: any, filters: any) => React.ReactNode;
 }
 
 export const widgetRegistry: Record<string, RegistryEntry> = {
   "widget-uuid-comparison": {
-    id: 1,
-    uuid: "widget-uuid-comparison",
-    name: "Comparador de Accidentes",
-    description: "Compara visualmente la cantidad de accidentes mes a mes.",
-    minWidth: 3,
-    minHeight: 3,
     component: () =>
       React.createElement(ComparisonWidget, {
         title: "Accidentes por Mes",
@@ -46,13 +34,6 @@ export const widgetRegistry: Record<string, RegistryEntry> = {
       }),
   },
   "widget-uuid-bar-chart": {
-    id: 3,
-    uuid: "widget-uuid-bar-chart",
-    name: "Gráfico de Barras",
-    description:
-      "Gráfico de barras para visualizar la comparación entre choques relacionados con alcohol y aquellos con otras causas.",
-    minWidth: 3,
-    minHeight: 5,
     component: () =>
       React.createElement(BarChartWidget, {
         title: "Incidentes causados por alcohol",
