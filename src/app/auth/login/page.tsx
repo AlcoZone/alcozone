@@ -29,12 +29,16 @@ const LoginPage: React.FC = () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
     } catch (error: any) {
+      console.log(error.code)
       switch (error.code) {
         case "auth/user-disabled":
           setError("Tu cuenta ha sido deshabilitada. Contacta al administrador");
           break;
         case "auth/invalid-email":
           setError("El formato del correo es inválido");
+          break;
+        case "auth/invalid-credential":
+            setError("El correo o la contraseña son incorrectos. Por favor, verifica tus datos e inténtalo de nuevo.");
           break;
         default:
           setError("Error al iniciar sesión. Intenta más tarde");
