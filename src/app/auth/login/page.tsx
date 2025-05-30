@@ -1,7 +1,6 @@
 "use client";
-import React, { useState, useEffect, ChangeEvent } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
-import api from "@/services/api";
 import ConfirmButtons from "@/components/ConfirmButtons/ConfirmButtons";
 import { TextInput } from "@/components/TextInput/TextInput";
 import { Banner } from "@/components/Banner/Banner";
@@ -11,41 +10,44 @@ import { auth } from "@/lib/firebaseClient";
 import { useRouter } from "next/navigation";
 
 const LoginPage: React.FC = () => {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState<string>("");
+  const [loadingLogin, setLoadingLogin] = useState(false);
+
   const router = useRouter();
-
-  useEffect(() => {
-    const validateToken = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) return;
-
-      try {
-        await api.get("/auth/login");
-        router.push("/home");
-      } catch (error) {
-        console.warn("Token inválido o expirado");
-        localStorage.removeItem("token");
-        localStorage.removeItem("refreshToken");
-      }
-    };
-
-    validateToken();
-  }, [router]);
-
+  
   const handleLogin = async () => {
+    setError("");
+  
+    if (!email.trim() || !password.trim()) {
+      setError("Por favor, completa ambos campos.");
+      return;
+    }
+  
+    setLoadingLogin(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      router.push("/home");
-    } catch (error) {
-      console.error("Error al iniciar sesión:", error);
-      setError("Correo o contraseña incorrectos");
+    } catch (error: any) {
+      console.log(error.code)
+      switch (error.code) {
+        case "auth/user-disabled":
+          setError("Tu cuenta ha sido deshabilitada. Contacta al administrador");
+          break;
+        case "auth/invalid-email":
+          setError("El formato del correo es inválido");
+          break;
+        case "auth/invalid-credential":
+            setError("El correo o la contraseña son incorrectos. Por favor, verifica tus datos e inténtalo de nuevo.");
+          break;
+        default:
+          setError("Error al iniciar sesión. Intenta más tarde");
+          break;
+      }
+    } finally {
+      setLoadingLogin(false);
     }
   };
-
-  const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value);
-  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value);
 
   return (
     <div className="flex min-h-screen flex-col justify-between bg-gray-242 pb-20">
@@ -70,14 +72,14 @@ const LoginPage: React.FC = () => {
             <div className="w-full space-y-6 mb-8 text-lg [&_input]:h-14 [&_input]:w-full [&_input]:text-lg">
               <TextInput
                 value={email}
-                onChange={handleEmailChange}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="Correo electrónico"
                 type="email"
               />
               <div className="relative w-full">
                 <TextInput
                   value={password}
-                  onChange={handlePasswordChange}
+                  onChange={(e) => setPassword(e.target.value)}
                   placeholder="Contraseña"
                   type="password"
                   showPasswordToggle
@@ -87,20 +89,32 @@ const LoginPage: React.FC = () => {
 
             <div className="w-full h-14">
               <div className="w-full h-full scale-y-120 origin-top [&_button]:w-full [&_button]:h-full [&_button]:scale-y-[0.75]">
-                <ConfirmButtons variant="login" onClick={handleLogin} />
+                <ConfirmButtons
+                  variant="login"
+                  onClick={handleLogin}
+                  disabled={loadingLogin}
+                />
               </div>
               {error && (
                 <p className="text-red-600 font-medium text-sm mt-2 text-center">
                   {error}
                 </p>
               )}
+              {loadingLogin && (
+                <p className="text-blue-700 text-center mt-2">Ingresando...</p>
+              )}
             </div>
-
             <p
               className="mt-20 text-base text-gray-700 cursor-pointer hover:font-semibold"
               onClick={() => router.push("/auth/forgotPassword")}
             >
               ¿Olvidaste tu contraseña?
+            </p>
+            <p
+              className="mt-4 text-base text-gray-700 cursor-pointer hover:font-semibold"
+              onClick={() => router.push("/legal/privacy")}
+            >
+              Aviso de privacidad
             </p>
           </div>
         </div>

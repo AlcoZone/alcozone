@@ -9,7 +9,7 @@ const HamburgerButton = ({ onClick }: HamburgerButtonProps) => {
     return (
         <Button
             onClick={onClick}
-            className="w-8 h-8 bg-transparent hover:bg-transparent text-black shadow-none">
+            className="cursor-pointer w-8 h-8 bg-transparent hover:bg-transparent text-black shadow-none">
             <RxHamburgerMenu className="size-6" />
         </Button>
     );

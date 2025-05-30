@@ -1,19 +1,18 @@
-"use client"
-
+import { AuthGuard } from "@/components/AuthGuard/AuthGuard";
 import "./globals.css";
-import { useState } from "react"
-import { Menu } from "@/components/Menu/Menu";
+import { AuthProvider } from "@/providers/AuthProvider"
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const [menuHidden, setMenuHidden] = useState(false);
 
   return (
     <html lang="en">
-      <body className="bg-[#F2F2F2] w-full">
-        <Menu variant="admin" onToggle={setMenuHidden}>
+      <body>
+        <AuthProvider>
+          <AuthGuard>
             {children}
-            
-        </Menu>
+          </AuthGuard>
+        </AuthProvider>
       </body>
     </html>
   );
