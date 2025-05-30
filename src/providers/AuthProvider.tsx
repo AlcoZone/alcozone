@@ -1,7 +1,8 @@
 "use client";
 
-import { User, getIdToken, onAuthStateChanged } from "firebase/auth";
+import { User, getIdToken, onAuthStateChanged, signOut } from "firebase/auth";
 import { createContext, useContext, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { ROLE_MAP } from "@/utils/roleMap";
 import { auth } from "@/lib/firebaseClient";
 import { getUserLogin } from "@/services/User/getUserLogin";
@@ -21,6 +22,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [idToken, setIdToken] = useState<string | null>(null);
   const [role, setRole] = useState<string | null>(null);
   const [email, setEmail] = useState<string | null>(null);
+  const router = useRouter();
+
+  const logout = async () => {
+    try {
+      await signOut(auth); 
+      setUser(null);
+      setIdToken(null);
+      setRole(null);
+      setEmail(null);
+      router.push("/auth/login"); 
+    } catch (error) {
+      console.error("Error al cerrar sesión:", error);
+    }
+  };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
@@ -61,7 +76,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, loading, idToken, role, email }}>
+    <AuthContext.Provider value={{ user, loading, idToken, role, email,logout }}>
       {children}
     </AuthContext.Provider>
   );

@@ -7,9 +7,9 @@ import {
   SidebarContent,
 } from "@/components/ui/sidebar";
 import { Icon } from "@/components/Icon/Icon";
-import HamburgerButton from "@/components/HamburgerButton/HamburgerButton";
 import TabSwitchButtons from "@/components/TabSwitchButtons/TabSwitchButtons";
 import Link from "next/link";
+import { useAuth } from "@/providers/AuthProvider"; 
 
 type MenuProps = {
   variant?: "user" | "admin";
@@ -19,10 +19,7 @@ type MenuProps = {
 export const Menu = ({ variant = "user", onToggle, children }: MenuProps) => {
   const [isHidden, setIsHidden] = useState(false);
   const isAdmin = variant === "admin";
-
-  const handleToggle = () => {
-    setIsHidden((prev) => !prev);
-  };
+  const { logout } = useAuth(); 
 
   const firstRender = useRef(true);
   useEffect(() => {
@@ -33,21 +30,20 @@ export const Menu = ({ variant = "user", onToggle, children }: MenuProps) => {
     onToggle?.(isHidden);
   }, [isHidden, onToggle]);
 
+  const handleLogout = () => {
+    logout?.(); 
+  };
+
   return (
     <SidebarProvider>
-      {/* TODO el layout se maneja desde el Menu */}
       <div className="flex min-h-screen">
-        {/* Menú fijo */}
         <Sidebar
           className={`${
             isHidden ? "w-20" : "w-56"
           } fixed top-0 left-0 h-screen z-50 border-r bg-white text-black flex flex-col justify-between transition-all duration-300`}
         >
           <SidebarContent>
-            <div className="p-5 relative z-50">
-              <HamburgerButton onClick={handleToggle} />
-            </div>
-            <div className="flex items-center justify-center py-2">
+            <div className="flex items-center justify-center py-6">
               <div className="h-10 w-10 rounded-full overflow-hidden">
                 <Icon variant="logo" width={80} height={80} />
               </div>
@@ -60,6 +56,7 @@ export const Menu = ({ variant = "user", onToggle, children }: MenuProps) => {
                 </span>
               )}
             </div>
+
             <div className="px-4 mt-4">
               {!isHidden && (
                 <>
@@ -85,6 +82,7 @@ export const Menu = ({ variant = "user", onToggle, children }: MenuProps) => {
                       <TabSwitchButtons variant="map" />
                     </Link>
                   </nav>
+
                   <p className="text-s font-semibold text-muted-foreground mt-10 mb-4">
                     OTROS
                   </p>
@@ -98,14 +96,15 @@ export const Menu = ({ variant = "user", onToggle, children }: MenuProps) => {
                     <Link href="/download">
                       <TabSwitchButtons variant="download" />
                     </Link>
-                    <Link href="/logout">
+                    <button onClick={handleLogout} className="w-full text-left">
                       <TabSwitchButtons variant="logout" />
-                    </Link>
+                    </button>
                   </nav>
                 </>
               )}
             </div>
           </SidebarContent>
+
           <div className="p-4 border-t text-sm text-muted-foreground flex flex-col items-center justify-center">
             <div className="flex items-center gap-2">
               <Icon variant="user" width={20} height={20} />
@@ -117,14 +116,13 @@ export const Menu = ({ variant = "user", onToggle, children }: MenuProps) => {
             </div>
           </div>
         </Sidebar>
-        {/* Espaciador */}
+
         <div
           className={`transition-all duration-300 ${
             isHidden ? "w-20" : "w-56"
           } shrink-0`}
           aria-hidden="true"
         />
-        {/* Contenido principal */}
         <div className="flex-1">{children}</div>
       </div>
     </SidebarProvider>
