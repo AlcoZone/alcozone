@@ -1,8 +1,8 @@
-//este es para el radial widget
+// es para la comparison widget 
 import api from "../api";
 
-export const getAccidentsPercentage = async () => {
-  const endpoint = '/widgets/accidents-percentage';
+export const getMonthlyAccidents = async () => {
+  const endpoint = '/widgets/monthly-accidents';
   try {
     const res = await api.get(endpoint);
     return res.data;

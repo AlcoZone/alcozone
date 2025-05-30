@@ -22,7 +22,8 @@ type DonutChartProps = {
   data: AccidenteDonut[];
 }
 
-const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff8042", "#8dd1e1", "#d0ed57", "#a4de6c", "#d084d8"]
+const COLORS = ["#C7CEFF", "#5A6ACF"]
+
 
 export const DonutChartWidget: React.FC<DonutChartProps> = ({
   title,
@@ -30,7 +31,6 @@ export const DonutChartWidget: React.FC<DonutChartProps> = ({
   centerLabel,
   data,
 }) => {
-  // Convertimos los datos a números reales
   const chartData = React.useMemo(() => {
     return data.map((item) => ({
       ...item,
@@ -51,13 +51,13 @@ export const DonutChartWidget: React.FC<DonutChartProps> = ({
         </CardHeader>
 
         <CardContent className="flex justify-center items-center">
-          <PieChart width={120} height={120}>
+          <PieChart width={150} height={150}>
             <Pie
               data={chartData}
               dataKey="total_accidents"
               nameKey="town"
-              innerRadius={40}
-              outerRadius={60}
+              innerRadius={50}
+              outerRadius={70}
               stroke="none"
             >
               {chartData.map((_, index) => (
@@ -105,7 +105,7 @@ export const DonutChartWidget: React.FC<DonutChartProps> = ({
           {chartData.map((entry, index) => {
             const percentage = ((entry.total_accidents / totalAccidents) * 100).toFixed(1)
             return (
-              <div key={entry.town} className="flex items-center gap-2">
+              <div key={`${entry.town}-${index}`} className="flex items-center gap-2">
                 <div
                   className="h-3 w-3 rounded-full"
                   style={{ backgroundColor: COLORS[index % COLORS.length] }}
@@ -120,4 +120,5 @@ export const DonutChartWidget: React.FC<DonutChartProps> = ({
     </div>
   )
 }
+
 

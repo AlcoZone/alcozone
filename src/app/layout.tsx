@@ -3,17 +3,16 @@
 import "./globals.css";
 import { useState } from "react"
 import { Menu } from "@/components/Menu/Menu";
-import { Banner } from "@/components/Banner/Banner";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const [menuHidden, setMenuHidden] = useState(false);
 
   return (
     <html lang="en">
-      <body className="bg-[#F2F2F2]">
+      <body className="bg-[#F2F2F2] w-full">
         <Menu variant="admin" onToggle={setMenuHidden}>
             {children}
-            <Banner />
+            
         </Menu>
       </body>
     </html>

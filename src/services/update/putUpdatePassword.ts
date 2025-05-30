@@ -1,8 +1,7 @@
-//este es para el radial widget
 import api from "../api";
 
-export const getAccidentsPercentage = async () => {
-  const endpoint = '/widgets/accidents-percentage';
+export const putUpdatePassword = async () => {
+  const endpoint = '/users/display-password';
   try {
     const res = await api.get(endpoint);
     return res.data;

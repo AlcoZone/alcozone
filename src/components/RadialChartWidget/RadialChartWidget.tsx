@@ -35,7 +35,7 @@ export const RadialChartWidget = ({
   data,
   description = "Porcentaje de accidentes",
 }: RadialChartProps) => {
-  const colors = ["#3b82f6", "#f97316", "#ef4444"]
+  const colors = ["#6463D6", "#F99C30", "#2FBFDE"]
 
   return (
     <div style={{ paddingTop: "1px" }}>
@@ -68,8 +68,8 @@ export const RadialChartWidget = ({
                       data={chartData}
                       startAngle={0}
                       endAngle={270}
-                      innerRadius="50%"
-                      outerRadius="90%"
+                      innerRadius="80%"
+                      outerRadius="115%"
                     >
                       <PolarGrid gridType="circle" radialLines={false} stroke="#eee" />
                       <RadialBar dataKey="value" background cornerRadius={10} />

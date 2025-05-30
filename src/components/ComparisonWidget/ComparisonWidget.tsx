@@ -53,7 +53,7 @@ export const ComparisonWidget: React.FC<ComparisonWidgetProps> = ({
           <CardTitle>{title}</CardTitle>
         </CardHeader>
         <CardContent>
-          <div style={{ width: "100%", height: 170 }}>
+          <div style={{ width: "100%", height: 210 }}>
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart
                 data={data.map((item) => ({

@@ -1,8 +1,8 @@
-//este es para el radial widget
+//este es utilizado para el donut widget
 import api from "../api";
 
-export const getAccidentsPercentage = async () => {
-  const endpoint = '/widgets/accidents-percentage';
+export const getDangerousTownPerMonth = async () => {
+  const endpoint = '/widgets/dangerous-town-month';
   try {
     const res = await api.get(endpoint);
     return res.data;
@@ -11,3 +11,4 @@ export const getAccidentsPercentage = async () => {
     throw err;
   }
 };
+

@@ -6,6 +6,9 @@ import { Icon } from '@/components/Icon/Icon';
 import { TextInput } from '@/components/TextInput/TextInput';
 import ConfirmButtons from '@/components/ConfirmButtons/ConfirmButtons';
 
+import { putUpdateDisplayName } from '@/services/update/putUpdateDisplayName';
+import { putUpdatePassword } from '@/services/update/putUpdatePassword';
+
 const MyAccountPage = () => {
     const [modalOpen, setModalOpen] = useState(false);
     const [modalType, setModalType] = useState<'username' | 'password' | null>(null);
@@ -17,13 +20,25 @@ const MyAccountPage = () => {
         setModalOpen(true);
     };
 
-    const handleSave = () => {
-        setModalOpen(false);
+    const handleSave = async () => {
+        try {
+            if (modalType === 'username') {
+                await putUpdateDisplayName(modalValue);
+                alert('Nombre de usuario actualizado correctamente.');
+            } else if (modalType === 'password') {
+                await putUpdatePassword(modalValue);
+                alert('Contraseña actualizada correctamente.');
+            }
+            setModalOpen(false);
+        } catch (error) {
+            alert('Error al actualizar. Por favor intenta de nuevo.');
+            console.error(error);
+        }
     };
 
     return (
-        <div className="flex flex-col items-center justify-start pt-4">
-            <div className="w-[800px] h-fit rounded-2xl flex flex-col items-start justify-between relative">
+        <div className="flex flex-col items-center justify-start ] ">
+            <div className="w-[600px] h-fit rounded-2xl flex flex-col items-start justify-between relative">
                 <h1 className="text-3xl font-bold text-blue-800 mb-6">Mi cuenta</h1>
 
                 <div className="mt-20 flex justify-center w-full">
@@ -41,8 +56,8 @@ const MyAccountPage = () => {
             </div>
 
             {modalOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-xl shadow-lg p-8 w-[400px] space-y-4">
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 w-[500px]">
+                    <div className="bg-white rounded-xl shadow-lg p-8 w-[300px] space-y-4">
                         <h2 className="text-xl font-bold text-center text-blue-800">
                             Cambiar {modalType === 'username' ? 'usuario' : 'contraseña'}
                         </h2>
@@ -77,7 +92,6 @@ const MyAccountPage = () => {
 };
 
 export default MyAccountPage;
-
 
 
 

@@ -36,7 +36,7 @@ export const BarChartWidget = ({
   data,
   colors = {},
 }: BarChartWidgetProps) => {
-  // Agrupamos datos por mes
+
   const groupedByMonth: Record<string, Record<string, number>> = {};
 
   data.forEach(({ month_name, town, total_accidents }) => {
@@ -65,7 +65,7 @@ export const BarChartWidget = ({
       </CardHeader>
 
       <CardContent>
-        <div style={{ width: "100%", height: "240px" }}>
+        <div style={{ width: "100%", height: "200px" }}>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={chartData}>
               <XAxis dataKey="month_name" />
@@ -85,7 +85,7 @@ export const BarChartWidget = ({
       </CardContent>
 
       <CardFooter className="text-center text-sm font-medium">
-        Mostrando los dos towns más peligrosos por mes
+        
       </CardFooter>
     </Card>
   );
