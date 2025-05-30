@@ -1,0 +1,79 @@
+// src/constants/widgetRegistry.ts
+import React from "react";
+
+import { ComparisonWidget } from "@/components/ComparisonWidget/ComparisonWidget";
+
+import { BarChartWidget } from "@/components/BarChartWidget/BarChartWidget";
+
+interface RegistryEntry {
+  id: number;
+  uuid: string;
+  name: string;
+  description: string;
+  minWidth: number;
+  minHeight: number;
+  component: (data: any, filters: any) => React.ReactNode;
+}
+
+export const widgetRegistry: Record<string, RegistryEntry> = {
+  "widget-uuid-comparison": {
+    id: 1,
+    uuid: "widget-uuid-comparison",
+    name: "Comparador de Accidentes",
+    description: "Compara visualmente la cantidad de accidentes mes a mes.",
+    minWidth: 3,
+    minHeight: 3,
+    component: () =>
+      React.createElement(ComparisonWidget, {
+        title: "Accidentes por Mes",
+        data: [
+          { month: "January", alcoholRelated: 120, nonAlcoholRelated: 200 },
+          { month: "February", alcoholRelated: 160, nonAlcoholRelated: 230 },
+          { month: "March", alcoholRelated: 110, nonAlcoholRelated: 220 },
+          { month: "April", alcoholRelated: 90, nonAlcoholRelated: 170 },
+          { month: "May", alcoholRelated: 130, nonAlcoholRelated: 210 },
+          { month: "June", alcoholRelated: 150, nonAlcoholRelated: 200 },
+        ],
+        config: {
+          alcoholRelated: { label: "Relacionado al alcohol", color: "#07E098" },
+          nonAlcoholRelated: {
+            label: "No relacionado al alcohol",
+            color: "#0095FF",
+          },
+        },
+        footer: "Enero - Junio 2024",
+        chartHeight: 200,
+      }),
+  },
+  "widget-uuid-bar-chart": {
+    id: 3,
+    uuid: "widget-uuid-bar-chart",
+    name: "Gráfico de Barras",
+    description:
+      "Gráfico de barras para visualizar la comparación entre choques relacionados con alcohol y aquellos con otras causas.",
+    minWidth: 3,
+    minHeight: 5,
+    component: () =>
+      React.createElement(BarChartWidget, {
+        title: "Incidentes causados por alcohol",
+        description: "Comparación mensual por categoría",
+        data: [
+          {
+            month: "January",
+            "Causa: Alcohol": 400,
+            "Otras causas": 300,
+          },
+          {
+            month: "February",
+            "Causa: Alcohol": 300,
+            "Otras causas": 200,
+          },
+          { month: "March", "Causa: Alcohol": 500, "Otras causas": 450 },
+          { month: "April", "Causa: Alcohol": 200, "Otras causas": 100 },
+        ],
+        categories: ["Causa: Alcohol", "Otras causas"],
+        categoryColors: ["#0095FF", "#00E096"],
+        chartHeight: 200,
+      }),
+  },
+};

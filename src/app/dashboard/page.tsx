@@ -8,6 +8,10 @@ import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 
 import { useDashboards } from "@/hooks/useDashboards";
+import { useAvailableWidgets } from "@/hooks/useAvailableWidgets";
+import { widgetRegistry } from "@/constants/widgetRegistry";
+import { v4 as uuidv4 } from "uuid";
+
 import { GridItem, useDashboardLayout } from "@/hooks/useDashboardLayout";
 
 import AccidentsBarWidget from "@/components/BarWidget/AccidentsBarWidget";
@@ -38,6 +42,8 @@ import {
 } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
 import api from "@/services/api";
+import { WidgetDetail } from "@/types/WidgetDetail";
+import WidgetSelectionDialog from "@/components/WidgetSelectionDialog/WidgetSelectionDialog";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -54,6 +60,12 @@ export default function DashboardPage() {
   const { layout, loading: layoutLoading } = useDashboardLayout(
     selectedDashboard || ""
   );
+
+  const {
+    widgets: availableWidgets,
+    loading: widgetsLoading,
+    error: widgetsError,
+  } = useAvailableWidgets();
 
   const [savedLayout, setSavedLayout] = useState<GridItem[]>([]);
   const [draftLayout, setDraftLayout] = useState<GridItem[]>([]);
@@ -74,6 +86,10 @@ export default function DashboardPage() {
       setDraftLayout(deepCloned.map((item) => ({ ...item })));
     }
   }, [layout, layoutLoading]);
+
+  console.log("isEditing", isEditing);
+  console.log("widgetsLoading", widgetsLoading);
+  console.log("widgetsError", widgetsError);
 
   useEffect(() => {
     if (!loading && dashboards.length > 0) {
@@ -99,6 +115,26 @@ export default function DashboardPage() {
       (l) => l.name === id
     );
     return item ? item.h * rowHeight : 300;
+  };
+
+  // add-widget handler
+  const handleAddWidget = (widget: WidgetDetail) => {
+    const entry = widgetRegistry[widget.uuid];
+    const newItem: GridItem = {
+      id: 0,
+      uuid: uuidv4(),
+      widgetUuid: widget.uuid,
+      name: widget.name,
+      i: widget.name,
+      x: 0,
+      y: 0,
+      w: entry.minWidth,
+      h: entry.minHeight,
+      minW: entry.minWidth,
+      minH: entry.minHeight,
+    };
+    setDraftLayout((prev) => [...prev, newItem]);
+    setHasChanges(true);
   };
 
   const handleRemoveWidget = (widgetName: string) => {
@@ -130,6 +166,7 @@ export default function DashboardPage() {
       const widgets = draftLayout.map((item) => ({
         id: item.id,
         uuid: item.uuid,
+        widgetUuid: item.widgetUuid,
         name: item.name,
         gridPositionX: item.x,
         gridPositionY: item.y,
@@ -138,8 +175,6 @@ export default function DashboardPage() {
         minWidth: item.minW,
         minHeight: item.minH,
       }));
-
-      console.log("widgets: ", widgets);
 
       await api.post(`/dashboards/${selectedDashboard}/widgets`, widgets);
 
@@ -322,6 +357,13 @@ export default function DashboardPage() {
               <Pencil className="mr-2 h-4 w-4" /> Editar
             </Button>
           )}
+          {isEditing && !widgetsLoading && !widgetsError && (
+            <WidgetSelectionDialog
+              widgets={availableWidgets}
+              addedWidgetIds={draftLayout.map((i) => i.widgetUuid)}
+              onAddWidget={handleAddWidget}
+            />
+          )}
         </div>
       </div>
 
@@ -351,38 +393,6 @@ export default function DashboardPage() {
           }
         }}
       >
-        {isWidgetVisible("accidents-bar") && (
-          <div
-            key="accidents-bar"
-            style={{ width: "100%", height: "100%" }}
-            className="relative overflow-visible"
-          >
-            {isEditing && (
-              <RemoveButton
-                onClick={() => handleRemoveWidget("accidents-bar")}
-              />
-            )}
-            <AccidentsBarWidget
-              title="Accidentes por alcoholismo"
-              subtitle="2.1% vs el año pasado"
-              description="2023 vs 2024"
-              data={[
-                { month: "Enero", month1: 186, month2: 80 },
-                { month: "Febrero", month1: 305, month2: 200 },
-                { month: "Marzo", month1: 237, month2: 120 },
-                { month: "Abril", month1: 73, month2: 190 },
-                { month: "Mayo", month1: 209, month2: 130 },
-                { month: "Junio", month1: 214, month2: 140 },
-              ]}
-              config={{
-                mes1: { label: "2022", color: "#00E096" },
-                mes2: { label: "2021", color: "#0095FF" },
-              }}
-              chartHeight={getHeight("accidents-bar")}
-            />
-          </div>
-        )}
-
         {isWidgetVisible("bar-chart") && (
           <div
             key="bar-chart"

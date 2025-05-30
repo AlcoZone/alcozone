@@ -4,6 +4,7 @@ import api from "@/services/api";
 export interface GridItem {
   id: number;
   uuid: string;
+  widgetUuid: string;
   name: string;
   i: string;
   x: number;
@@ -30,6 +31,7 @@ export function useDashboardLayout(dashboardUuid: string) {
         const gridLayout = widgets.map((w: any) => ({
           id: w.id,
           uuid: w.uuid,
+          widgetUuid: w.widgetUuid,
           name: w.name,
           i: w.name,
           x: w.gridPositionX,
