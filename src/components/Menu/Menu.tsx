@@ -9,6 +9,7 @@ import {
 import { Icon } from "@/components/Icon/Icon";
 import TabSwitchButtons from "@/components/TabSwitchButtons/TabSwitchButtons";
 import Link from "next/link";
+import { useAuth } from "@/providers/AuthProvider"; 
 
 type MenuProps = {
   variant?: "user" | "admin";
@@ -16,11 +17,24 @@ type MenuProps = {
 
 export const Menu = ({ variant = "user", children }: MenuProps) => {
   const isAdmin = variant === "admin";
+  const { logout } = useAuth(); 
+
+  const firstRender = useRef(true);
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false;
+      return;
+    }
+    onToggle?.(isHidden);
+  }, [isHidden, onToggle]);
+
+  const handleLogout = () => {
+    logout?.(); 
+  };
 
   return (
     <SidebarProvider>
       <div className="flex min-h-screen">
-        {/* Menú fijo expandido */}
         <Sidebar
           className="w-56 fixed top-0 left-0 h-screen z-50 border-r bg-white text-black flex flex-col justify-between"
         >
@@ -34,47 +48,51 @@ export const Menu = ({ variant = "user", children }: MenuProps) => {
               </span>
             </div>
 
-            <div className="px-4">
-              <p className="text-s font-semibold text-muted-foreground mt-1 mb-4">
-                MENÚ
-              </p>
-              <nav className="space-y-2">
-                <Link href="/home">
-                  <TabSwitchButtons variant="home" />
-                </Link>
-                <Link href="/dashboard">
-                  <TabSwitchButtons variant="dashboard" />
-                </Link>
-                <Link href="/database">
-                  <TabSwitchButtons variant="database" />
-                </Link>
-                {isAdmin && (
-                  <Link href="/users">
-                    <TabSwitchButtons variant="users" />
-                  </Link>
-                )}
-                <Link href="/map">
-                  <TabSwitchButtons variant="map" />
-                </Link>
-              </nav>
+            <div className="px-4 mt-4">
+              {!isHidden && (
+                <>
+                  <p className="text-s font-semibold text-muted-foreground mt-1 mb-4">
+                    MENÚ
+                  </p>
+                  <nav className="space-y-2">
+                    <Link href="/home">
+                      <TabSwitchButtons variant="home" />
+                    </Link>
+                    <Link href="/dashboard">
+                      <TabSwitchButtons variant="dashboard" />
+                    </Link>
+                    <Link href="/database">
+                      <TabSwitchButtons variant="database" />
+                    </Link>
+                    {isAdmin && (
+                      <Link href="/users">
+                        <TabSwitchButtons variant="users" />
+                      </Link>
+                    )}
+                    <Link href="/map">
+                      <TabSwitchButtons variant="map" />
+                    </Link>
+                  </nav>
 
-              <p className="text-s font-semibold text-muted-foreground mt-10 mb-4">
-                OTROS
-              </p>
-              <nav className="space-y-2">
-                <Link href="/account">
-                  <TabSwitchButtons variant="account" />
-                </Link>
-                <Link href="/upload">
-                  <TabSwitchButtons variant="upload" />
-                </Link>
-                <Link href="/download">
-                  <TabSwitchButtons variant="download" />
-                </Link>
-                <Link href="/auth/login">
-                  <TabSwitchButtons variant="logout" />
-                </Link>
-              </nav>
+                  <p className="text-s font-semibold text-muted-foreground mt-10 mb-4">
+                    OTROS
+                  </p>
+                  <nav className="space-y-2">
+                    <Link href="/account">
+                      <TabSwitchButtons variant="account" />
+                    </Link>
+                    <Link href="/upload">
+                      <TabSwitchButtons variant="upload" />
+                    </Link>
+                    <Link href="/download">
+                      <TabSwitchButtons variant="download" />
+                    </Link>
+                    <button onClick={handleLogout} className="w-full text-left">
+                      <TabSwitchButtons variant="logout" />
+                    </button>
+                  </nav>
+                </>
+              )}
             </div>
           </SidebarContent>
 
@@ -87,9 +105,13 @@ export const Menu = ({ variant = "user", children }: MenuProps) => {
             </div>
           </div>
         </Sidebar>
-        {/* Espaciador fijo (w-56 para que no empalme) */}
-        <div className="w-56 shrink-0" aria-hidden="true" />
-        {/* Contenido principal */}
+
+        <div
+          className={`transition-all duration-300 ${
+            isHidden ? "w-20" : "w-56"
+          } shrink-0`}
+          aria-hidden="true"
+        />
         <div className="flex-1">{children}</div>
       </div>
     </SidebarProvider>

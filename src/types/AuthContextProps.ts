@@ -6,4 +6,5 @@ export interface AuthContextProps {
     idToken: string | null;
     role: string | null;
     email: string | null;
+    logout?: () => Promise<void>;
   }

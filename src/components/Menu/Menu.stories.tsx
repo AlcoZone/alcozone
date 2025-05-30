@@ -21,9 +21,3 @@ export const Administrator: Story = {
     variant: "admin",
   },
 };
-
-export const Colapsado: Story = {
-  args: {
-    variant: "user",
-  },
-};
