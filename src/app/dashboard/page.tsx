@@ -46,6 +46,7 @@ import WidgetSelectionDialog from "@/components/WidgetSelectionDialog/WidgetSele
 import { getAuth } from "firebase/auth";
 import { MapWidget } from "@/components/MapWidget/MapWidget";
 import { RadialChartWidget } from "@/components/RadialChartWidget/RadialChartWidget";
+import { DonutChartWidget } from "@/components/DonutChartWidget/DonutChartWidget";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -630,6 +631,26 @@ export default function DashboardPage() {
                 { percentage: 28.47, subType: "Choque con lesionados" },
                 { percentage: 9.72, subType: "Motociclista" },
                 { percentage: 9.43, subType: "Atropellado" },
+              ]}
+            />
+          </div>
+        )}
+        {isWidgetVisible("donut") && (
+          <div
+            key="donut"
+            style={{ width: "100%", height: "100%" }}
+            className="relative overflow-visible"
+          >
+            {isEditing && (
+              <RemoveButton onClick={() => handleRemoveWidget("donut")} />
+            )}
+            <DonutChartWidget
+              title="Alcadías con más peligro"
+              footer="Datos del último mes disponibles"
+              centerLabel="Total accidentes"
+              data={[
+                { town: "Iztapalapa", total_accidents: "2747" },
+                { town: "Gustavo A. Madero", total_accidents: "1846" },
               ]}
             />
           </div>

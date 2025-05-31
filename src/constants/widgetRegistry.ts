@@ -6,6 +6,7 @@ import { ComparisonWidget } from "@/components/ComparisonWidget/ComparisonWidget
 import { BarChartWidget } from "@/components/BarChartWidget/BarChartWidget";
 import { MapWidget } from "@/components/MapWidget/MapWidget";
 import { RadialChartWidget } from "@/components/RadialChartWidget/RadialChartWidget";
+import { DonutChartWidget } from "@/components/DonutChartWidget/DonutChartWidget";
 
 interface RegistryEntry {
   component: (data: any, filters: any) => React.ReactNode;
@@ -82,6 +83,18 @@ export const widgetRegistry: Record<string, RegistryEntry> = {
           { percentage: 28.47, subType: "Choque con lesionados" },
           { percentage: 9.72, subType: "Motociclista" },
           { percentage: 9.43, subType: "Atropellado" },
+        ],
+      }),
+  },
+  donut: {
+    component: () =>
+      React.createElement(DonutChartWidget, {
+        title: "Alcadías con más peligro",
+        footer: "Datos del último mes disponibles",
+        centerLabel: "Total accidentes",
+        data: [
+          { town: "Iztapalapa", total_accidents: "2747" },
+          { town: "Gustavo A. Madero", total_accidents: "1846" },
         ],
       }),
   },
