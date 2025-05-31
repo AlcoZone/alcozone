@@ -10,20 +10,20 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 
-type DonutChartProps = {
-  /** Title of the chart */
-  title: string;
-  /** Description shown below the title */
-  footer: string;
-  /** Text shown in the center of the chart */
-  centerLabel: string;
-  /** Data for the pie chart */
-  data: Array<{
-    category: string;
-    visitors: number;
-    fill: string;
-  }>;
+type AccidenteDonut = {
+  town: string 
+  total_accidents: string // número como string
 }
+
+type DonutChartProps = {
+  title: string;
+  footer: string;
+  centerLabel: string;
+  data: AccidenteDonut[];
+}
+
+const COLORS = ["#C7CEFF", "#5A6ACF"]
+
 
 export const DonutChartWidget: React.FC<DonutChartProps> = ({
   title,
@@ -31,9 +31,16 @@ export const DonutChartWidget: React.FC<DonutChartProps> = ({
   centerLabel,
   data,
 }) => {
-  const totalVisitors = React.useMemo(() => {
-    return data.reduce((acc, curr) => acc + curr.visitors, 0)
+  const chartData = React.useMemo(() => {
+    return data.map((item) => ({
+      ...item,
+      total_accidents: Number(item.total_accidents),
+    }))
   }, [data])
+
+  const totalAccidents = React.useMemo(() => {
+    return chartData.reduce((acc, curr) => acc + curr.total_accidents, 0)
+  }, [chartData])
 
   return (
     <div style={{ paddingTop: "1px" }}>
@@ -44,17 +51,20 @@ export const DonutChartWidget: React.FC<DonutChartProps> = ({
         </CardHeader>
 
         <CardContent className="flex justify-center items-center">
-          <PieChart width={250} height={250}>
+          <PieChart width={150} height={150}>
             <Pie
-              data={data}
-              dataKey="visitors"
-              nameKey="category"
-              innerRadius={60}
-              outerRadius={100}
+              data={chartData}
+              dataKey="total_accidents"
+              nameKey="town"
+              innerRadius={50}
+              outerRadius={70}
               stroke="none"
             >
-              {data.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.fill} />
+              {chartData.map((_, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={COLORS[index % COLORS.length]}
+                />
               ))}
 
               <Label
@@ -74,7 +84,7 @@ export const DonutChartWidget: React.FC<DonutChartProps> = ({
                         y={cy}
                         className="fill-foreground text-3xl font-bold"
                       >
-                        {totalVisitors.toLocaleString()}
+                        {totalAccidents.toLocaleString()}
                       </tspan>
                       <tspan
                         x={cx}
@@ -92,15 +102,15 @@ export const DonutChartWidget: React.FC<DonutChartProps> = ({
         </CardContent>
 
         <CardFooter className="flex flex-col gap-2 text-sm pt-4">
-          {data.map((entry) => {
-            const percentage = ((entry.visitors / totalVisitors) * 100).toFixed(1)
+          {chartData.map((entry, index) => {
+            const percentage = ((entry.total_accidents / totalAccidents) * 100).toFixed(1)
             return (
-              <div key={entry.category} className="flex items-center gap-2">
+              <div key={`${entry.town}-${index}`} className="flex items-center gap-2">
                 <div
                   className="h-3 w-3 rounded-full"
-                  style={{ backgroundColor: entry.fill }}
+                  style={{ backgroundColor: COLORS[index % COLORS.length] }}
                 />
-                <span className="font-medium">{entry.category}</span>
+                <span className="font-medium">{entry.town}</span>
                 <span className="text-muted-foreground">– {percentage}%</span>
               </div>
             )
@@ -110,3 +120,5 @@ export const DonutChartWidget: React.FC<DonutChartProps> = ({
     </div>
   )
 }
+
+
