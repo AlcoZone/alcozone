@@ -45,6 +45,7 @@ import { WidgetDetail } from "@/types/WidgetDetail";
 import WidgetSelectionDialog from "@/components/WidgetSelectionDialog/WidgetSelectionDialog";
 import { getAuth } from "firebase/auth";
 import { MapWidget } from "@/components/MapWidget/MapWidget";
+import { RadialChartWidget } from "@/components/RadialChartWidget/RadialChartWidget";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -606,6 +607,29 @@ export default function DashboardPage() {
                 { id: "2", latitude: 19.4426, longitude: -99.1232 },
                 { id: "3", latitude: 19.4526, longitude: -99.1432 },
                 { id: "4", latitude: 19.4356, longitude: -99.1382 },
+              ]}
+            />
+          </div>
+        )}
+        {isWidgetVisible("radial-chart") && (
+          <div
+            key="radial-chart"
+            style={{ width: "100%", height: "100%" }}
+            className="relative overflow-visible"
+          >
+            {isEditing && (
+              <RemoveButton
+                onClick={() => handleRemoveWidget("radial-chart")}
+              />
+            )}
+            <RadialChartWidget
+              title="Tipos de accidente"
+              description="Porcentaje de accidentes"
+              footer=""
+              data={[
+                { percentage: 28.47, subType: "Choque con lesionados" },
+                { percentage: 9.72, subType: "Motociclista" },
+                { percentage: 9.43, subType: "Atropellado" },
               ]}
             />
           </div>

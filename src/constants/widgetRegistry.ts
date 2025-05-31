@@ -5,6 +5,7 @@ import { ComparisonWidget } from "@/components/ComparisonWidget/ComparisonWidget
 
 import { BarChartWidget } from "@/components/BarChartWidget/BarChartWidget";
 import { MapWidget } from "@/components/MapWidget/MapWidget";
+import { RadialChartWidget } from "@/components/RadialChartWidget/RadialChartWidget";
 
 interface RegistryEntry {
   component: (data: any, filters: any) => React.ReactNode;
@@ -68,6 +69,19 @@ export const widgetRegistry: Record<string, RegistryEntry> = {
           { id: "2", latitude: 19.4426, longitude: -99.1232 },
           { id: "3", latitude: 19.4526, longitude: -99.1432 },
           { id: "4", latitude: 19.4356, longitude: -99.1382 },
+        ],
+      }),
+  },
+  "radial-chart": {
+    component: () =>
+      React.createElement(RadialChartWidget, {
+        title: "Tipos de accidente",
+        description: "Porcentaje de accidentes",
+        footer: "",
+        data: [
+          { percentage: 28.47, subType: "Choque con lesionados" },
+          { percentage: 9.72, subType: "Motociclista" },
+          { percentage: 9.43, subType: "Atropellado" },
         ],
       }),
   },
