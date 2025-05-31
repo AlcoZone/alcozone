@@ -91,21 +91,31 @@ export default function DashboardPage() {
   }, [layout, layoutLoading]);
 
   useEffect(() => {
-    if (!loading && dashboards.length > 0) {
-      setAvailableDashboards(
-        dashboards.map((d) => ({ id: d.uuid, name: d.name }))
-      );
+    if (!loading) {
+      if (dashboards.length > 0) {
+        setAvailableDashboards(
+          dashboards.map((d) => ({ id: d.uuid, name: d.name }))
+        );
 
-      const lastViewedUuid = localStorage.getItem("selectedDashboardUuid");
-      const found = dashboards.find((d) => d.uuid === lastViewedUuid);
-      const fallback = dashboards[0];
+        const lastViewedUuid = localStorage.getItem("selectedDashboardUuid");
+        const found = dashboards.find((d) => d.uuid === lastViewedUuid);
+        const fallback = dashboards[0];
 
-      const active = found || fallback;
+        const active = found || fallback;
 
-      setSelectedDashboard(active.uuid);
-      setSavedName(active.name);
-      setDraftName(active.name);
-      localStorage.setItem("selectedDashboardUuid", active.uuid);
+        setSelectedDashboard(active.uuid);
+        setSavedName(active.name);
+        setDraftName(active.name);
+        localStorage.setItem("selectedDashboardUuid", active.uuid);
+        setIsEditing(false);
+      } else {
+        setSelectedDashboard(null);
+        setSavedLayout([]);
+        setDraftLayout([]);
+        setSavedName("Nuevo Dashboard");
+        setDraftName("Nuevo Dashboard");
+        setIsEditing(true);
+      }
     }
   }, [dashboards, loading]);
 
@@ -266,6 +276,9 @@ export default function DashboardPage() {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isEditing) {
         if (selectedDashboard === null) {
+          if (dashboards.length === 0) {
+            return;
+          }
           const lastViewed = localStorage.getItem("selectedDashboardUuid");
           if (lastViewed) {
             setSelectedDashboard(lastViewed);
@@ -292,7 +305,8 @@ export default function DashboardPage() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isEditing, savedLayout, savedName, selectedDashboard]);
 
-  if (layoutLoading) return <div>Cargando layout del dashboard...</div>;
+  if (layoutLoading && dashboards.length > 0)
+    return <div>Cargando layout del dashboard...</div>;
 
   const isWidgetVisible = (name: string) =>
     (isEditing ? draftLayout : savedLayout).some((w) => w.name === name);
