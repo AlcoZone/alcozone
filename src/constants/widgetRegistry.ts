@@ -10,7 +10,7 @@ interface RegistryEntry {
 }
 
 export const widgetRegistry: Record<string, RegistryEntry> = {
-  "widget-uuid-comparison": {
+  comparison: {
     component: () =>
       React.createElement(ComparisonWidget, {
         title: "Accidentes por Mes",
@@ -33,7 +33,7 @@ export const widgetRegistry: Record<string, RegistryEntry> = {
         chartHeight: 200,
       }),
   },
-  "widget-uuid-bar-chart": {
+  "bar-chart": {
     component: () =>
       React.createElement(BarChartWidget, {
         title: "Incidentes causados por alcohol",
