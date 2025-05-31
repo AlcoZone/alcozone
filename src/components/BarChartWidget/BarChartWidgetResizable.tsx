@@ -18,7 +18,7 @@ export type BarChartWidgetProps = {
   chartHeight: number;
 };
 
-export const BarChartWidget = ({
+export const BarChartWidgetResizable = ({
   title,
   description,
   data,

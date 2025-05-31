@@ -13,8 +13,8 @@ import { v4 as uuidv4 } from "uuid";
 
 import { GridItem, useDashboardLayout } from "@/hooks/useDashboardLayout";
 
-import { BarChartWidget } from "@/components/BarChartWidget/BarChartWidget";
-import { ComparisonWidget } from "@/components/ComparisonWidget/ComparisonWidget";
+import { BarChartWidgetResizable as BarChartWidget } from "@/components/BarChartWidget/BarChartWidgetResizable";
+import { ComparisonWidgetResizable as ComparisonWidget } from "@/components/ComparisonWidget/ComparisonWidgetResizable";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -43,6 +43,7 @@ import { cn } from "@/lib/utils";
 import api from "@/services/api";
 import { WidgetDetail } from "@/types/WidgetDetail";
 import WidgetSelectionDialog from "@/components/WidgetSelectionDialog/WidgetSelectionDialog";
+import { getAuth } from "firebase/auth";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -50,7 +51,11 @@ export default function DashboardPage() {
   const [isEditing, setIsEditing] = useState(false);
   const [savedName, setSavedName] = useState("Dashboard principal");
   const [draftName, setDraftName] = useState(savedName);
-  const [userUuid, setUserUuid] = useState("oh1ntUykRjWWlYSothlaAVtAfG53");
+
+  const auth = getAuth();
+  const user = auth.currentUser;
+
+  const [userUuid, setUserUuid] = useState(user?.uid || "");
   const { dashboards, loading, error } = useDashboards(userUuid);
   const [selectedDashboard, setSelectedDashboard] = useState<string | null>(
     null
@@ -84,10 +89,6 @@ export default function DashboardPage() {
       setDraftLayout(deepCloned.map((item) => ({ ...item })));
     }
   }, [layout, layoutLoading]);
-
-  console.log("isEditing", isEditing);
-  console.log("widgetsLoading", widgetsLoading);
-  console.log("widgetsError", widgetsError);
 
   useEffect(() => {
     if (!loading && dashboards.length > 0) {

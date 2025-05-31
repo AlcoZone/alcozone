@@ -25,7 +25,7 @@ type ComparisonWidgetProps = {
   chartHeight: number;
 };
 
-export const ComparisonWidget: React.FC<ComparisonWidgetProps> = ({
+export const ComparisonWidgetResizable: React.FC<ComparisonWidgetProps> = ({
   title,
   data,
   config,
