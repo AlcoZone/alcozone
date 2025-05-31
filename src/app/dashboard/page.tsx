@@ -44,6 +44,7 @@ import api from "@/services/api";
 import { WidgetDetail } from "@/types/WidgetDetail";
 import WidgetSelectionDialog from "@/components/WidgetSelectionDialog/WidgetSelectionDialog";
 import { getAuth } from "firebase/auth";
+import { MapWidget } from "@/components/MapWidget/MapWidget";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -585,6 +586,27 @@ export default function DashboardPage() {
               }}
               footer="Enero - Junio 2024"
               chartHeight={getHeight("comparison")}
+            />
+          </div>
+        )}
+
+        {isWidgetVisible("map") && (
+          <div
+            key="map"
+            style={{ width: "100%", height: "100%" }}
+            className="relative overflow-visible"
+          >
+            {isEditing && (
+              <RemoveButton onClick={() => handleRemoveWidget("map")} />
+            )}
+            <MapWidget
+              variant="clusterize"
+              data={[
+                { id: "1", latitude: 19.4326, longitude: -99.1332 },
+                { id: "2", latitude: 19.4426, longitude: -99.1232 },
+                { id: "3", latitude: 19.4526, longitude: -99.1432 },
+                { id: "4", latitude: 19.4356, longitude: -99.1382 },
+              ]}
             />
           </div>
         )}

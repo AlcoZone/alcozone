@@ -4,6 +4,7 @@ import React from "react";
 import { ComparisonWidget } from "@/components/ComparisonWidget/ComparisonWidget";
 
 import { BarChartWidget } from "@/components/BarChartWidget/BarChartWidget";
+import { MapWidget } from "@/components/MapWidget/MapWidget";
 
 interface RegistryEntry {
   component: (data: any, filters: any) => React.ReactNode;
@@ -55,6 +56,19 @@ export const widgetRegistry: Record<string, RegistryEntry> = {
         categories: ["Causa: Alcohol", "Otras causas"],
         categoryColors: ["#0095FF", "#00E096"],
         chartHeight: 200,
+      }),
+  },
+  // TODO: do we need predict variant?
+  map: {
+    component: () =>
+      React.createElement(MapWidget, {
+        variant: "clusterize",
+        data: [
+          { id: "1", latitude: 19.4326, longitude: -99.1332 },
+          { id: "2", latitude: 19.4426, longitude: -99.1232 },
+          { id: "3", latitude: 19.4526, longitude: -99.1432 },
+          { id: "4", latitude: 19.4356, longitude: -99.1382 },
+        ],
       }),
   },
 };
