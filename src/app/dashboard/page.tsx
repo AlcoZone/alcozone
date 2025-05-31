@@ -9,12 +9,10 @@ import "react-resizable/css/styles.css";
 
 import { useDashboards } from "@/hooks/useDashboards";
 import { useAvailableWidgets } from "@/hooks/useAvailableWidgets";
-import { widgetRegistry } from "@/constants/widgetRegistry";
 import { v4 as uuidv4 } from "uuid";
 
 import { GridItem, useDashboardLayout } from "@/hooks/useDashboardLayout";
 
-import AccidentsBarWidget from "@/components/BarWidget/AccidentsBarWidget";
 import { BarChartWidget } from "@/components/BarChartWidget/BarChartWidget";
 import { ComparisonWidget } from "@/components/ComparisonWidget/ComparisonWidget";
 import { Input } from "@/components/ui/input";
@@ -26,6 +24,7 @@ import {
   Save,
   CirclePlus,
   X,
+  Trash2,
 } from "lucide-react";
 import {
   Popover,
@@ -51,9 +50,8 @@ export default function DashboardPage() {
   const [isEditing, setIsEditing] = useState(false);
   const [savedName, setSavedName] = useState("Dashboard principal");
   const [draftName, setDraftName] = useState(savedName);
-  const { dashboards, loading, error } = useDashboards(
-    "oh1ntUykRjWWlYSothlaAVtAfG53" // TODO remove this hardcoded userUuid string
-  );
+  const [userUuid, setUserUuid] = useState("oh1ntUykRjWWlYSothlaAVtAfG53");
+  const { dashboards, loading, error } = useDashboards(userUuid);
   const [selectedDashboard, setSelectedDashboard] = useState<string | null>(
     null
   );
@@ -152,13 +150,75 @@ export default function DashboardPage() {
     setHasChanges(true);
   };
 
+  const handleDeleteDashboard = async (
+    dashboardName: string,
+    dashboardUuidToDelete: string
+  ) => {
+    const confirmed = window.confirm(
+      `¿Seguro que deseas borrar el dashboard "${dashboardName}"?`
+    );
+    if (!confirmed) {
+      return;
+    }
+
+    setAvailableDashboards((prev) =>
+      prev.filter((d) => d.id !== dashboardUuidToDelete)
+    );
+
+    if (selectedDashboard === dashboardUuidToDelete) {
+      localStorage.removeItem("selectedDashboardUuid");
+      setSelectedDashboard(null);
+
+      if (availableDashboards.length > 0) {
+        const remaining = availableDashboards.filter(
+          (d) => d.id !== dashboardUuidToDelete
+        );
+        if (remaining.length) {
+          const next = remaining[0].id;
+          setSelectedDashboard(next);
+          localStorage.setItem("selectedDashboardUuid", next);
+          const found = dashboards.find((db) => db.uuid === next);
+          if (found) {
+            setSavedName(found.name);
+            setDraftName(found.name);
+          }
+        }
+      }
+    }
+    try {
+      await api.delete(`/dashboards/${dashboardUuidToDelete}/widgets`);
+      await api.delete(`/dashboards/${dashboardUuidToDelete}`);
+    } catch (err) {
+      console.error("Error al borrar dashboard:", err);
+    }
+  };
+
   const handleSave = async () => {
-    if (!selectedDashboard) return;
+    let dashboardUuidToUse = selectedDashboard;
+
+    if (selectedDashboard === null) {
+      try {
+        const createRes = await api.post("/dashboards", {
+          userUuid: userUuid,
+          name: draftName,
+        });
+
+        dashboardUuidToUse = createRes.data.uuid;
+        setAvailableDashboards((prev) => [
+          ...prev,
+          { id: dashboardUuidToUse!, name: draftName },
+        ]);
+        setSelectedDashboard(dashboardUuidToUse);
+        localStorage.setItem("selectedDashboardUuid", dashboardUuidToUse || "");
+      } catch (err) {
+        console.error("Error creating new dashboard:", err);
+      }
+    }
 
     setIsSaving(true);
 
     try {
-      await api.put(`/dashboards/${selectedDashboard}`, {
+      await api.put(`/dashboards/${dashboardUuidToUse}`, {
         name: draftName,
       });
 
@@ -175,7 +235,7 @@ export default function DashboardPage() {
         minHeight: item.minH,
       }));
 
-      await api.post(`/dashboards/${selectedDashboard}/widgets`, widgets);
+      await api.post(`/dashboards/${dashboardUuidToUse}/widgets`, widgets);
 
       setSavedName(draftName);
       setSavedLayout([...draftLayout]);
@@ -204,13 +264,25 @@ export default function DashboardPage() {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isEditing) {
-        setDraftLayout([...savedLayout]);
-        setDraftName(savedName);
-        setAvailableDashboards((prev) =>
-          prev.map((d) =>
-            d.id === selectedDashboard ? { ...d, name: savedName } : d
-          )
-        );
+        if (selectedDashboard === null) {
+          const lastViewed = localStorage.getItem("selectedDashboardUuid");
+          if (lastViewed) {
+            setSelectedDashboard(lastViewed);
+            const previously = dashboards.find((d) => d.uuid === lastViewed);
+            if (previously) {
+              setSavedName(previously.name);
+              setDraftName(previously.name);
+            }
+          }
+        } else {
+          setDraftLayout([...savedLayout]);
+          setDraftName(savedName);
+          setAvailableDashboards((prev) =>
+            prev.map((d) =>
+              d.id === selectedDashboard ? { ...d, name: savedName } : d
+            )
+          );
+        }
         setIsEditing(false);
         setHasChanges(false);
       }
@@ -244,8 +316,11 @@ export default function DashboardPage() {
             <Popover open={open} onOpenChange={setOpen}>
               <PopoverTrigger asChild>
                 <Button variant="outline" className="w-[220px] justify-between">
-                  {availableDashboards.find((d) => d.id === selectedDashboard)
-                    ?.name || "Selecciona un dashboard"}
+                  {selectedDashboard === null
+                    ? "Nuevo Dashboard"
+                    : availableDashboards.find(
+                        (d) => d.id === selectedDashboard
+                      )?.name || "Selecciona un dashboard"}
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
               </PopoverTrigger>
@@ -256,35 +331,57 @@ export default function DashboardPage() {
                     <CommandEmpty>No hay dashboards.</CommandEmpty>
                     <CommandGroup>
                       {availableDashboards.map((d) => (
-                        <CommandItem
+                        <div
                           key={d.id}
-                          value={d.id}
-                          onSelect={(val) => {
-                            setSelectedDashboard(val);
-                            localStorage.setItem("selectedDashboardUuid", val);
-                            setOpen(false);
-                            const selected = dashboards.find(
-                              (d) => d.uuid === val
-                            );
-                            setDraftName(selected?.name || "");
-                          }}
+                          className="flex items-center justify-between px-2"
                         >
-                          <Check
-                            className={`mr-2 h-4 w-4 ${
-                              selectedDashboard === d.id
-                                ? "opacity-100"
-                                : "opacity-0"
-                            }`}
+                          <CommandItem
+                            value={d.id}
+                            onSelect={(val) => {
+                              setSelectedDashboard(val);
+                              localStorage.setItem(
+                                "selectedDashboardUuid",
+                                val
+                              );
+                              setOpen(false);
+                              const selected = dashboards.find(
+                                (db) => db.uuid === val
+                              );
+                              setDraftName(selected?.name || "");
+                            }}
+                            className="flex-1 flex items-center space-x-2 overflow-hidden"
+                          >
+                            <Check
+                              className={`h-4 w-4 flex-shrink-0 ${
+                                selectedDashboard === d.id
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                              }`}
+                            />
+                            <span className="truncate">{d.name}</span>
+                          </CommandItem>
+
+                          <Trash2
+                            size={16}
+                            className="ml-2 flex-shrink-0 cursor-pointer"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteDashboard(d.name, d.id);
+                            }}
                           />
-                          {d.name}
-                        </CommandItem>
+                        </div>
                       ))}
                       {/* Nuevo Widget button as a styled CommandItem */}
                       <CommandItem
                         className="text-primary font-medium mt-1 border-t pt-2 cursor-pointer"
                         onSelect={() => {
-                          console.log("Nuevo Widget clicked");
                           setOpen(false);
+                          setSelectedDashboard(null);
+                          setSavedLayout([]);
+                          setDraftLayout([]);
+                          setSavedName("Nuevo Dashboard");
+                          setDraftName("Nuevo Dashboard");
+                          setIsEditing(true);
                         }}
                       >
                         <CirclePlus className="mr-2 h-4 w-4" />
@@ -365,6 +462,12 @@ export default function DashboardPage() {
           )}
         </div>
       </div>
+
+      {isEditing && draftLayout.length === 0 && (
+        <div className="p-6 text-center italic text-gray-600">
+          El Dashboard está vacío. Agrega nuevos Widgets arriba a la derecha.
+        </div>
+      )}
 
       <ResponsiveGridLayout
         className="layout"
