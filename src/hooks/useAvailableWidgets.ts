@@ -14,7 +14,6 @@ export function useAvailableWidgets() {
       .then((res) => {
         const details = res.data.map((w: any) => {
           const entry = widgetRegistry[w.name];
-          console.log("entry", entry);
           return {
             id: w.id,
             uuid: w.uuid,
