@@ -15,9 +15,6 @@ api.interceptors.request.use(
       const token = await user.getIdToken();
       config.headers.Authorization = `Bearer ${token}`;
     }
-
-    config.headers.Accept = "application/json";
-    console.log("Making request to: ", config.url);
     return config;
   },
   (error) => {

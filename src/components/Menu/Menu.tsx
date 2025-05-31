@@ -97,9 +97,6 @@ export const Menu = ({ variant = "user", children }: MenuProps) => {
         </Sidebar>
 
         {/* Espaciador */}
-        <div className="w-56 shrink-0" aria-hidden="true" />
-
-        {/* Contenido principal */}
         <div className="flex-1">{children}</div>
       </div>
     </SidebarProvider>
