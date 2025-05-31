@@ -476,7 +476,7 @@ export default function DashboardPage() {
           {isEditing && !widgetsLoading && !widgetsError && (
             <WidgetSelectionDialog
               widgets={availableWidgets}
-              addedWidgetIds={draftLayout.map((i) => i.widgetUuid)}
+              addedWidgetUuids={draftLayout.map((i) => i.widgetUuid)}
               onAddWidget={handleAddWidget}
             />
           )}

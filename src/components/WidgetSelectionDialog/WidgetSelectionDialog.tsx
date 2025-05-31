@@ -17,20 +17,20 @@ import { cn } from "@/lib/utils";
 type WidgetSelectionDialogProps = {
   widgets: WidgetDetail[];
   onAddWidget: (widget: WidgetDetail) => void;
-  addedWidgetIds: string[];
+  addedWidgetUuids: string[];
 };
 
 const WidgetSelectionDialog = ({
   widgets,
   onAddWidget,
-  addedWidgetIds,
+  addedWidgetUuids,
 }: WidgetSelectionDialogProps) => {
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedWidgetId, setSelectedWidgetId] = useState<string | null>(null);
+  const [selectedWidgetUuid, setSelectedWidgetUuid] = useState<string | null>(null);
   const refs = useRef(new Map<string, HTMLDivElement>());
-  const scrollToWidget = (id: string) => {
+  const scrollToWidget = (uuid: string) => {
     setTimeout(() => {
-      const targetWidget = refs.current.get(id);
+      const targetWidget = refs.current.get(uuid);
       if (targetWidget) {
         targetWidget.scrollIntoView({ behavior: "smooth", block: "center" });
       }
@@ -43,7 +43,7 @@ const WidgetSelectionDialog = ({
       onOpenChange={(isOpen) => {
         setDialogOpen(isOpen);
         if (!isOpen) {
-          setSelectedWidgetId(null);
+          setSelectedWidgetUuid(null);
         }
       }}
     >
@@ -54,7 +54,7 @@ const WidgetSelectionDialog = ({
       <DialogContent
         className={cn(
           "transition-all duration-500 w-full max-h-[80vh] overflow-y-auto overflow-x-hidden p-0 rounded-lg scrollbar-rounded",
-          selectedWidgetId ? "sm:max-w-[700px]" : "sm:max-w-[600px]"
+          selectedWidgetUuid ? "sm:max-w-[700px]" : "sm:max-w-[600px]"
         )}
         onPointerDownOutside={(e) => e.preventDefault()}
         onEscapeKeyDown={(e) => e.preventDefault()}
@@ -76,18 +76,18 @@ const WidgetSelectionDialog = ({
 
         <div className="space-y-3 mt-2 px-2">
           {widgets.map((widget) => {
-            const isSelected = widget.id === selectedWidgetId;
-            const isAdded = addedWidgetIds.includes(widget.id);
+            const isSelected = widget.uuid === selectedWidgetUuid;
+            const isAdded = addedWidgetUuids.includes(widget.uuid);
             return (
               <div
-                key={widget.id}
+                key={widget.uuid}
                 ref={(el) => {
-                  if (el) refs.current.set(widget.id, el);
+                  if (el) refs.current.set(widget.uuid, el);
                 }}
                 onClick={() => {
                   if (isAdded) return;
-                  scrollToWidget(widget.id);
-                  setSelectedWidgetId(isSelected ? null : widget.id);
+                  scrollToWidget(widget.uuid);
+                  setSelectedWidgetUuid(isSelected ? null : widget.uuid);
                 }}
                 className={cn(
                   isAdded
@@ -125,12 +125,12 @@ const WidgetSelectionDialog = ({
                       <Button
                         onClick={() => {
                           const selectedWidget = widgets.find(
-                            (w) => w.id === selectedWidgetId
+                            (w) => w.uuid === selectedWidgetUuid
                           );
                           if (!selectedWidget) return;
                           onAddWidget(selectedWidget);
                           setDialogOpen(false);
-                          setSelectedWidgetId(null);
+                          setSelectedWidgetUuid(null);
                         }}
                         className="cursor-pointer bg-lime-750 hover:bg-lime-600"
                       >
