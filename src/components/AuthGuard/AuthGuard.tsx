@@ -8,7 +8,7 @@ import { protectedRoutes } from "@/utils/protectedRoutes";
 import { RoleType } from "@/types/Roles";
 
 function isValidRole(role: string | null): role is RoleType {
-  return ["admin", "datamanager", "datavisualizer"].includes(role ?? "");
+  return ["admin", "datamanager", "datavisualizer", "anonymus"].includes(role ?? "");
 }
 
 export function AuthGuard({ children }: { children: React.ReactNode }) {
