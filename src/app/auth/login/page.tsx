@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import Image from "next/image";
 import ConfirmButtons from "@/components/ConfirmButtons/ConfirmButtons";
 import { TextInput } from "@/components/TextInput/TextInput";
-import { Banner } from "@/components/Banner/Banner";
 import { Icon } from "@/components/Icon/Icon";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/lib/firebaseClient";
@@ -119,7 +118,6 @@ const LoginPage: React.FC = () => {
           </div>
         </div>
       </div>
-      <Banner />
     </div>
   );
 };
