@@ -17,14 +17,18 @@ import { cn } from "@/lib/utils";
 type WidgetSelectionDialogProps = {
   widgets: WidgetDetail[];
   onAddWidget: (widget: WidgetDetail) => void;
-  addedWidgetIds: number[];
+  addedWidgetIds: string[];
 };
 
-const WidgetSelectionDialog = ({ widgets, onAddWidget, addedWidgetIds }: WidgetSelectionDialogProps) => {
+const WidgetSelectionDialog = ({
+  widgets,
+  onAddWidget,
+  addedWidgetIds,
+}: WidgetSelectionDialogProps) => {
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedWidgetId, setSelectedWidgetId] = useState<number | null>(null);
-  const refs = useRef(new Map<number, HTMLDivElement>());
-  const scrollToWidget = (id: number) => {
+  const [selectedWidgetId, setSelectedWidgetId] = useState<string | null>(null);
+  const refs = useRef(new Map<string, HTMLDivElement>());
+  const scrollToWidget = (id: string) => {
     setTimeout(() => {
       const targetWidget = refs.current.get(id);
       if (targetWidget) {
@@ -86,15 +90,18 @@ const WidgetSelectionDialog = ({ widgets, onAddWidget, addedWidgetIds }: WidgetS
                   setSelectedWidgetId(isSelected ? null : widget.id);
                 }}
                 className={cn(
-                  isAdded ? "opacity-50 cursor-not-allowed" : "cursor-pointer rounded transition-all duration-700 ease-in-out hover:text-blue-850 group",
-                  isSelected ? "shadow-xl/30 p-4 text-blue-850" : "p-2 pl-5",
+                  isAdded
+                    ? "opacity-50 cursor-not-allowed"
+                    : "cursor-pointer rounded transition-all duration-700 ease-in-out hover:text-blue-850 group",
+                  isSelected ? "shadow-xl/30 p-4 text-blue-850" : "p-2 pl-5"
                   //selectedWidgetId !== null && !isSelected && "text-muted-foreground",
                 )}
               >
                 <h3
                   className={cn(
                     "font-medium text-base transition-transform duration-300",
-                    !isSelected && "group-hover:translate-x-5 group-hover:scale-105"
+                    !isSelected &&
+                      "group-hover:translate-x-5 group-hover:scale-105"
                   )}
                 >
                   {widget.name}
@@ -117,7 +124,9 @@ const WidgetSelectionDialog = ({ widgets, onAddWidget, addedWidgetIds }: WidgetS
                     <div className="flex items-end">
                       <Button
                         onClick={() => {
-                          const selectedWidget = widgets.find((w) => w.id === selectedWidgetId);
+                          const selectedWidget = widgets.find(
+                            (w) => w.id === selectedWidgetId
+                          );
                           if (!selectedWidget) return;
                           onAddWidget(selectedWidget);
                           setDialogOpen(false);
