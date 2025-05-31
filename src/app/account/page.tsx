@@ -1,0 +1,113 @@
+'use client';
+
+import React, { useState } from 'react';
+
+import { Icon } from '@/components/Icon/Icon';
+import { TextInput } from '@/components/TextInput/TextInput';
+import ConfirmButtons from '@/components/ConfirmButtons/ConfirmButtons';
+
+import { putUpdateDisplayName } from '@/services/update/putUpdateDisplayName';
+import { putUpdatePassword } from '@/services/update/putUpdatePassword';
+
+import { Card, CardContent } from '@/components/ui/card';
+import { useAuth } from '@/providers/AuthProvider';
+
+const MyAccountPage = () => {
+    const [modalOpen, setModalOpen] = useState(false);
+    const [modalType, setModalType] = useState<'username' | 'password' | null>(null);
+    const [modalValue, setModalValue] = useState('');
+
+    const { role, email, user } = useAuth();
+
+    const openModal = (type: 'username' | 'password') => {
+        setModalType(type);
+        setModalValue('');
+        setModalOpen(true);
+    };
+
+    const handleSave = async () => {
+        try {
+            if (modalType === 'username') {
+                await putUpdateDisplayName(modalValue);
+                alert('Nombre de usuario actualizado correctamente.');
+            } else if (modalType === 'password') {
+                await putUpdatePassword(modalValue);
+                alert('Contraseña actualizada correctamente.');
+            }
+            setModalOpen(false);
+        } catch (error) {
+            alert('Error al actualizar. Por favor intenta de nuevo.');
+            console.error(error);
+        }
+    };
+
+    return (
+        <div className="flex flex-col items-center justify-center mt-40 w-[80vw]">
+            <Card className="w-[800px] p-8 rounded-2xl justify-center">
+                <CardContent className="flex flex-col items-center text-center">
+                    <h1 className="text-3xl font-bold text-blue-800 mb-6">Mi cuenta</h1>
+                    <p className="font-bold text-blue-800 mb-6">Usuario: {user.displayName}</p>
+                    <p className="font-bold text-blue-800 mb-6">Correo: {email}</p>
+                    <p className="font-bold text-blue-800 mb-6">Rol: {role}</p>
+
+                    <div className="mt-10 flex justify-center w-full">
+                        <Icon variant="user" width={90} height={90} />
+                    </div>
+
+                    <div className="mt-10 w-full flex flex-col items-center gap-10 mb-4">
+                        <div className="transform scale-125 w-full flex justify-center">
+                            <ConfirmButtons variant="changeUser" onClick={() => openModal('username')} />
+                        </div>
+                        <div className="transform scale-125 w-full flex justify-center">
+                            <ConfirmButtons variant="changePassword" onClick={() => openModal('password')} />
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
+
+            {modalOpen && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white rounded-xl shadow-lg p-8 w-[300px] space-y-4">
+                        <h2 className="text-xl font-bold text-center text-blue-800">
+                            Cambiar {modalType === 'username' ? 'usuario' : 'contraseña'}
+                        </h2>
+
+                        <TextInput
+                            value={modalValue}
+                            onChange={(e) => setModalValue(e.target.value)}
+                            placeholder={`Nuevo ${modalType === 'username' ? 'usuario' : 'contraseña'}`}
+                            type={modalType === 'password' ? 'password' : 'text'}
+                            showPasswordToggle={modalType === 'password'}
+                        />
+
+                        <div className="flex justify-end gap-4 mt-4">
+                            <button
+                                onClick={() => setModalOpen(false)}
+                                className="px-4 py-2 text-gray-700 hover:underline"
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                onClick={handleSave}
+                                className="bg-blue-800 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+                            >
+                                Guardar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+};
+
+export default MyAccountPage;
+
+
+
+
+
+
+
+
+

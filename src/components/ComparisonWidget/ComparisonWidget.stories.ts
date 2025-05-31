@@ -2,34 +2,31 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { ComparisonWidget } from "./ComparisonWidget";
 
 const meta: Meta<typeof ComparisonWidget> = {
-  title: "Widgets/ComparisonWidget",
+  title: "Components/ComparisonWidget",
   component: ComparisonWidget,
   tags: ["autodocs"],
-  parameters: {
-    layout: "centered",
-  },
 };
 
 export default meta;
 
 type Story = StoryObj<typeof ComparisonWidget>;
 
-export const Default: Story = {
+export const GeneralAccidents: Story = {
   args: {
-    title: "Accidentes por Mes",
+    title: "Número de accidentes por mes",
     data: [
-      { month: "January", alcoholRelated: 120, nonAlcoholRelated: 200 },
-      { month: "February", alcoholRelated: 160, nonAlcoholRelated: 230 },
-      { month: "March", alcoholRelated: 110, nonAlcoholRelated: 220 },
-      { month: "April", alcoholRelated: 90, nonAlcoholRelated: 170 },
-      { month: "May", alcoholRelated: 130, nonAlcoholRelated: 210 },
-      { month: "June", alcoholRelated: 150, nonAlcoholRelated: 200 },
+      { month_name: "January", accidents: "15432" },
+      { month_name: "February", accidents: "16208" },
+      { month_name: "March", accidents: "17021" },
+      { month_name: "April", accidents: "14850" },
+      { month_name: "May", accidents: "15200" },
     ],
     config: {
-      alcoholRelated: { label: "Relacionado al alcohol", color: "#07E098" },
-      nonAlcoholRelated: { label: "No relacionado al alcohol", color: "#0095FF" },
+      accidents: {
+        label: "Accidentes",
+        color: "#8884d8",
+      },
     },
-    footer: "Enero - Junio 2024",
+    footer: "Datos totales sin distinguir alcaldía",
   },
 };
-

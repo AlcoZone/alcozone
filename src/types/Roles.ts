@@ -1,1 +1,1 @@
-export type RoleType = "admin" | "datavisualizer" | "datamanager";
+export type RoleType = "admin" | "datavisualizer" | "datamanager" | "public";

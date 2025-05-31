@@ -1,12 +1,27 @@
-import type { Meta, StoryObj } from "@storybook/react";
+// BarChartWidget.stories.ts
+import React from "react";
+import { Meta, StoryObj } from "@storybook/react";
 import { BarChartWidget } from "./BarChartWidget";
 
 const meta: Meta<typeof BarChartWidget> = {
-  title: "Widgets/BarChartWidget",
+  title: "Components/BarChartWidget",
   component: BarChartWidget,
   tags: ["autodocs"],
-  parameters: {
-    layout: "centered",
+  args: {
+    title: "Accidentes mensuales",
+    description: "Las dos alcaldías con más incidentes por mes",
+    data: [
+      { month_name: "Enero", town: "Cuauhtémoc", total_accidents: 25 },
+      { month_name: "Enero", town: "Benito Juárez", total_accidents: 18 },
+      { month_name: "Febrero", town: "Cuauhtémoc", total_accidents: 20 },
+      { month_name: "Febrero", town: "Benito Juárez", total_accidents: 22 },
+      { month_name: "Marzo", town: "Cuauhtémoc", total_accidents: 30 },
+      { month_name: "Marzo", town: "Benito Juárez", total_accidents: 26 },
+    ],
+    colors: {
+      Cuauhtémoc: "#8884d8",
+      "Benito Juárez": "#82ca9d",
+    },
   },
 };
 
@@ -14,19 +29,6 @@ export default meta;
 
 type Story = StoryObj<typeof BarChartWidget>;
 
-export const Default: Story = {
-  args: {
-    title: "Incidentes causados por alcohol",
-    description: "Comparación mensual por categoría",
-    data: [
-      { month: "January", "Causa: Alcohol": 400, "Otras causas": 300, "Otro": 150 },
-      { month: "February", "Causa: Alcohol": 300, "Otras causas": 200, "Otro": 100 },
-      { month: "March", "Causa: Alcohol": 500, "Otras causas": 450, "Otro": 200 },
-      { month: "April", "Causa: Alcohol": 200, "Otras causas": 100, "Otro": 50 },
-    ],
-    categories: ["Causa: Alcohol", "Otras causas"],
-    categoryColors: ["#0095FF", "#00E096", "#FF9900"],
-  },
-};
+export const Default: Story = {};
 
 
