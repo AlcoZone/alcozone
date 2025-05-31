@@ -10,11 +10,14 @@ import { putUpdateDisplayName } from '@/services/update/putUpdateDisplayName';
 import { putUpdatePassword } from '@/services/update/putUpdatePassword';
 
 import { Card, CardContent } from '@/components/ui/card';
+import { useAuth } from '@/providers/AuthProvider';
 
 const MyAccountPage = () => {
     const [modalOpen, setModalOpen] = useState(false);
     const [modalType, setModalType] = useState<'username' | 'password' | null>(null);
     const [modalValue, setModalValue] = useState('');
+
+    const { role, email, user } = useAuth();
 
     const openModal = (type: 'username' | 'password') => {
         setModalType(type);
@@ -39,10 +42,13 @@ const MyAccountPage = () => {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center mt-40 w-[80vw]" >
-            <Card className="w-[800px] p-8 rounded-2xl justify-center ">
-                <CardContent>
+        <div className="flex flex-col items-center justify-center mt-40 w-[80vw]">
+            <Card className="w-[800px] p-8 rounded-2xl justify-center">
+                <CardContent className="flex flex-col items-center text-center">
                     <h1 className="text-3xl font-bold text-blue-800 mb-6">Mi cuenta</h1>
+                    <p className="font-bold text-blue-800 mb-6">Usuario: {user.displayName}</p>
+                    <p className="font-bold text-blue-800 mb-6">Correo: {email}</p>
+                    <p className="font-bold text-blue-800 mb-6">Rol: {role}</p>
 
                     <div className="mt-10 flex justify-center w-full">
                         <Icon variant="user" width={90} height={90} />
@@ -96,6 +102,7 @@ const MyAccountPage = () => {
 };
 
 export default MyAccountPage;
+
 
 
 

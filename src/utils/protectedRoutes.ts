@@ -26,4 +26,8 @@ export const protectedRoutes: Record<RoleType, Set<string>> = {
     "/dashboard",
     "/map",
   ]),
+  public: new Set([
+    "/auth/login",
+    "/auth/forgotPassword",
+  ]),
 };
