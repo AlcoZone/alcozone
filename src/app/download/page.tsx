@@ -21,12 +21,10 @@ export default function CsvPage() {
 
   return (
     <>
-      <Menu variant="admin">
         <div
           className="bg-white shadow-xl rounded-xl p-6 space-y-4 transition-all duration-300"
           style={{
             marginTop: "50px",
-            marginLeft: "-220px",
             marginRight: "30px",
             bottom: "50px",
             height: "calc(100vh - 100px)",
@@ -54,7 +52,6 @@ export default function CsvPage() {
             />
           </div>
         </div>
-      </Menu>
     </>
   );
 }
