@@ -313,7 +313,10 @@ export default function DashboardPage() {
 
   return (
     <main
-      className={cn("p-6 transition-colors h-100", isEditing && "bg-muted")}
+      className={cn(
+        "p-6 transition-colors h-100 w-full",
+        isEditing && "bg-muted"
+      )}
       style={{
         cursor: isEditing ? "grab" : "default",
         minHeight: "calc(100vh - 175px)",

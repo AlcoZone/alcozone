@@ -13,7 +13,6 @@ export function useAvailableWidgets() {
     api
       .get("/widgets")
       .then((res) => {
-        console.log("res from widgets", res);
         const details = res.data.map((w: any) => {
           const entry = widgetRegistry[w.uuid];
           return {

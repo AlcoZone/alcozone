@@ -27,7 +27,10 @@ export default function RootLayout({
                 <Banner />
               </>
             ) : (
-              <Menu>{children}</Menu>
+              <div className="flex">
+                <Menu />
+                {children}
+              </div>
             )}
           </AuthGuard>
         </AuthProvider>
