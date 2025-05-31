@@ -6,19 +6,22 @@ const ConfirmButtonsVariants: Record<string, { text: string; color: string; roun
     changePassword: { text: "Cambiar contraseña", color: "bg-neutral-550", rounded: true },
     login: { text: "Iniciar sesión", color: "bg-neutral-550", rounded: true },
     save: { text: "Guardar", color: "bg-neutral-550", rounded: true },
+    changeUser: { text: "Cambiar usuario", color: "bg-neutral-550", rounded: true },
 };
 
 type ConfirmButtonsProps = {
     variant: keyof typeof ConfirmButtonsVariants;
     onClick?: () => void;
+    disabled?: boolean;
 };
 
-const ConfirmButtons = ({ variant, onClick }: ConfirmButtonsProps) => {
+const ConfirmButtons = ({ variant, onClick, disabled }: ConfirmButtonsProps) => {
     const { text, color, rounded } = ConfirmButtonsVariants[variant];
 
     return (
         <Button
             onClick={onClick}
+            disabled={disabled}
             className={cn("cursor-pointer text-lg transition duration-500", color, { "rounded-full": rounded })}>
             {text}
         </Button>
