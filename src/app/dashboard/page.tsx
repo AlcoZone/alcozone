@@ -392,7 +392,6 @@ export default function DashboardPage() {
                           />
                         </div>
                       ))}
-                      {/* Nuevo Widget button as a styled CommandItem */}
                       <CommandItem
                         className="text-primary font-medium mt-1 border-t pt-2 cursor-pointer"
                         onSelect={() => {
