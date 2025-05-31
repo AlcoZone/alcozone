@@ -16,13 +16,19 @@ import { cn } from "@/lib/utils";
 
 type WidgetSelectionDialogProps = {
   widgets: WidgetDetail[];
+  onAddWidget: (widget: WidgetDetail) => void;
+  addedWidgetIds: string[];
 };
 
-const WidgetSelectionDialog = ({ widgets }: WidgetSelectionDialogProps) => {
+const WidgetSelectionDialog = ({
+  widgets,
+  onAddWidget,
+  addedWidgetIds,
+}: WidgetSelectionDialogProps) => {
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedWidgetId, setSelectedWidgetId] = useState<number | null>(null);
-  const refs = useRef(new Map<number, HTMLDivElement>());
-  const scrollToWidget = (id: number) => {
+  const [selectedWidgetId, setSelectedWidgetId] = useState<string | null>(null);
+  const refs = useRef(new Map<string, HTMLDivElement>());
+  const scrollToWidget = (id: string) => {
     setTimeout(() => {
       const targetWidget = refs.current.get(id);
       if (targetWidget) {
@@ -59,6 +65,7 @@ const WidgetSelectionDialog = ({ widgets }: WidgetSelectionDialogProps) => {
               Selecciona un widget para agregar al dashboard
             </h2>
           </DialogTitle>
+
           <DialogClose asChild>
             <button className="text-muted-foreground hover:text-red-500 transition-colors">
               <X className="h-5 w-5" />
@@ -70,6 +77,7 @@ const WidgetSelectionDialog = ({ widgets }: WidgetSelectionDialogProps) => {
         <div className="space-y-3 mt-2 px-2">
           {widgets.map((widget) => {
             const isSelected = widget.id === selectedWidgetId;
+            const isAdded = addedWidgetIds.includes(widget.id);
             return (
               <div
                 key={widget.id}
@@ -77,24 +85,33 @@ const WidgetSelectionDialog = ({ widgets }: WidgetSelectionDialogProps) => {
                   if (el) refs.current.set(widget.id, el);
                 }}
                 onClick={() => {
+                  if (isAdded) return;
                   scrollToWidget(widget.id);
                   setSelectedWidgetId(isSelected ? null : widget.id);
                 }}
                 className={cn(
-                  "cursor-pointer rounded transition-all duration-700 ease-in-out hover:text-blue-850 group",
-                  isSelected ? "shadow-xl/30 p-4 text-blue-850" : "p-2 pl-5",
-                  selectedWidgetId !== null && !isSelected && "text-muted-foreground"
+                  isAdded
+                    ? "opacity-50 cursor-not-allowed"
+                    : "cursor-pointer rounded transition-all duration-700 ease-in-out hover:text-blue-850 group",
+                  isSelected ? "shadow-xl/30 p-4 text-blue-850" : "p-2 pl-5"
+                  //selectedWidgetId !== null && !isSelected && "text-muted-foreground",
                 )}
               >
                 <h3
                   className={cn(
                     "font-medium text-base transition-transform duration-300",
-                    !isSelected && "group-hover:translate-x-5 group-hover:scale-105"
+                    !isSelected &&
+                      "group-hover:translate-x-5 group-hover:scale-105"
                   )}
                 >
                   {widget.name}
+                  {isAdded && (
+                    <span className="ml-2 text-sm text-red-500">
+                      - Ya agregado
+                    </span>
+                  )}
                 </h3>
-                {isSelected && (
+                {isSelected && !isAdded && (
                   <div className="flex flex-col overflow-y-auto max-h-[250px] gap-3 sm:flex-row sm:overflow-hidden">
                     <p className="w-[210px] mt-2 text-sm text-foreground pl-3">
                       {widget.description}
@@ -107,6 +124,11 @@ const WidgetSelectionDialog = ({ widgets }: WidgetSelectionDialogProps) => {
                     <div className="flex items-end">
                       <Button
                         onClick={() => {
+                          const selectedWidget = widgets.find(
+                            (w) => w.id === selectedWidgetId
+                          );
+                          if (!selectedWidget) return;
+                          onAddWidget(selectedWidget);
                           setDialogOpen(false);
                           setSelectedWidgetId(null);
                         }}

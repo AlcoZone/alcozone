@@ -13,9 +13,9 @@ import { useAuth } from "@/providers/AuthProvider";
 
 type MenuProps = {
   variant?: "user" | "admin";
-} & PropsWithChildren;
+};
 
-export const Menu = ({ variant = "user", children }: MenuProps) => {
+export const Menu = ({ variant = "user" }: MenuProps) => {
   const isAdmin = variant === "admin";
   const { logout } = useAuth();
 
@@ -26,9 +26,7 @@ export const Menu = ({ variant = "user", children }: MenuProps) => {
   return (
     <SidebarProvider>
       <div className="flex min-h-screen">
-        <Sidebar
-          className="w-56 fixed top-0 left-0 h-screen z-50 border-r bg-white text-black flex flex-col justify-between"
-        >
+        <Sidebar className="w-56 fixed top-0 left-0 h-screen z-50 border-r bg-white text-black flex flex-col justify-between">
           <SidebarContent>
             <div className="flex items-center justify-center py-6">
               <div className="h-10 w-10 rounded-full overflow-hidden">
@@ -95,9 +93,6 @@ export const Menu = ({ variant = "user", children }: MenuProps) => {
             </div>
           </div>
         </Sidebar>
-
-        {/* Espaciador */}
-        <div className="flex-1">{children}</div>
       </div>
     </SidebarProvider>
   );

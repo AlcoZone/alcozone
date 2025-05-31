@@ -10,7 +10,7 @@ type BannerProps = {
 export const Banner = ({ width = 300, height = 40 }: BannerProps) => {
   return (
     <div
-      className={`w-full bg-[#04138b] flex justify-center items-center py-3 fixed bottom-0 left-0 right-0`}
+      className={`w-full bg-[#04138b] flex justify-center items-center py-3 fixed bottom-0 left-20 right-0`}
     >
       <Image
         src="/eic.png"
