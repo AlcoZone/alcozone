@@ -192,38 +192,22 @@ export default function DatabasePage() {
 
   return (
     <>
-      <Banner />
-      <Menu variant="user" onToggle={setMenuHidden}>
-        <div
-          className="bg-white shadow-xl rounded-xl p-6 space-y-4 transition-all duration-300"
-          style={{
-            marginTop: "50px",
-            marginLeft: "-220px",
-            marginRight: "30px",
-            bottom: "50px",
-            height: "calc(100vh - 175px)",
-            width: menuHidden ? "calc(100vw - 150px)" : "calc(100vw - 300px)",
-            overflowY: "auto"
-          }}
-        >
-          <h1 className="text-2xl font-bold text-blue-850">Base de datos</h1>
-          <div className="w-full max-w-full overflow-y-auto" style={{ maxHeight: "500px" }}>
-            <Table
-              variant="default"
-              columns={[
-                { header: "Fecha", accessor: "fecha" },
-                { header: "Hora", accessor: "hora" },
-                { header: "Alcaldía", accessor: "alcaldia" },
-                { header: "Colonia", accessor: "colonia" },
-                { header: "Longitud", accessor: "longitud" },
-                { header: "Latitud", accessor: "latitud" },
-                { header: "Incidente", accessor: "incidente" },
-              ]}
-              data={data}
-            />
-          </div>
-        </div>
-      </Menu>
+      <h1 className="text-2xl font-bold text-blue-850">Base de datos</h1>
+      <div className="w-full max-w-full overflow-y-auto">
+        <Table
+          variant="default"
+          columns={[
+            { header: "Fecha", accessor: "fecha" },
+            { header: "Hora", accessor: "hora" },
+            { header: "Alcaldía", accessor: "alcaldia" },
+            { header: "Colonia", accessor: "colonia" },
+            { header: "Longitud", accessor: "longitud" },
+            { header: "Latitud", accessor: "latitud" },
+            { header: "Incidente", accessor: "incidente" },
+          ]}
+          data={data}
+        />
+      </div>
     </>
   );
 }
