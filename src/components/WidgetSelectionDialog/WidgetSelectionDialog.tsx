@@ -54,7 +54,7 @@ const WidgetSelectionDialog = ({
       <DialogContent
         className={cn(
           "transition-all duration-500 w-full max-h-[80vh] overflow-y-auto overflow-x-hidden p-0 rounded-lg scrollbar-rounded",
-          selectedWidgetUuid ? "sm:max-w-[700px]" : "sm:max-w-[600px]"
+          selectedWidgetUuid ? "sm:max-w-[750px]" : "sm:max-w-[600px]"
         )}
         onPointerDownOutside={(e) => e.preventDefault()}
         onEscapeKeyDown={(e) => e.preventDefault()}
@@ -74,7 +74,7 @@ const WidgetSelectionDialog = ({
           </DialogClose>
         </div>
 
-        <div className="space-y-3 mt-2 px-2">
+        <div className="space-y-3 px-2">
           {widgets.map((widget) => {
             const isSelected = widget.uuid === selectedWidgetUuid;
             const isAdded = addedWidgetUuids.includes(widget.uuid);
@@ -99,12 +99,12 @@ const WidgetSelectionDialog = ({
               >
                 <h3
                   className={cn(
-                    "font-medium text-base transition-transform duration-300",
+                    "font-medium text-lg transition-transform duration-300",
                     !isSelected &&
-                      "group-hover:translate-x-5 group-hover:scale-105"
+                    "group-hover:translate-x-5 group-hover:scale-105 text-base"
                   )}
                 >
-                  {widget.name}
+                  {widget.title}
                   {isAdded && (
                     <span className="ml-2 text-sm text-red-500">
                       - Ya agregado
@@ -112,16 +112,16 @@ const WidgetSelectionDialog = ({
                   )}
                 </h3>
                 {isSelected && !isAdded && (
-                  <div className="flex flex-col overflow-y-auto max-h-[250px] gap-3 sm:flex-row sm:overflow-hidden">
-                    <p className="w-[210px] mt-2 text-sm text-foreground pl-3">
+                  <div className="flex flex-col overflow-y-auto max-h-[850px] gap-3 sm:flex-row sm:overflow-hidden">
+                    <p className="w-[210px] mt-2 text-base text-foreground pl-3">
                       {widget.description}
                     </p>
-                    <div className="w-[300px] h-[210px] rounded">
-                      <div className="w-[600px] h-[200px] scale-[0.43] origin-top-left">
+                    <div className="w-[300px] h-[310px] rounded">
+                      <div className="w-[600px] h-[300px] scale-[0.75] origin-top-left ml-5">
                         {widget.preview}
                       </div>
                     </div>
-                    <div className="flex items-end">
+                    <div className="flex items-end ">
                       <Button
                         onClick={() => {
                           const selectedWidget = widgets.find(
@@ -132,7 +132,7 @@ const WidgetSelectionDialog = ({
                           setDialogOpen(false);
                           setSelectedWidgetUuid(null);
                         }}
-                        className="cursor-pointer bg-lime-750 hover:bg-lime-600"
+                        className="cursor-pointer bg-lime-750 hover:bg-lime-600 ml-18"
                       >
                         Agregar
                       </Button>

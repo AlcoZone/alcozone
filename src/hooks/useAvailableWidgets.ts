@@ -18,6 +18,7 @@ export function useAvailableWidgets() {
             id: w.id,
             uuid: w.uuid,
             name: w.name,
+            title: entry?.title || w.name,
             description: w.description,
             minWidth: w.minWidth,
             minHeight: w.minHeight,
