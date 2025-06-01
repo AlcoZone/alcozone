@@ -13,7 +13,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import { GridItem, useDashboardLayout } from "@/hooks/useDashboardLayout";
 
-import { BarChartWidgetResizable as BarChartWidget } from "@/components/BarChartWidget/BarChartWidgetResizable";
+import { BarChartWidget } from '@/components/BarChartWidget/BarChartWidget';
 import { ComparisonWidgetResizable as ComparisonWidget } from "@/components/ComparisonWidget/ComparisonWidgetResizable";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -44,9 +44,12 @@ import api from "@/services/api";
 import { WidgetDetail } from "@/types/WidgetDetail";
 import WidgetSelectionDialog from "@/components/WidgetSelectionDialog/WidgetSelectionDialog";
 import { getAuth } from "firebase/auth";
-import { MapWidget } from "@/components/MapWidget/MapWidget";
 import { RadialChartWidget } from "@/components/RadialChartWidget/RadialChartWidget";
 import { DonutChartWidget } from "@/components/DonutChartWidget/DonutChartWidget";
+import AccidentCauseTableWidget from "@/components/Table/AccidentCauseTableWidget";
+import ReportChannelWidget from "@/components/ReportChannelWidget/ReportChannelWidget";
+import LineGraphWidget from "@/components/LineGraph/LineGraphWidget";
+
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -270,7 +273,7 @@ export default function DashboardPage() {
 
     const changed =
       JSON.stringify(sanitizeLayout(draftLayout)) !==
-        JSON.stringify(sanitizeLayout(savedLayout)) || draftName !== savedName;
+      JSON.stringify(sanitizeLayout(savedLayout)) || draftName !== savedName;
 
     setHasChanges(changed);
   }, [draftLayout, draftName, savedLayout, savedName]);
@@ -340,8 +343,8 @@ export default function DashboardPage() {
                   {selectedDashboard === null
                     ? "Nuevo Dashboard"
                     : availableDashboards.find(
-                        (d) => d.id === selectedDashboard
-                      )?.name || "Selecciona un dashboard"}
+                      (d) => d.id === selectedDashboard
+                    )?.name || "Selecciona un dashboard"}
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
               </PopoverTrigger>
@@ -373,11 +376,10 @@ export default function DashboardPage() {
                             className="flex-1 flex items-center space-x-2 overflow-hidden"
                           >
                             <Check
-                              className={`h-4 w-4 flex-shrink-0 ${
-                                selectedDashboard === d.id
-                                  ? "opacity-100"
-                                  : "opacity-0"
-                              }`}
+                              className={`h-4 w-4 flex-shrink-0 ${selectedDashboard === d.id
+                                ? "opacity-100"
+                                : "opacity-0"
+                                }`}
                             />
                             <span className="truncate">{d.name}</span>
                           </CommandItem>
@@ -525,25 +527,20 @@ export default function DashboardPage() {
               <RemoveButton onClick={() => handleRemoveWidget("bar-chart")} />
             )}
             <BarChartWidget
-              title="Incidentes causados por alcohol"
-              description="Comparación mensual por categoría"
+              title="Top 2 Alcaldías con más accidentes por mes"
+              description="Comparativa mensual de las alcaldías con más accidentes"
               data={[
-                {
-                  month: "January",
-                  "Causa: Alcohol": 400,
-                  "Otras causas": 300,
-                },
-                {
-                  month: "February",
-                  "Causa: Alcohol": 300,
-                  "Otras causas": 200,
-                },
-                { month: "March", "Causa: Alcohol": 500, "Otras causas": 450 },
-                { month: "April", "Causa: Alcohol": 200, "Otras causas": 100 },
+                { month_name: "Enero", town: "Cuauhtémoc", total_accidents: 25 },
+                { month_name: "Enero", town: "Benito Juárez", total_accidents: 18 },
+                { month_name: "Febrero", town: "Cuauhtémoc", total_accidents: 20 },
+                { month_name: "Febrero", town: "Benito Juárez", total_accidents: 22 },
+                { month_name: "Marzo", town: "Cuauhtémoc", total_accidents: 40 },
+                { month_name: "Marzo", town: "Benito Juárez", total_accidents: 26 },
               ]}
-              categories={["Causa: Alcohol", "Otras causas"]}
-              categoryColors={["#0095FF", "#00E096"]}
-              chartHeight={getHeight("bar-chart")}
+              colors={{
+                "Cuauhtémoc": "#0095FF",
+                "Benito Juárez": "#00E096"
+              }}
             />
           </div>
         )}
@@ -560,57 +557,24 @@ export default function DashboardPage() {
             <ComparisonWidget
               title="Accidentes por Mes"
               data={[
-                {
-                  month: "January",
-                  alcoholRelated: 120,
-                  nonAlcoholRelated: 200,
-                },
-                {
-                  month: "February",
-                  alcoholRelated: 160,
-                  nonAlcoholRelated: 230,
-                },
-                { month: "March", alcoholRelated: 110, nonAlcoholRelated: 220 },
-                { month: "April", alcoholRelated: 90, nonAlcoholRelated: 170 },
-                { month: "May", alcoholRelated: 130, nonAlcoholRelated: 210 },
-                { month: "June", alcoholRelated: 150, nonAlcoholRelated: 200 },
+                { month_name: "January", accidents: "15432" },
+                { month_name: "February", accidents: "16208" },
+                { month_name: "March", accidents: "17021" },
+                { month_name: "April", accidents: "14850" },
+                { month_name: "May", accidents: "15200" },
               ]}
               config={{
-                alcoholRelated: {
-                  label: "Relacionado al alcohol",
-                  color: "#07E098",
-                },
-                nonAlcoholRelated: {
-                  label: "No relacionado al alcohol",
-                  color: "#0095FF",
+                accidents: {
+                  label: "Accidentes",
+                  color: "#8884d8",
                 },
               }}
-              footer="Enero - Junio 2024"
+              footer="Datos totales sin distinguir alcaldía"
               chartHeight={getHeight("comparison")}
             />
           </div>
         )}
 
-        {isWidgetVisible("map") && (
-          <div
-            key="map"
-            style={{ width: "100%", height: "100%" }}
-            className="relative overflow-visible"
-          >
-            {isEditing && (
-              <RemoveButton onClick={() => handleRemoveWidget("map")} />
-            )}
-            <MapWidget
-              variant="clusterize"
-              data={[
-                { id: "1", latitude: 19.4326, longitude: -99.1332 },
-                { id: "2", latitude: 19.4426, longitude: -99.1232 },
-                { id: "3", latitude: 19.4526, longitude: -99.1432 },
-                { id: "4", latitude: 19.4356, longitude: -99.1382 },
-              ]}
-            />
-          </div>
-        )}
         {isWidgetVisible("radial-chart") && (
           <div
             key="radial-chart"
@@ -623,7 +587,7 @@ export default function DashboardPage() {
               />
             )}
             <RadialChartWidget
-              title="Tipos de accidente"
+              title="Causas de accidentes"
               description="Porcentaje de accidentes"
               footer=""
               data={[
@@ -634,6 +598,7 @@ export default function DashboardPage() {
             />
           </div>
         )}
+
         {isWidgetVisible("donut") && (
           <div
             key="donut"
@@ -644,13 +609,123 @@ export default function DashboardPage() {
               <RemoveButton onClick={() => handleRemoveWidget("donut")} />
             )}
             <DonutChartWidget
-              title="Alcadías con más peligro"
-              footer="Datos del último mes disponibles"
+              title="Alcadías Peligrosas"
+              footer="Alcaldías con más accidentes"
               centerLabel="Total accidentes"
               data={[
                 { town: "Iztapalapa", total_accidents: "2747" },
                 { town: "Gustavo A. Madero", total_accidents: "1846" },
               ]}
+            />
+          </div>
+        )}
+
+        {isWidgetVisible("accident-cause-table") && (
+          <div
+            key="accident-cause-table"
+            style={{ width: "100%", height: "100%" }}
+            className="relative overflow-visible"
+          >
+            {isEditing && (
+              <RemoveButton onClick={() => handleRemoveWidget("accident-cause-table")} />
+            )}
+            <AccidentCauseTableWidget
+              title="Tipos de accidentes"
+              subtitle="Datos totales sin distinguir alcaldía"
+              data={[
+                {
+                  subType: "Choque con lesionados",
+                  accidentCount: 4614,
+                },
+                {
+                  subType: "Motociclista",
+                  accidentCount: 1576,
+                },
+                {
+                  subType: "Atropellado",
+                  accidentCount: 1528,
+                },
+                {
+                  subType: "Ciclista",
+                  accidentCount: 232,
+                },
+              ]}
+            />
+          </div>
+        )}
+
+        {isWidgetVisible("report-channel") && (
+          <div
+            key="report-channel"
+            style={{ width: "100%", height: "100%" }}
+            className="relative overflow-visible"
+          >
+            {isEditing && (
+              <RemoveButton onClick={() => handleRemoveWidget("report-channel")} />
+            )}
+            <ReportChannelWidget
+              title="Canales de reporte"
+              description="Distribución de accidentes según el medio utilizado para reportarlos"
+              chartHeight={330}
+              data={[
+                { report_source: "LLAMADA DEL 911", total_accidents: 12845 },
+                { report_source: "RADIO", total_accidents: 914 },
+                { report_source: "REDES", total_accidents: 35 },
+                { report_source: "BOTÓN DE AUXILIO", total_accidents: 866 },
+                { report_source: "CÁMARA", total_accidents: 43 },
+                { report_source: "APLICATIVOS", total_accidents: 50 },
+                { report_source: "LLAMADA APP911", total_accidents: 46 },
+              ]}
+              config={{
+                report: {
+                  label: "Reportes",
+                  color: "#0095FF",
+                },
+              }}
+            />
+          </div>
+        )}
+
+        {isWidgetVisible("line-graph") && (
+          <div
+            key="line-graph"
+            style={{ width: "100%", height: "100%" }}
+            className="relative overflow-visible"
+          >
+            {isEditing && (
+              <RemoveButton onClick={() => handleRemoveWidget("line-graph")} />
+            )}
+            <LineGraphWidget
+              title="Tendencia diaria de accidentes"
+              description="Número de accidentes registrados por día"
+              data={[
+                { date: "01-05-2025", accidents: 120 },
+                { date: "02-05-2025", accidents: 95 },
+                { date: "03-05-2025", accidents: 130 },
+                { date: "04-05-2025", accidents: 655 },
+                { date: "05-05-2025", accidents: 453 },
+                { date: "06-05-2025", accidents: 123 },
+                { date: "07-05-2025", accidents: 232 },
+                { date: "08-05-2025", accidents: 213 },
+                { date: "09-05-2025", accidents: 321 },
+                { date: "10-05-2025", accidents: 130 },
+                { date: "11-05-2025", accidents: 213 },
+                { date: "12-05-2025", accidents: 768 },
+                { date: "13-05-2025", accidents: 456 },
+                { date: "14-05-2025", accidents: 546 },
+                { date: "15-05-2025", accidents: 345 },
+                { date: "16-05-2025", accidents: 234 },
+                { date: "17-05-2025", accidents: 65 },
+                { date: "18-05-2025", accidents: 345 },
+                { date: "19-05-2025", accidents: 234 },
+                { date: "20-05-2025", accidents: 243 },
+              ]}
+              config={{
+                desktop: {
+                  label: "Accidentes",
+                  color: "#8950FC",
+                },
+              }}
             />
           </div>
         )}
