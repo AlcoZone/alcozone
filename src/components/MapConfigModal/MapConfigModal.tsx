@@ -26,23 +26,25 @@ export default function MapConfigModal({
 }) {
     const [revisions, setRevisions] = useState<RevisionMetadata[]>([]);
     const [selectedDate, setSelectedDate] = useState("");
+    const [type, setType] = useState(mapConfig.type);
+    const [data_source, setDataSource] = useState(mapConfig.data_source);
+    const [revision, setRevision] = useState();
 
-    const handleTypeChange = (type: string) => {
-        setMapConfig({ ...mapConfig, type });
-    };
-
-    const handleDataSourceChange = (data_source: string) => {
-        setMapConfig({ ...mapConfig, data_source });
-    };
-
-    const handleRevisionSetChange = (revision: string) => {
-        setMapConfig({ ...mapConfig, revision });
-    };
+    const handleSave = () => {
+        setMapConfig({
+            type: type,
+            data_source: data_source,
+            revision: revision,
+        })
+    }
 
     const getRevisions = async () => {
         try {
             const response = await api.get("/revision/list");
             setRevisions(response.data);
+            if(mapConfig.revision === "latest") {
+                setRevision(response.data?.at(-1)?.uuid);
+            }
         } catch (e) {
             console.error(e);
         }
@@ -69,8 +71,8 @@ export default function MapConfigModal({
                         <input
                             type="radio"
                             name="hotspot"
-                            checked={mapConfig.type === "hotspot"}
-                            onChange={() => handleTypeChange("hotspot")}
+                            checked={type === "hotspot"}
+                            onChange={() => setType("hotspot")}
                             className="form-radio text-blue-600"
                         />
                         Puntos Calientes
@@ -80,8 +82,8 @@ export default function MapConfigModal({
                         <input
                             type="radio"
                             name="predictive"
-                            checked={mapConfig.type === "predictive"}
-                            onChange={() => handleTypeChange("predictive")}
+                            checked={type === "predictive"}
+                            onChange={() => setType("predictive")}
                             className="form-radio text-blue-600"
                         />
                         Predictivo
@@ -95,8 +97,8 @@ export default function MapConfigModal({
                         <input
                             type="radio"
                             name="revision"
-                            checked={mapConfig.data_source === "revision"}
-                            onChange={() => handleDataSourceChange("revision")}
+                            checked={data_source === "revision"}
+                            onChange={() => setDataSource("revision")}
                             className="form-radio text-blue-600"
                         />
                         Revision
@@ -106,28 +108,25 @@ export default function MapConfigModal({
                         <input
                             type="radio"
                             name="date-range"
-                            checked={mapConfig.data_source === "date-range"}
-                            onChange={() => handleDataSourceChange("date-range")}
+                            checked={data_source === "date-range"}
+                            onChange={() => setDataSource("date-range")}
                             className="form-radio text-blue-600"
                         />
                         Rango de fechas
                     </label>
                 </div>
 
-                {mapConfig.data_source === "revision" && (
+                {data_source === "revision" && (
                     <div className="mt-4 flex items-center gap-4">
                         <label htmlFor="revision-select" className="min-w-[120px] font-medium">
                             Selecciona una revisión
                         </label>
                         <select
                             id="revision-select"
-                            value={mapConfig.revision}
-                            onChange={(e) => handleRevisionSetChange(e.target.value)}
+                            defaultValue={revision}
+                            onChange={(e) => setRevision(e.target.value)}
                             className="border rounded px-3 py-1"
                         >
-                            <option value="" disabled>
-                                -- Selecciona --
-                            </option>
                             {revisions.map((revision) => (
                                 <option key={revision.uuid} value={revision.uuid}>
                                     {revision.name} ({revision.dataQuantity} Datos)
@@ -137,7 +136,7 @@ export default function MapConfigModal({
                     </div>
                 )}
 
-                {mapConfig.data_source === "date-range" && (
+                {data_source === "date-range" && (
                     <div className="mt-4 flex items-center gap-4">
                         <label htmlFor="date-select" className="min-w-[120px] font-medium">
                             Selecciona una fecha
@@ -153,7 +152,7 @@ export default function MapConfigModal({
                 )}
 
                 <DialogClose asChild>
-                    <button className="mt-6 btn-secondary">Cerrar</button>
+                    <button className="mt-6 btn-secondary" onClick={handleSave}>Guardar</button>
                 </DialogClose>
             </DialogContent>
         </Dialog>
