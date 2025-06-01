@@ -7,11 +7,15 @@ import MapConfigModal from "@/components/MapConfigModal/MapConfigModal";
 import {MapConfig} from "@/types/MapConfig";
 
 const MapPage = () => {
-    const [mapConfig, setMapConfig] = useState<MapConfig>();
     const [clusters, setClusters] = useState({});
     const [loading, setLoading] = useState(true);
     const [selectedDay, setSelectedDay] = useState("monday");
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [mapConfig, setMapConfig] = useState<MapConfig>({
+        type: "predictive",
+        data_source: "revision",
+        revision: "latest",
+    });
 
     const InteractiveMap = useMemo(() => dynamic(
         () => import('@/components/InteractiveMap/InteractiveMap'),
@@ -22,9 +26,10 @@ const MapPage = () => {
     ), []);
 
     const getClusters = async () => {
+        console.log("Fetching clusters");
         setLoading(true);
         try {
-            const response = await api.get("/revision/predict");
+            const response = await api.get(`/predict?revision=${mapConfig.revision}`);
             setClusters(response.data);
         } finally {
             setLoading(false);
@@ -32,14 +37,8 @@ const MapPage = () => {
     };
 
     useEffect(() => {
-        const defaultProperties = {
-            type: "Predictivo",
-            data_source: ""
-        }
-
-        setMapConfig(defaultProperties)
         getClusters();
-    }, []);
+    }, [mapConfig]);
 
     const dayOptions = [
         { label: "Lunes", value: "monday" },
@@ -55,8 +54,18 @@ const MapPage = () => {
         <>
             <div className="h-full flex flex-col">
                 <div className="basis-[6%] flex items-center justify-between">
-                    <h1 className="text-2xl font-bold text-blue-850">Mapa Interactivo ({mapConfig?.type})</h1>
-                    <MapConfigModal open={isDialogOpen} onOpenChange={setIsDialogOpen} />
+                    <h1 className="text-2xl font-bold text-blue-850">
+                        Mapa Interactivo ({
+                        mapConfig?.type === 'predictive' ? 'Predictivo'
+                        : 'Puntos Calientes'
+                    })
+                    </h1>
+                    <MapConfigModal
+                        open={isDialogOpen}
+                        onOpenChange={setIsDialogOpen}
+                        mapConfig={mapConfig}
+                        setMapConfig={setMapConfig}
+                    />
                 </div>
 
                 <div className="basis-[6%] flex items-center gap-4">

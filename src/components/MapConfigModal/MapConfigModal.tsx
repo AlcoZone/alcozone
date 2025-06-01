@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import {
     Dialog,
     DialogTrigger,
@@ -9,17 +9,48 @@ import {
     DialogTitle,
     DialogClose,
 } from "@/components/ui/dialog";
+import { MapConfig } from "@/types/MapConfig";
+import {RevisionMetadata} from "@/types/RevisionMetadata";
+import api from "@/services/api";
 
-export default function MapConfigModal({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
-    const [dataSource, setDataSource] = useState("revision");
-    const [selectedRevision, setSelectedRevision] = useState("");
+export default function MapConfigModal({
+   open,
+   onOpenChange,
+   mapConfig,
+   setMapConfig,
+}: {
+    open: boolean;
+    onOpenChange: (open: boolean) => void
+    mapConfig: MapConfig;
+    setMapConfig: (config: MapConfig) => void;
+}) {
+    const [revisions, setRevisions] = useState<RevisionMetadata[]>([]);
     const [selectedDate, setSelectedDate] = useState("");
 
-    const revisionsPlaceholder = [
-        { label: "Revision 1", value: "revision-1" },
-        { label: "Revision 2", value: "revision-2" },
-        { label: "Revision 3", value: "revision-3" },
-    ];
+    const handleTypeChange = (type: string) => {
+        setMapConfig({ ...mapConfig, type });
+    };
+
+    const handleDataSourceChange = (data_source: string) => {
+        setMapConfig({ ...mapConfig, data_source });
+    };
+
+    const handleRevisionSetChange = (revision: string) => {
+        setMapConfig({ ...mapConfig, revision });
+    };
+
+    const getRevisions = async () => {
+        try {
+            const response = await api.get("/revision/list");
+            setRevisions(response.data);
+        } catch (e) {
+            console.error(e);
+        }
+    };
+
+    useEffect(() => {
+        getRevisions()
+    }, [mapConfig]);
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -38,9 +69,8 @@ export default function MapConfigModal({ open, onOpenChange }: { open: boolean; 
                         <input
                             type="radio"
                             name="hotspot"
-                            value="hotspot"
-                            // checked={dataSource === "revision"}
-                            // onChange={() => setDataSource("revision")}
+                            checked={mapConfig.type === "hotspot"}
+                            onChange={() => handleTypeChange("hotspot")}
                             className="form-radio text-blue-600"
                         />
                         Puntos Calientes
@@ -49,10 +79,9 @@ export default function MapConfigModal({ open, onOpenChange }: { open: boolean; 
                     <label className="inline-flex items-center gap-2 cursor-pointer">
                         <input
                             type="radio"
-                            name="data-source"
-                            value="data-range"
-                            // checked={dataSource === "data-range"}
-                            // onChange={() => setDataSource("date-range")}
+                            name="predictive"
+                            checked={mapConfig.type === "predictive"}
+                            onChange={() => handleTypeChange("predictive")}
                             className="form-radio text-blue-600"
                         />
                         Predictivo
@@ -65,10 +94,9 @@ export default function MapConfigModal({ open, onOpenChange }: { open: boolean; 
                     <label className="inline-flex items-center gap-2 cursor-pointer">
                         <input
                             type="radio"
-                            name="data-source"
-                            value="revision"
-                            checked={dataSource === "revision"}
-                            onChange={() => setDataSource("revision")}
+                            name="revision"
+                            checked={mapConfig.data_source === "revision"}
+                            onChange={() => handleDataSourceChange("revision")}
                             className="form-radio text-blue-600"
                         />
                         Revision
@@ -77,40 +105,39 @@ export default function MapConfigModal({ open, onOpenChange }: { open: boolean; 
                     <label className="inline-flex items-center gap-2 cursor-pointer">
                         <input
                             type="radio"
-                            name="data-source"
-                            value="rango-fechas"
-                            checked={dataSource === "rango-fechas"}
-                            onChange={() => setDataSource("date-range")}
+                            name="date-range"
+                            checked={mapConfig.data_source === "date-range"}
+                            onChange={() => handleDataSourceChange("date-range")}
                             className="form-radio text-blue-600"
                         />
                         Rango de fechas
                     </label>
                 </div>
 
-                {dataSource === "revision" && (
+                {mapConfig.data_source === "revision" && (
                     <div className="mt-4 flex items-center gap-4">
                         <label htmlFor="revision-select" className="min-w-[120px] font-medium">
                             Selecciona una revisión
                         </label>
                         <select
                             id="revision-select"
-                            value={selectedRevision}
-                            onChange={(e) => setSelectedRevision(e.target.value)}
+                            value={mapConfig.revision}
+                            onChange={(e) => handleRevisionSetChange(e.target.value)}
                             className="border rounded px-3 py-1"
                         >
                             <option value="" disabled>
                                 -- Selecciona --
                             </option>
-                            {revisionsPlaceholder.map((rev) => (
-                                <option key={rev.value} value={rev.value}>
-                                    {rev.label}
+                            {revisions.map((revision) => (
+                                <option key={revision.uuid} value={revision.uuid}>
+                                    {revision.name} ({revision.dataQuantity} Datos)
                                 </option>
                             ))}
                         </select>
                     </div>
                 )}
 
-                {dataSource === "date-range" && (
+                {mapConfig.data_source === "date-range" && (
                     <div className="mt-4 flex items-center gap-4">
                         <label htmlFor="date-select" className="min-w-[120px] font-medium">
                             Selecciona una fecha
