@@ -15,11 +15,7 @@ import React from "react";
 
 type ComparisonWidgetProps = {
   title: string;
-  data: Array<{
-    month: string;
-    alcoholRelated: number;
-    nonAlcoholRelated: number;
-  }>;
+  data: Array<{ month_name: string; accidents: string | number }>;
   config: Record<string, { label: string; color: string }>;
   footer: string;
   chartHeight: number;
