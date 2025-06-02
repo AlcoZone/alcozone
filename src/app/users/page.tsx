@@ -1,6 +1,5 @@
 "use client";
 
-import { Banner } from "@/components/Banner/Banner";
 import ConfirmButtons from "@/components/ConfirmButtons/ConfirmButtons";
 import { Menu } from "@/components/Menu/Menu";
 import { Table } from "@/components/Table/Table";
@@ -11,6 +10,7 @@ import React, { useState, useEffect } from "react";
 type Role = "Administrador" | "Data Visualizer" | "Data Manager";
 
 interface UserRow {
+  id: number; // agrega el id aquí
   name: string;
   email: string;
   password: string;
@@ -38,10 +38,23 @@ const actions = [
   },
   {
     label: "Eliminar",
-    onClick: (row: any) => alert(`Eliminar: ${row.name}`),
+    onClick: async (row: UserRow) => {
+      const confirmed = window.confirm(`¿Estás seguro de eliminar a ${row.name}?`);
+      if (!confirmed) return;
+
+      try {
+        await api.delete(`/users/delete/${row.id}`);
+        alert("Usuario eliminado exitosamente.");
+        await fetchUsers();
+      } catch (error: any) {
+        alert(`Error al eliminar el usuario: ${error?.response?.data?.message || error.message}`);
+      }
+    },
     className: "text-red-500 hover:underline cursor-pointer font-medium",
   },
 ];
+
+let fetchUsers: () => Promise<void>;
 
 export default function DatabasePage() {
   const [menuHidden, setMenuHidden] = useState(false);
@@ -49,17 +62,20 @@ export default function DatabasePage() {
   const [error, setError] = useState<string>("");
   const [data, setData] = useState<UserRow[]>([]);
 
-  const fetchUsers = async () => {
+  fetchUsers = async () => {
     try {
       const response = await api.get("/user/all");
       const users = response.data;
 
-      const mappedUsers: UserRow[] = users.map((user: any) => ({
-        name: user.username,
-        email: user.email,
-        password: "***************",
-        role: (Object.keys(roleMap) as Role[]).find(key => roleMap[key] === user.role_id) || "Desconocido",
-      }));
+      const mappedUsers: UserRow[] = users
+        .filter((user: any) => user.deleted === false)  // Filtra solo usuarios activos
+        .map((user: any) => ({
+          id: user.id,
+          name: user.username,
+          email: user.email,
+          password: "***************",
+          role: (Object.keys(roleMap) as Role[]).find(key => roleMap[key] === user.role_id) || "Desconocido",
+        }));
 
       setData(mappedUsers);
     } catch (err) {
@@ -67,7 +83,7 @@ export default function DatabasePage() {
     }
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     fetchUsers();
   }, []);
 
@@ -109,7 +125,7 @@ export default function DatabasePage() {
     };
 
     try {
-      const response = await api.post("/user/register", payload);
+      await api.post("/user/register", payload);
       alert("Usuario registrado exitosamente.");
       setNewUser({ user: "", email: "", password: "", role: "" });
       await fetchUsers();
@@ -120,8 +136,7 @@ export default function DatabasePage() {
 
   return (
     <>
-      <Banner />
-      <Menu variant="admin" onToggle={setMenuHidden}>
+      <Menu variant="admin">
         <div
           className="bg-white shadow-xl rounded-xl p-6 space-y-4 transition-all duration-300"
           style={{
@@ -129,14 +144,14 @@ export default function DatabasePage() {
             marginLeft: "-220px",
             marginRight: "30px",
             bottom: "50px",
-            height: "calc(100vh - 175px)",
-            width: menuHidden ? "calc(100vw - 150px)" : "calc(100vw - 300px)",
+            height: "calc(100vh - 100px)",
+            width: "calc(100vw - 330px)",
             overflowY: "auto",
           }}
         >
           <h1 className="text-3xl font-bold text-blue-850">Usuarios</h1>
 
-          <div className="w-full max-w-full overflow-y-auto" style={{ maxHeight: "320px" }}>
+          <div className="w-full max-w-full overflow-y-auto" style={{ maxHeight: "380px" }}>
             <Table
               variant="withActions"
               columns={[
@@ -149,44 +164,43 @@ export default function DatabasePage() {
               actions={actions}
             />
           </div>
-
-          <h1 className="text-1xl font-bold text-gray-600 text-center">Registrar nuevo usuario</h1>
-
-          <div className="mt-4 flex justify-center">
-            <TableInput
-              label="Usuario"
-              type="text"
-              id="user"
-              value={newUser.user}
-              onChange={handleInputChange}
-              placeholder="Nombre de usuario"
-            />
-            <TableInput
-              label="Correo electrónico"
-              type="email"
-              id="email"
-              value={newUser.email}
-              onChange={handleInputChange}
-              placeholder="Email"
-            />
-            <TableInput
-              label="Contraseña"
-              type="password"
-              id="password"
-              value={newUser.password}
-              onChange={handleInputChange}
-              placeholder="Contraseña"
-            />
-            <TableInput
-              label="Rol"
-              type="text"
-              id="role"
-              value={newUser.role}
-              onChange={handleInputChange}
-              placeholder="Rol"
-            />
+          <div className="mt-10">
+            <h1 style={{ fontSize: "1.375rem" }} className=" font-bold text-gray-600 text-center mb-4">Registrar nuevo usuario</h1>
+            <div className="mt- flex justify-center">
+              <TableInput
+                label="Usuario"
+                type="text"
+                id="user"
+                value={newUser.user}
+                onChange={handleInputChange}
+                placeholder="Nombre de usuario"
+              />
+              <TableInput
+                label="Correo electrónico"
+                type="email"
+                id="email"
+                value={newUser.email}
+                onChange={handleInputChange}
+                placeholder="Email"
+              />
+              <TableInput
+                label="Contraseña"
+                type="password"
+                id="password"
+                value={newUser.password}
+                onChange={handleInputChange}
+                placeholder="Contraseña"
+              />
+              <TableInput
+                label="Rol"
+                type="text"
+                id="role"
+                value={newUser.role}
+                onChange={handleInputChange}
+                placeholder="Rol"
+              />
+            </div>
           </div>
-
           <div className="mt-4 flex justify-center">
             <ConfirmButtons variant="registerNewUser" onClick={handleSubmit} />
           </div>
