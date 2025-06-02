@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/chart"
 
 type Props = {
-  data: { date: string; accidents: number }[]
+  data: { accident_date: string; total_accidents: number }[]
   config: ChartConfig
   title: string
   description: string
@@ -43,7 +43,7 @@ const LineGraphWidget = ({
           >
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="date"
+              dataKey="accident_date"
               tickLine={false}
               axisLine={false}
               tickFormatter={() => ""}
@@ -51,7 +51,7 @@ const LineGraphWidget = ({
             />
             <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
             <Line
-              dataKey="accidents"
+              dataKey="total_accidents"
               type="monotone"
               stroke="var(--color-desktop)"
               strokeWidth={2}
