@@ -8,7 +8,7 @@ const PrivacyPage = () => {
         <Card className="bg-white">
           <CardHeader>
             <CardTitle className="text-3xl font-bold text-blue-850 mb-4">
-              Términos y Condiciones de AlcoZone
+              Política de Privacidad de AlcoZone
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6 text-gray-700">
