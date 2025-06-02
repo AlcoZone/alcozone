@@ -39,6 +39,15 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+  SelectLabel,
+  SelectGroup,
+} from '@/components/ui/select';
 import { cn } from "@/lib/utils";
 import api from "@/services/api";
 import { WidgetDetail } from "@/types/WidgetDetail";
@@ -87,6 +96,15 @@ export default function DashboardPage() {
   const [isSaving, setIsSaving] = useState(false);
 
   const rowHeight = 100;
+
+  const [selectedTown, setSelectedTown] = useState('');//mío
+  const handleTownChange = (value: string) => {
+    if (value === "clear") {
+      setSelectedTown("");
+    } else {
+      setSelectedTown(value);
+    }
+  };
 
   useEffect(() => {
     if (!layoutLoading) {
@@ -337,83 +355,113 @@ export default function DashboardPage() {
               className="text-xl font-semibold border-none px-2 py-1 bg-white focus-visible:ring-0 focus-visible:ring-offset-0"
             />
           ) : (
-            <Popover open={open} onOpenChange={setOpen}>
-              <PopoverTrigger asChild>
-                <Button variant="outline" className="w-[220px] justify-between">
-                  {selectedDashboard === null
-                    ? "Nuevo Dashboard"
-                    : availableDashboards.find(
-                      (d) => d.id === selectedDashboard
-                    )?.name || "Selecciona un dashboard"}
-                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-[220px] p-0">
-                <Command>
-                  <CommandInput placeholder="Buscar..." className="text-sm" />
-                  <CommandList>
-                    <CommandEmpty>No hay dashboards.</CommandEmpty>
-                    <CommandGroup>
-                      {availableDashboards.map((d) => (
-                        <div
-                          key={d.id}
-                          className="flex items-center justify-between px-2"
-                        >
-                          <CommandItem
-                            value={d.id}
-                            onSelect={(val) => {
-                              setSelectedDashboard(val);
-                              localStorage.setItem(
-                                "selectedDashboardUuid",
-                                val
-                              );
-                              setOpen(false);
-                              const selected = dashboards.find(
-                                (db) => db.uuid === val
-                              );
-                              setDraftName(selected?.name || "");
-                            }}
-                            className="flex-1 flex items-center space-x-2 overflow-hidden"
+            <div className="flex justify-between items-center mb-6 gap-4">
+              <Popover open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className="w-[220px] justify-between">
+                    {selectedDashboard === null
+                      ? "Nuevo Dashboard"
+                      : availableDashboards.find(
+                        (d) => d.id === selectedDashboard
+                      )?.name || "Selecciona un dashboard"}
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[220px] p-0">
+                  <Command>
+                    <CommandInput placeholder="Buscar..." className="text-sm" />
+                    <CommandList>
+                      <CommandEmpty>No hay dashboards.</CommandEmpty>
+                      <CommandGroup>
+                        {availableDashboards.map((d) => (
+                          <div
+                            key={d.id}
+                            className="flex items-center justify-between px-2"
                           >
-                            <Check
-                              className={`h-4 w-4 flex-shrink-0 ${selectedDashboard === d.id
-                                ? "opacity-100"
-                                : "opacity-0"
-                                }`}
-                            />
-                            <span className="truncate">{d.name}</span>
-                          </CommandItem>
+                            <CommandItem
+                              value={d.id}
+                              onSelect={(val) => {
+                                setSelectedDashboard(val);
+                                localStorage.setItem(
+                                  "selectedDashboardUuid",
+                                  val
+                                );
+                                setOpen(false);
+                                const selected = dashboards.find(
+                                  (db) => db.uuid === val
+                                );
+                                setDraftName(selected?.name || "");
+                              }}
+                              className="flex-1 flex items-center space-x-2 overflow-hidden"
+                            >
+                              <Check
+                                className={`h-4 w-4 flex-shrink-0 ${selectedDashboard === d.id
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                                  }`}
+                              />
+                              <span className="truncate">{d.name}</span>
+                            </CommandItem>
 
-                          <Trash2
-                            size={16}
-                            className="ml-2 flex-shrink-0 cursor-pointer"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDeleteDashboard(d.name, d.id);
-                            }}
-                          />
-                        </div>
-                      ))}
-                      <CommandItem
-                        className="text-primary font-medium mt-1 border-t pt-2 cursor-pointer"
-                        onSelect={() => {
-                          setOpen(false);
-                          setSelectedDashboard(null);
-                          setSavedLayout([]);
-                          setDraftLayout([]);
-                          setSavedName("Nuevo Dashboard");
-                          setDraftName("Nuevo Dashboard");
-                          setIsEditing(true);
-                        }}
+                            <Trash2
+                              size={16}
+                              className="ml-2 flex-shrink-0 cursor-pointer"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteDashboard(d.name, d.id);
+                              }}
+                            />
+                          </div>
+                        ))}
+                        <CommandItem
+                          className="text-primary font-medium mt-1 border-t pt-2 cursor-pointer"
+                          onSelect={() => {
+                            setOpen(false);
+                            setSelectedDashboard(null);
+                            setSavedLayout([]);
+                            setDraftLayout([]);
+                            setSavedName("Nuevo Dashboard");
+                            setDraftName("Nuevo Dashboard");
+                            setIsEditing(true);
+                          }}
+                        >
+                          <CirclePlus className="mr-2 h-4 w-4" />
+                          Nuevo Dashboard
+                        </CommandItem>
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+
+              <Select onValueChange={handleTownChange} value={selectedTown}>
+                <SelectTrigger className="w-[250px] ml-[500px]">
+                  <SelectValue placeholder="Selecciona una alcaldía" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="clear" className="cursor-pointer">
+                      -- Sin selección --
+                    </SelectItem>
+                    <SelectLabel>Alcaldías CDMX</SelectLabel>
+                    {[
+                      "Álvaro Obregón", "Azcapotzalco", "Benito Juárez", "Coyoacán",
+                      "Cuajimalpa de Morelos", "Cuauhtémoc", "Gustavo A. Madero", "Iztacalco",
+                      "Iztapalapa", "La Magdalena Contreras", "Miguel Hidalgo", "Milpa Alta",
+                      "Tláhuac", "Tlalpan", "Venustiano Carranza", "Xochimilco"
+                    ].map((name, index) => (
+                      <SelectItem
+                        key={index}
+                        value={name}
+                        className="cursor-pointer transition-colors transition-transform duration-300 ease-in-out origin-left hover:scale-110 hover:!text-blue-850 text-sm m-0 data-[state=checked]:!text-blue-850"
                       >
-                        <CirclePlus className="mr-2 h-4 w-4" />
-                        Nuevo Dashboard
-                      </CommandItem>
-                    </CommandGroup>
-                  </CommandList>
-                </Command>
-              </PopoverContent>
-            </Popover>
+                        {name}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
           )}
         </div>
 
