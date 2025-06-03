@@ -586,6 +586,7 @@ export default function DashboardPage() {
                 Cuauhtémoc: "#0095FF",
                 "Benito Juárez": "#00E096",
               }}
+              chartHeight={getHeight("bar-chart")}
             />
           </div>
         )}

@@ -15,7 +15,7 @@ type ComparisonWidgetProps = {
   data: Array<{ month_name: string; accidents: string | number }>;
   config: Record<string, { label: string; color: string }>;
   footer: string;
-  chartHeight: number;
+  chartHeight?: number;
 };
 
 export const ComparisonWidget: React.FC<ComparisonWidgetProps> = ({
@@ -54,6 +54,8 @@ export const ComparisonWidget: React.FC<ComparisonWidgetProps> = ({
     return null;
   }
 
+  const defaultHeight = 210;
+
   return (
     <Card className={`w-full ${chartHeight ? "h-full" : ""}`}>
       <CardHeader className="text-center">
@@ -62,7 +64,11 @@ export const ComparisonWidget: React.FC<ComparisonWidgetProps> = ({
       <CardContent className={chartHeight ? "flex-1" : ""}>
         <ChartContainer
           config={config}
-          style={{ width: "100%", height: chartHeight - 130 || 210 }}
+          style={{
+            width: "100%",
+            height:
+              chartHeight !== undefined ? chartHeight - 130 : defaultHeight,
+          }}
         >
           <AreaChart
             data={data.map((item) => ({
