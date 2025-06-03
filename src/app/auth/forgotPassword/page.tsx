@@ -7,6 +7,7 @@ import { getResetPassword } from "@/services/User/getResetPassword";
 import { TextInput } from "@/components/TextInput/TextInput";
 import ConfirmButtons from "@/components/ConfirmButtons/ConfirmButtons";
 import { Icon } from "@/components/Icon/Icon";
+import { FirebaseError } from "firebase/app";
 
 const ForgotPasswordPage = () => {
   const [email, setEmail] = useState("");
@@ -18,34 +19,35 @@ const ForgotPasswordPage = () => {
   const handleSendResetEmail = async () => {
     setError("");
     setStatus("idle");
-  
+
     if (!email.trim()) {
       setError("Por favor, completa el campo.");
       return;
     }
-  
+
     setLoadingResetEmail(true);
-  
+
     try {
-      // Firebase primero valida el formato
-      await resetPassword(email); 
-  
-      // Si no lanza error, ahora sí validamos si existe en backend
+      await resetPassword(email);
+
       const exists = await getResetPassword(email);
       if (!exists) {
         setError("No se encontró un usuario con ese correo.");
         return;
       }
-  
+
       setStatus("success");
-    } catch (err: any) {
-      switch (err.code) {
-        case "auth/invalid-email":
-          setError("El formato del correo es inválido.");
-          break;
-        default:
-          setError("Ocurrió un error al enviar el correo.");
-          break;
+    } catch (err) {
+      if (err instanceof FirebaseError) {
+        switch (err.code) {
+          case "auth/invalid-email":
+            setError("El formato del correo es inválido.");
+            break;
+          default:
+            setError("Ocurrió un error al enviar el correo.");
+        }
+      } else {
+        setError("Error inesperado.");
       }
     } finally {
       setLoadingResetEmail(false);
