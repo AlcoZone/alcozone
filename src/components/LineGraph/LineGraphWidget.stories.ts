@@ -11,15 +11,15 @@ export default meta;
 type Story = StoryObj<typeof LineGraphWidget>;
 
 const sampleData = [
-  { date: "2025-05-01", accidents: 120 },
-  { date: "2025-05-02", accidents: 150 },
-  { date: "2025-05-03", accidents: 110 },
-  { date: "2025-05-04", accidents: 180 },
-  { date: "2025-05-05", accidents: 90 },
+  { accident_date: "2025-05-01", total_accidents: 180 },
+  { accident_date: "2025-05-02", total_accidents: 150 },
+  { accident_date: "2025-05-03", total_accidents: 200 },
+  { accident_date: "2025-05-04", total_accidents: 210 },
+  { accident_date: "2025-05-05", total_accidents: 90 },
 ];
 
 const sampleConfig = {
-  desktop: {
+  total_accidents: {
     label: "Accidentes",
     color: "#001391",
   },
