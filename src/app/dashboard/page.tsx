@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 import { Responsive, WidthProvider } from "react-grid-layout";
 
@@ -58,6 +58,12 @@ import { DonutChartWidget } from "@/components/DonutChartWidget/DonutChartWidget
 import AccidentCauseTableWidget from "@/components/Table/AccidentCauseTableWidget";
 import ReportChannelWidget from "@/components/ReportChannelWidget/ReportChannelWidget";
 import LineGraphWidget from "@/components/LineGraph/LineGraphWidget";
+import { getMonthlyAccidents } from "@/services/widgets/getMonthlyAccidents";
+import { getAccidentsCount } from "@/services/widgets/getAccidentsCount";
+import { getDailyAccidents } from "@/services/widgets/getDailyAccidents";
+import { getAccidentsPercentage } from "@/services/widgets/getAccidentsPercentage";
+import { getAccidentsByReportSource } from "@/services/widgets/getAccidentsByReportSource";
+
 
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
@@ -97,7 +103,39 @@ export default function DashboardPage() {
 
   const rowHeight = 100;
 
-  const [selectedTown, setSelectedTown] = useState('');//mío
+  //Dynamic Widgets
+  type ComparisonData = {
+    month_name: string;
+    accidents: string;
+  };
+
+  type Accidente = {
+    subType?: string;
+    accidentCount: number;
+  };
+
+  type LineGraphData = {
+    accident_date: string;
+    total_accidents: number;
+  }
+
+  type RadialChartData = {
+    percentage: number;
+    subType: string;
+  }
+
+  type ReportChannelData = {
+    report_source: string;
+    total_accidents: number;
+  }
+
+  const [selectedTown, setSelectedTown] = useState('');
+  const [comparisonData, setComparisonData] = useState<ComparisonData[]>([]);
+  const [accidentCauseData, setAccidentCauseData] = useState<Accidente[]>([]);
+  const [lineGraphData, setLineGraphData] = useState<LineGraphData[]>([]);
+  const [radialChartData, setRadialChartData] = useState<RadialChartData[]>([]);
+  const [reportChannelData, setReportChannelData] = useState<ReportChannelData[]>([]);
+
   const handleTownChange = (value: string) => {
     if (value === "clear") {
       setSelectedTown("");
@@ -105,6 +143,67 @@ export default function DashboardPage() {
       setSelectedTown(value);
     }
   };
+
+  useEffect(() => {
+    const fetchComparisonData = async () => {
+      try {
+        const data = await getMonthlyAccidents(selectedTown);
+        setComparisonData(data);
+      } catch (error) {
+        console.error("Error fetching comparison data: ", error);
+      }
+    };
+    fetchComparisonData();
+  }, [selectedTown]);
+
+  useEffect(() => {
+    const fetchAccidentCauseData = async () => {
+      try {
+        const data = await getAccidentsCount(selectedTown);
+        setAccidentCauseData(data);
+      } catch (error) {
+        console.error("Error fetching accident cause data: ", error);
+      }
+    };
+    fetchAccidentCauseData();
+  }, [selectedTown]);
+
+  useEffect(() => {
+    const fetchLineGraphData = async () => {
+      try {
+        const data = await getDailyAccidents(selectedTown);
+        setLineGraphData(data);
+      } catch (error) {
+        console.error("Error fetching daily accidents data: ", error);
+      }
+    };
+    fetchLineGraphData();
+  }, [selectedTown]);
+
+  useEffect(() => {
+    const fetchRadialChartData = async () => {
+      try {
+        const data = await getAccidentsPercentage(selectedTown);
+        setRadialChartData(data);
+      } catch (error) {
+        console.error("Error fetching radial chart data: ", error);
+      }
+    };
+    fetchRadialChartData();
+  }, [selectedTown]);
+
+  useEffect(() => {
+    const fetchReportChannelData = async () => {
+      try {
+        const data = await getAccidentsByReportSource(selectedTown);
+        setReportChannelData(data);
+      } catch (error) {
+        console.error("Error fetching report channel data: ", error);
+      }
+    };
+    fetchReportChannelData();
+  }, [selectedTown]);
+
 
   useEffect(() => {
     if (!layoutLoading) {
@@ -604,20 +703,16 @@ export default function DashboardPage() {
             )}
             <ComparisonWidget
               title="Accidentes por Mes"
-              data={[
-                { month_name: "January", accidents: "15432" },
-                { month_name: "February", accidents: "16208" },
-                { month_name: "March", accidents: "17021" },
-                { month_name: "April", accidents: "14850" },
-                { month_name: "May", accidents: "15200" },
-              ]}
+              data={comparisonData}
               config={{
                 accidents: {
                   label: "Accidentes",
                   color: "#8884d8",
                 },
               }}
-              footer="Datos totales sin distinguir alcaldía"
+              footer={selectedTown
+                ? `Datos para ${selectedTown}`
+                : "Datos totales"}
               chartHeight={getHeight("comparison")}
             />
           </div>
@@ -636,13 +731,10 @@ export default function DashboardPage() {
             )}
             <RadialChartWidget
               title="Causas de accidentes"
-              description="Porcentaje de accidentes"
-              footer=""
-              data={[
-                { percentage: 28.47, subType: "Choque con lesionados" },
-                { percentage: 9.72, subType: "Motociclista" },
-                { percentage: 9.43, subType: "Atropellado" },
-              ]}
+              description={selectedTown
+                ? `Porcentaje de accidentes en ${selectedTown}`
+                : "Porcentaje de accidentes"}
+              data={radialChartData}
             />
           </div>
         )}
@@ -679,25 +771,10 @@ export default function DashboardPage() {
             )}
             <AccidentCauseTableWidget
               title="Tipos de accidentes"
-              subtitle="Datos totales sin distinguir alcaldía"
-              data={[
-                {
-                  subType: "Choque con lesionados",
-                  accidentCount: 4614,
-                },
-                {
-                  subType: "Motociclista",
-                  accidentCount: 1576,
-                },
-                {
-                  subType: "Atropellado",
-                  accidentCount: 1528,
-                },
-                {
-                  subType: "Ciclista",
-                  accidentCount: 232,
-                },
-              ]}
+              subtitle={selectedTown
+                ? `Datos para ${selectedTown}`
+                : "Datos totales"}
+              data={accidentCauseData}
             />
           </div>
         )}
@@ -713,21 +790,15 @@ export default function DashboardPage() {
             )}
             <ReportChannelWidget
               title="Canales de reporte"
-              description="Distribución de accidentes según el medio utilizado para reportarlos"
+              description={selectedTown
+                ? `Accidentes en ${selectedTown} según canal de reporte`
+                : "Accidentes según canal de reporte"}
               chartHeight={330}
-              data={[
-                { report_source: "LLAMADA DEL 911", total_accidents: 12845 },
-                { report_source: "RADIO", total_accidents: 914 },
-                { report_source: "REDES", total_accidents: 35 },
-                { report_source: "BOTÓN DE AUXILIO", total_accidents: 866 },
-                { report_source: "CÁMARA", total_accidents: 43 },
-                { report_source: "APLICATIVOS", total_accidents: 50 },
-                { report_source: "LLAMADA APP911", total_accidents: 46 },
-              ]}
+              data={reportChannelData}
               config={{
-                report: {
-                  label: "Reportes",
-                  color: "#0095FF",
+                total_accidents: {
+                  label: "Accidentes",
+                  color: "#8884d8",
                 },
               }}
             />
@@ -745,31 +816,12 @@ export default function DashboardPage() {
             )}
             <LineGraphWidget
               title="Tendencia diaria de accidentes"
-              description="Número de accidentes registrados por día"
-              data={[
-                { accident_date: "01-05-2025", total_accidents: 120 },
-                { accident_date: "02-05-2025", total_accidents: 95 },
-                { accident_date: "03-05-2025", total_accidents: 130 },
-                { accident_date: "04-05-2025", total_accidents: 655 },
-                { accident_date: "05-05-2025", total_accidents: 453 },
-                { accident_date: "06-05-2025", total_accidents: 123 },
-                { accident_date: "07-05-2025", total_accidents: 232 },
-                { accident_date: "08-05-2025", total_accidents: 213 },
-                { accident_date: "09-05-2025", total_accidents: 321 },
-                { accident_date: "10-05-2025", total_accidents: 130 },
-                { accident_date: "11-05-2025", total_accidents: 213 },
-                { accident_date: "12-05-2025", total_accidents: 768 },
-                { accident_date: "13-05-2025", total_accidents: 456 },
-                { accident_date: "14-05-2025", total_accidents: 546 },
-                { accident_date: "15-05-2025", total_accidents: 345 },
-                { accident_date: "16-05-2025", total_accidents: 234 },
-                { accident_date: "17-05-2025", total_accidents: 65 },
-                { accident_date: "18-05-2025", total_accidents: 345 },
-                { accident_date: "19-05-2025", total_accidents: 234 },
-                { accident_date: "20-05-2025", total_accidents: 243 },
-              ]}
+              description={selectedTown
+                ? `Número de accidentes registrados por día en ${selectedTown}`
+                : "Número de accidentes registrados por día"}
+              data={lineGraphData}
               config={{
-                desktop: {
+                total_accidents: {
                   label: "Accidentes",
                   color: "#8950FC",
                 },
