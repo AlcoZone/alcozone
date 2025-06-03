@@ -131,21 +131,39 @@ export default function DashboardPage() {
     return item ? item.h * rowHeight : 300;
   };
 
+  function findSlot(layout: GridItem[], w: number, h: number, cols = 12) {
+    for (let y = 0; ; y++) {
+      for (let x = 0; x <= cols - w; x++) {
+        const collides = layout.some((it) => {
+          const xOverlap = x < it.x + it.w && x + w > it.x;
+          const yOverlap = y < it.y + it.h && y + h > it.y;
+          return xOverlap && yOverlap;
+        });
+        if (!collides) return { x, y };
+      }
+    }
+  }
+
   const handleAddWidget = (widget: WidgetDetail) => {
-    const newItem: GridItem = {
-      id: 0,
-      uuid: uuidv4(),
-      widgetUuid: widget.uuid,
-      name: widget.name,
-      i: widget.name,
-      x: 0,
-      y: 0,
-      w: widget.minWidth,
-      h: widget.minHeight,
-      minW: widget.minWidth,
-      minH: widget.minHeight,
-    };
-    setDraftLayout((prev) => [...prev, newItem]);
+    setDraftLayout((prev) => {
+      const { x, y } = findSlot(prev, widget.minWidth, widget.minHeight);
+
+      const newItem: GridItem = {
+        id: 0,
+        uuid: uuidv4(),
+        widgetUuid: widget.uuid,
+        name: widget.name,
+        i: widget.name,
+        x,
+        y,
+        w: widget.minWidth,
+        h: widget.minHeight,
+        minW: widget.minWidth,
+        minH: widget.minHeight,
+      };
+
+      return [...prev, newItem];
+    });
     setHasChanges(true);
   };
 
