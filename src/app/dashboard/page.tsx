@@ -342,7 +342,7 @@ export default function DashboardPage() {
   return (
     <main
       className={cn(
-        "p-6 transition-colors w-full",
+        "transition-colors w-full",
         isEditing && "bg-muted",
         isEditing ? "cursor-grab" : "cursor-default"
       )}
