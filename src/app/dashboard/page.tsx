@@ -14,7 +14,7 @@ import { v4 as uuidv4 } from "uuid";
 import { GridItem, useDashboardLayout } from "@/hooks/useDashboardLayout";
 
 import { BarChartWidget } from "@/components/BarChartWidget/BarChartWidget";
-import { ComparisonWidgetResizable as ComparisonWidget } from "@/components/ComparisonWidget/ComparisonWidgetResizable";
+import { ComparisonWidget } from "@/components/ComparisonWidget/ComparisonWidget";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
