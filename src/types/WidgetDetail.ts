@@ -1,6 +1,10 @@
 export type WidgetDetail = {
-    id: number;
-    name: string;
-    description: string;
-    preview?: React.ReactNode;  
-}
+  id: number;
+  uuid: string;
+  name: string;
+  title: string;
+  description: string;
+  minWidth: number;
+  minHeight: number;
+  preview?: React.ReactNode;
+};

@@ -24,7 +24,7 @@ const allRoutes = [
   { path: "/download", variant: "download" },
 ];
 
-export const Menu = ({ children }: PropsWithChildren) => {
+export const Menu = () => {
   const { logout, role, name, user } = useAuth();
 
   if (user && !role) {
@@ -99,11 +99,8 @@ export const Menu = ({ children }: PropsWithChildren) => {
                 </span>
               </div>
             </div>
-          </Sidebar>
-
-          <div className="flex-1">{children}</div>
-        </div>
-      </SidebarProvider>
-    );
-  }
+        </Sidebar>
+      </div>
+    </SidebarProvider>
+  );
 };
