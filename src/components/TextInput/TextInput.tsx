@@ -40,7 +40,7 @@ export const TextInput = ({
           onClick={() => setShow((prev) => !prev)}
           className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600"
         >
-          {show ? <VisibilityOffIcon fontSize="small" /> : <VisibilityIcon fontSize="small" />}
+          {show ? <VisibilityIcon fontSize="small" /> : <VisibilityOffIcon fontSize="small" />}
         </button>
       )}
     </div>

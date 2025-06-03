@@ -8,6 +8,8 @@ import { usePathname } from "next/navigation";
 import { publicRoutes } from "@/utils/publicRoutes";
 import { Banner } from "@/components/Banner/Banner";
 
+
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isPublicRoute = publicRoutes.has(pathname);

@@ -6,5 +6,8 @@ export interface AuthContextProps {
     idToken: string | null;
     role: string | null;
     email: string | null;
+    name: string | null;
     logout?: () => Promise<void>;
+    refreshUser?: () => Promise<void>;
+    updateFirebaseDisplayName?: (newName: string) => Promise<void>; 
   }
