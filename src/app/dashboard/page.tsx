@@ -342,13 +342,10 @@ export default function DashboardPage() {
   return (
     <main
       className={cn(
-        "p-6 transition-colors h-screen w-full overflow-y-auto",
-        isEditing && "bg-muted"
+        "p-6 transition-colors w-full",
+        isEditing && "bg-muted",
+        isEditing ? "cursor-grab" : "cursor-default"
       )}
-      style={{
-        cursor: isEditing ? "grab" : "default",
-        minHeight: "calc(100vh - 175px)",
-      }}
     >
       <div className="flex justify-between items-center mb-6 gap-4">
         <div className="flex-1">

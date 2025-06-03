@@ -18,7 +18,7 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body>
+      <body className="bg-[#F2F2F2]">
         <AuthProvider>
           <AuthGuard>
             {isPublicRoute ? (
@@ -29,7 +29,9 @@ export default function RootLayout({
             ) : (
               <div className="flex">
                 <Menu />
-                {children}
+                <div className="bg-white shadow-xl rounded-xl p-6 space-y-4 transition-all duration-300 m-6 h-screen w-full overflow-y-auto">
+                  {children}
+                </div>
               </div>
             )}
           </AuthGuard>
