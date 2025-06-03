@@ -14,6 +14,7 @@ const AuthContext = createContext<AuthContextProps>({
   idToken: null,
   role: null,
   email: null,
+  updateDisplayName: () => {}, 
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -37,6 +38,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const updateDisplayName = (newName: string) => {
+    if (user) {
+      const updatedUser = { ...user, displayName: newName } as User;
+      setUser(updatedUser);
+    }
+  };
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setUser(firebaseUser);
@@ -45,7 +53,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         try {
           const token = await getIdToken(firebaseUser);
           setIdToken(token);
-          
+
           const userLogin = await getUserLogin();
 
           if (!userLogin?.role_id || !ROLE_MAP[userLogin.role_id]) {
@@ -54,9 +62,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           } else {
             setRole(ROLE_MAP[userLogin.role_id]);
           }
-          
-          setEmail(userLogin.email || null);
 
+          setEmail(userLogin.email || null);
         } catch (error) {
           console.error("Error obteniendo userLogin:", error);
           setIdToken(null);
@@ -76,7 +83,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, loading, idToken, role, email,logout }}>
+    <AuthContext.Provider
+      value={{ user, loading, idToken, role, email, updateDisplayName,logout }}
+    >
       {children}
     </AuthContext.Provider>
   );

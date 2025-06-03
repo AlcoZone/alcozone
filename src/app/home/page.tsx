@@ -55,6 +55,13 @@ const MainPage = () => {
   const [barChartColors, setBarChartColors] = useState<Record<string, string>>({});
   const [accidentCauseData, setAccidentCauseData] = useState<Accidente[]>([]);
 
+  
+  const [loadingDonut, setLoadingDonut] = useState(true);
+  const [loadingRadial, setLoadingRadial] = useState(true);
+  const [loadingComparison, setLoadingComparison] = useState(true);
+  const [loadingBar, setLoadingBar] = useState(true);
+  const [loadingTable, setLoadingTable] = useState(true);
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user ? user : null);
@@ -63,133 +70,166 @@ const MainPage = () => {
   }, []);
 
   useEffect(() => {
+    
     const fetchDonutData = async () => {
       try {
+        setLoadingDonut(true);
         const response = await api.get<AccidenteDonut[]>('/widgets/dangerous-town');
         setDonutChartData(response.data);
       } catch (error) {
-        console.error('Error al obtener datos donut:', error);
+        console.error("Error cargando DonutChart:", error);
+      } finally {
+        setLoadingDonut(false);
       }
     };
-    fetchDonutData();
-  }, []);
 
-  useEffect(() => {
+    
     const fetchRadialData = async () => {
       try {
-        const data = await getAccidentsPercentage();
-        setRadialData(data);
+        setLoadingRadial(true);
+        const radial = await getAccidentsPercentage();
+        setRadialData(radial);
       } catch (error) {
-        console.error('Error fetching radial chart data:', error);
+        console.error("Error cargando RadialChart:", error);
+      } finally {
+        setLoadingRadial(false);
       }
     };
-    fetchRadialData();
-  }, []);
 
-  useEffect(() => {
-    const fetchComparisonData = async () => {
+    
+    const fetchBarData = async () => {
       try {
-        const data = await getMonthlyAccidents();
-        setComparisonData(data);
-      } catch (error) {
-        console.error("Error fetching comparison data: ", error);
-      }
-    };
-    fetchComparisonData();
-  }, []);
-
-  useEffect(() => {
-    const fetchBarChartData = async () => {
-      try {
-        const data = await getDangerousTownPerMonth();
-        setBarChartData(data);
-        const towns = data.map((d: any) => d.town);
+        setLoadingBar(true);
+        const barData = await getDangerousTownPerMonth();
+        setBarChartData(barData);
+        const towns = barData.map((d: any) => d.town);
         setBarChartColors(generateColors(towns));
       } catch (error) {
-        console.error("Error fetching bar chart data: ", error);
+        console.error("Error cargando BarChart:", error);
+      } finally {
+        setLoadingBar(false);
       }
     };
-    fetchBarChartData();
-  }, []);
 
-  useEffect(() => {
-    const fetchAccidentCauses = async () => {
+    
+    const fetchComparisonData = async () => {
       try {
-        const data = await getAccidentsCount();
-        setAccidentCauseData(data);
+        setLoadingComparison(true);
+        const comparison = await getMonthlyAccidents();
+        setComparisonData(comparison);
       } catch (error) {
-        console.error("Error fetching accident causes:", error);
+        console.error("Error cargando Comparison:", error);
+      } finally {
+        setLoadingComparison(false);
       }
     };
-    fetchAccidentCauses();
+
+    
+    const fetchTableData = async () => {
+      try {
+        setLoadingTable(true);
+        const accidentCauses = await getAccidentsCount();
+        setAccidentCauseData(accidentCauses);
+      } catch (error) {
+        console.error("Error cargando Table:", error);
+      } finally {
+        setLoadingTable(false);
+      }
+    };
+
+    fetchDonutData();
+    fetchRadialData();
+    fetchBarData();
+    fetchComparisonData();
+    fetchTableData();
   }, []);
 
   return (
-<div className="flex flex-wrap h-screen overflow-auto px-4 pb-4 gap-4">
-  {/* Card 1 - DonutChartWidget */}
-  <div className="w-full md:w-[calc(33.33%-1rem)]">
-    <Card className="bg-transparent shadow-none border-none h-full flex flex-col pt-3 pb-0">
-      <CardContent className="flex-1 flex flex-col px-0">
-        <DonutChartWidget
-          data={donutChartData}
-          title="Alcaldías peligrosas"
-          footer="Alcaldías con más accidentes"
-          centerLabel="Accidentes"
-        />
-      </CardContent>
-    </Card>
-  </div>
+    <div className="flex flex-wrap h-screen overflow-auto px-4 pb-4 gap-4">
+      {/* DonutChartWidget */}
+      <div className="w-full md:w-[calc(33.33%-1rem)]">
+        <Card className="bg-transparent shadow-none border-none h-full flex flex-col pt-3 pb-0">
+          <CardContent className="flex-1 flex flex-col px-0">
+            {loadingDonut ? (
+              <p className="text-center text-xl font-semibold">Cargando...</p>
+            ) : (
+              <DonutChartWidget
+                data={donutChartData}
+                title="Alcaldías peligrosas"
+                footer="Alcaldías con más accidentes"
+                centerLabel="Accidentes"
+              />
+            )}
+          </CardContent>
+        </Card>
+      </div>
 
-  {/* Card 2 - RadialChartWidget (ocupa 2 columnas) */}
-  <div className="w-full md:w-[calc(66.66%-1rem)]">
-    <Card className="bg-transparent shadow-none border-none h-full flex flex-col pt-3 pb-0">
-      <CardContent className="flex-1 flex flex-col px-0">
-        <RadialChartWidget title="Causas de accidentes" data={radialData} />
-      </CardContent>
-    </Card>
-  </div>
+      {/* RadialChartWidget */}
+      <div className="w-full md:w-[calc(66.66%-1rem)]">
+        <Card className="bg-transparent shadow-none border-none h-full flex flex-col pt-3 pb-0">
+          <CardContent className="flex-1 flex flex-col px-0">
+            {loadingRadial ? (
+              <p className="text-center text-xl font-semibold">Cargando...</p>
+            ) : (
+              <RadialChartWidget title="Causas de accidentes" data={radialData} />
+            )}
+          </CardContent>
+        </Card>
+      </div>
 
-  {/* Card 3 - BarChartWidget */}
-  <div className="w-full md:w-[calc(33.33%-1rem)]">
-    <Card className="bg-transparent shadow-none border-none h-full flex flex-col pt-3 pb-0">
-      <CardContent className="flex-1 flex flex-col px-0">
-        <BarChartWidget
-          data={barChartData}
-          title="Top 2 alcaldías con más accidentes por mes"
-          description="Comparativa mensual de las alcaldías con más accidentes"
-          colors={barChartColors}
-        />
-      </CardContent>
-    </Card>
-  </div>
+      {/* BarChartWidget */}
+      <div className="w-full md:w-[calc(33.33%-1rem)]">
+        <Card className="bg-transparent shadow-none border-none h-full flex flex-col pt-3 pb-0">
+          <CardContent className="flex-1 flex flex-col px-0">
+            {loadingBar ? (
+              <p className="text-center text-xl font-semibold">Cargando...</p>
+            ) : (
+              <BarChartWidget
+                data={barChartData}
+                title="Top 2 alcaldías con más accidentes por mes"
+                description="Comparativa mensual de las alcaldías con más accidentes"
+                colors={barChartColors}
+              />
+            )}
+          </CardContent>
+        </Card>
+      </div>
 
-  {/* Card 4 - ComparisonWidget */}
-  <div className="w-full md:w-[calc(33.33%-1rem)]">
-    <Card className="bg-transparent shadow-none border-none h-full flex flex-col pt-3 pb-0">
-      <CardContent className="flex-1 flex flex-col px-0">
-        <ComparisonWidget
-          title="Accidentes por mes"
-          data={comparisonData}
-          footer="Año 2024"
-          config={comparisonConfig}
-        />
-      </CardContent>
-    </Card>
-  </div>
+      {/* ComparisonWidget */}
+      <div className="w-full md:w-[calc(33.33%-1rem)]">
+        <Card className="bg-transparent shadow-none border-none h-full flex flex-col pt-3 pb-0">
+          <CardContent className="flex-1 flex flex-col px-0">
+            {loadingComparison ? (
+              <p className="text-center text-xl font-semibold">Cargando...</p>
+            ) : (
+              <ComparisonWidget
+                title="Accidentes por mes"
+                data={comparisonData}
+                footer="Año 2024"
+                config={comparisonConfig}
+              />
+            )}
+          </CardContent>
+        </Card>
+      </div>
 
-  {/* Card 5 - AccidentCauseTableWidget */}
-  <div className="w-full md:w-[calc(33.33%-1rem)]">
-    <Card className="bg-transparent shadow-none border-none h-full flex flex-col pt-3 pb-0">
-      <CardContent className="flex-1 flex flex-col px-0">
-        <AccidentCauseTableWidget
-          data={accidentCauseData}
-          title="Tipos de accidentes"
-          subtitle="Año 2024"
-        />
-      </CardContent>
-    </Card>
-  </div>
-</div>
+      {/* AccidentCauseTableWidget */}
+      <div className="w-full md:w-[calc(33.33%-1rem)]">
+        <Card className="bg-transparent shadow-none border-none h-full flex flex-col pt-3 pb-0">
+          <CardContent className="flex-1 flex flex-col px-0">
+            {loadingTable ? (
+              <p className="text-center text-xl font-sans justify-center">Cargando...</p>
+            ) : (
+              <AccidentCauseTableWidget
+                data={accidentCauseData}
+                title="Tipos de accidentes"
+                subtitle="Año 2024"
+              />
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </div>
   );
 };
 
