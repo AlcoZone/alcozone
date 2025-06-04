@@ -1,35 +1,17 @@
 "use client";
 
 import ConfirmButtons from "@/components/ConfirmButtons/ConfirmButtons";
-import { Menu } from "@/components/Menu/Menu";
 import { Table } from "@/components/Table/Table";
 import { TableInput } from "@/components/TableInputs/tableInputs";
 import api from "@/services/api";
-import React, { useState, useEffect } from "react";
-
-type Role = "Administrador" | "Data Visualizer" | "Data Manager";
-
-interface UserRow {
-  id: number; // agrega el id aquí
-  name: string;
-  email: string;
-  password: string;
-  role: Role | "Desconocido";
-}
-
-interface NewUser {
-  user: string;
-  email: string;
-  password: string;
-  role: string;
-}
+import React, { useState} from "react";
+import {Role, UserRow, NewUser } from "@/types/User";
 
 const roleMap: Record<Role, number> = {
   "Administrador": 1,
   "Data Visualizer": 2,
   "Data Manager": 3,
 };
-
 const actions = [
   {
     label: "Modificar",
@@ -57,7 +39,6 @@ const actions = [
 let fetchUsers: () => Promise<void>;
 
 export default function DatabasePage() {
-  const [menuHidden, setMenuHidden] = useState(false);
   const [newUser, setNewUser] = useState<NewUser>({ user: "", email: "", password: "", role: "" });
   const [error, setError] = useState<string>("");
   const [data, setData] = useState<UserRow[]>([]);
@@ -68,7 +49,7 @@ export default function DatabasePage() {
       const users = response.data;
 
       const mappedUsers: UserRow[] = users
-        .filter((user: any) => user.deleted === false)  // Filtra solo usuarios activos
+        .filter((user: any) => user.deleted === false)  
         .map((user: any) => ({
           id: user.id,
           name: user.username,
@@ -135,23 +116,10 @@ export default function DatabasePage() {
   };
 
   return (
-    <>
-      <Menu variant="admin">
-        <div
-          className="bg-white shadow-xl rounded-xl p-6 space-y-4 transition-all duration-300"
-          style={{
-            marginTop: "50px",
-            marginLeft: "-220px",
-            marginRight: "30px",
-            bottom: "50px",
-            height: "calc(100vh - 100px)",
-            width: "calc(100vw - 330px)",
-            overflowY: "auto",
-          }}
-        >
-          <h1 className="text-3xl font-bold text-blue-850">Usuarios</h1>
+    <div className="h-[screen-40px]">
+          <h1 className="text-3xl font-bold text-blue-850 mb-4">Usuarios</h1>
 
-          <div className="w-full max-w-full overflow-y-auto" style={{ maxHeight: "380px" }}>
+          <div className="w-full max-w-full overflow-y-auto" style={{ maxHeight: "400px" }}>
             <Table
               variant="withActions"
               columns={[
@@ -210,8 +178,6 @@ export default function DatabasePage() {
               {error}
             </div>
           )}
-        </div>
-      </Menu>
-    </>
+    </div>
   );
 }

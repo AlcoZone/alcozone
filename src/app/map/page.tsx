@@ -9,7 +9,7 @@ const MapPage = () => {
     const [clusters, setClusters] = useState({})
 
     const PoCReactMap = useMemo(() => dynamic(
-        () => import('@/components/PoCReactMap/PoCReactMap.tsx'),
+        () => import('@/components/PoCReactMap/PoCReactMap'),
         {
             loading: () => <p>A map is loading</p>,
             ssr: false
