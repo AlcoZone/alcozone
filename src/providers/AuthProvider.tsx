@@ -27,6 +27,7 @@ export const AuthContext = createContext<AuthContextProps>({
   role: null,
   name: null,
   email: null,
+  updateDisplayName: () => {}, 
   logout: async () => {},
   refreshUser: async () => {},
   updateFirebaseDisplayName: async () => {},
@@ -52,6 +53,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       router.push("/auth/login");
     } catch (error) {
       console.error("Error al cerrar sesión:", error);
+    }
+  };
+
+  const updateDisplayName = (newName: string) => {
+    if (user) {
+      const updatedUser = { ...user, displayName: newName } as User;
+      setUser(updatedUser);
     }
   };
 
@@ -91,6 +99,26 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setUser(firebaseUser);
       if (firebaseUser) {
+        try {
+          const token = await getIdToken(firebaseUser);
+          setIdToken(token);
+
+          const userLogin = await getUserLogin();
+
+          if (!userLogin?.role_id || !ROLE_MAP[userLogin.role_id]) {
+            console.warn("roleId inválido o no mapeado:", userLogin?.role_id);
+            setRole(null);
+          } else {
+            setRole(ROLE_MAP[userLogin.role_id]);
+          }
+
+          setEmail(userLogin.email || null);
+        } catch (error) {
+          console.error("Error obteniendo userLogin:", error);
+          setIdToken(null);
+          setRole(null);
+          setEmail(null);
+        }
         await refreshUser();
       } else {
         setIdToken(null);
@@ -113,6 +141,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         role,
         name,
         email,
+        updateDisplayName
         logout,
         refreshUser,
         updateFirebaseDisplayName,
