@@ -1,6 +1,4 @@
 import api from "../api";
-// src/services/update/putUpdateDisplayName.ts
-
 
 export const putUpdateDisplayName = async (newDisplayName: string) => {
   const endpoint = '/users/display-name';

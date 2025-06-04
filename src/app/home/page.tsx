@@ -44,6 +44,17 @@ function generateColors(towns: string[]): Record<string, string> {
   return colorsMap;
 }
 
+// Componente reutilizable de carga con spinner
+const LoadingWidget = ({ message = "Loading..." }: { message?: string }) => (
+  <div className="flex justify-center items-center h-full">
+    <div className="flex flex-col items-center">
+    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#001391] mb-2"></div>
+
+      <p className="text-center text-xl font-sans">{message}</p>
+    </div>
+  </div>
+);
+
 const MainPage = () => {
   const router = useRouter();
   const [user, setUser] = useState<{ email: string } | null>(null);
@@ -55,7 +66,6 @@ const MainPage = () => {
   const [barChartColors, setBarChartColors] = useState<Record<string, string>>({});
   const [accidentCauseData, setAccidentCauseData] = useState<Accidente[]>([]);
 
-  
   const [loadingDonut, setLoadingDonut] = useState(true);
   const [loadingRadial, setLoadingRadial] = useState(true);
   const [loadingComparison, setLoadingComparison] = useState(true);
@@ -70,7 +80,6 @@ const MainPage = () => {
   }, []);
 
   useEffect(() => {
-    
     const fetchDonutData = async () => {
       try {
         setLoadingDonut(true);
@@ -83,7 +92,6 @@ const MainPage = () => {
       }
     };
 
-    
     const fetchRadialData = async () => {
       try {
         setLoadingRadial(true);
@@ -96,7 +104,6 @@ const MainPage = () => {
       }
     };
 
-    
     const fetchBarData = async () => {
       try {
         setLoadingBar(true);
@@ -111,7 +118,6 @@ const MainPage = () => {
       }
     };
 
-    
     const fetchComparisonData = async () => {
       try {
         setLoadingComparison(true);
@@ -124,7 +130,6 @@ const MainPage = () => {
       }
     };
 
-    
     const fetchTableData = async () => {
       try {
         setLoadingTable(true);
@@ -151,7 +156,7 @@ const MainPage = () => {
         <Card className="bg-transparent shadow-none border-none h-full flex flex-col pt-3 pb-0">
           <CardContent className="flex-1 flex flex-col px-0">
             {loadingDonut ? (
-              <p className="text-center text-xl font-semibold">Cargando...</p>
+              <LoadingWidget />
             ) : (
               <DonutChartWidget
                 data={donutChartData}
@@ -169,7 +174,7 @@ const MainPage = () => {
         <Card className="bg-transparent shadow-none border-none h-full flex flex-col pt-3 pb-0">
           <CardContent className="flex-1 flex flex-col px-0">
             {loadingRadial ? (
-              <p className="text-center text-xl font-semibold">Cargando...</p>
+              <LoadingWidget />
             ) : (
               <RadialChartWidget title="Causas de accidentes" data={radialData} />
             )}
@@ -182,7 +187,7 @@ const MainPage = () => {
         <Card className="bg-transparent shadow-none border-none h-full flex flex-col pt-3 pb-0">
           <CardContent className="flex-1 flex flex-col px-0">
             {loadingBar ? (
-              <p className="text-center text-xl font-semibold">Cargando...</p>
+              <LoadingWidget />
             ) : (
               <BarChartWidget
                 data={barChartData}
@@ -200,7 +205,7 @@ const MainPage = () => {
         <Card className="bg-transparent shadow-none border-none h-full flex flex-col pt-3 pb-0">
           <CardContent className="flex-1 flex flex-col px-0">
             {loadingComparison ? (
-              <p className="text-center text-xl font-semibold">Cargando...</p>
+              <LoadingWidget />
             ) : (
               <ComparisonWidget
                 title="Accidentes por mes"
@@ -218,7 +223,7 @@ const MainPage = () => {
         <Card className="bg-transparent shadow-none border-none h-full flex flex-col pt-3 pb-0">
           <CardContent className="flex-1 flex flex-col px-0">
             {loadingTable ? (
-              <p className="text-center text-xl font-sans justify-center">Cargando...</p>
+              <LoadingWidget />
             ) : (
               <AccidentCauseTableWidget
                 data={accidentCauseData}

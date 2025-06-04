@@ -1,4 +1,3 @@
-// src/services/update/putUpdatePassword.ts
 import api from "../api";
 
 export const putUpdatePassword = async (newPassword: string) => {
