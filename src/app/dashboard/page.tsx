@@ -63,6 +63,7 @@ import { getAccidentsCount } from "@/services/widgets/getAccidentsCount";
 import { getDailyAccidents } from "@/services/widgets/getDailyAccidents";
 import { getAccidentsPercentage } from "@/services/widgets/getAccidentsPercentage";
 import { getAccidentsByReportSource } from "@/services/widgets/getAccidentsByReportSource";
+import { Accidente, ComparisonData, LineGraphData, RadialChartData, ReportChannelData } from "@/types/WidgetsData";
 
 
 
@@ -103,32 +104,12 @@ export default function DashboardPage() {
 
   const rowHeight = 100;
 
-  //Dynamic Widgets
-  type ComparisonData = {
-    month_name: string;
-    accidents: string;
-  };
-
-  type Accidente = {
-    subType?: string;
-    accidentCount: number;
-  };
-
-  type LineGraphData = {
-    accident_date: string;
-    total_accidents: number;
-  }
-
-  type RadialChartData = {
-    percentage: number;
-    subType: string;
-  }
-
-  type ReportChannelData = {
-    report_source: string;
-    total_accidents: number;
-  }
-
+  const alcaldias = [
+    "Álvaro Obregón", "Azcapotzalco", "Benito Juárez", "Coyoacán",
+    "Cuajimalpa de Morelos", "Cuauhtémoc", "Gustavo A. Madero", "Iztacalco",
+    "Iztapalapa", "La Magdalena Contreras", "Miguel Hidalgo", "Milpa Alta",
+    "Tláhuac", "Tlalpan", "Venustiano Carranza", "Xochimilco"
+  ];
   const [selectedTown, setSelectedTown] = useState('');
   const [comparisonData, setComparisonData] = useState<ComparisonData[]>([]);
   const [accidentCauseData, setAccidentCauseData] = useState<Accidente[]>([]);
@@ -147,63 +128,65 @@ export default function DashboardPage() {
   useEffect(() => {
     const fetchComparisonData = async () => {
       try {
-        const data = await getMonthlyAccidents(selectedTown);
-        setComparisonData(data);
+        if (isWidgetVisible("comparison")) {
+          const data = await getMonthlyAccidents(selectedTown);
+          setComparisonData(data);
+        }
       } catch (error) {
         console.error("Error fetching comparison data: ", error);
       }
     };
     fetchComparisonData();
-  }, [selectedTown]);
 
-  useEffect(() => {
     const fetchAccidentCauseData = async () => {
       try {
-        const data = await getAccidentsCount(selectedTown);
-        setAccidentCauseData(data);
+        if (isWidgetVisible("accident-cause-table")) {
+          const data = await getAccidentsCount(selectedTown);
+          setAccidentCauseData(data);
+        }
       } catch (error) {
         console.error("Error fetching accident cause data: ", error);
       }
     };
     fetchAccidentCauseData();
-  }, [selectedTown]);
 
-  useEffect(() => {
     const fetchLineGraphData = async () => {
       try {
-        const data = await getDailyAccidents(selectedTown);
-        setLineGraphData(data);
+        if (isWidgetVisible("line-graph")) {
+          const data = await getDailyAccidents(selectedTown);
+          setLineGraphData(data);
+        }
       } catch (error) {
         console.error("Error fetching daily accidents data: ", error);
       }
     };
     fetchLineGraphData();
-  }, [selectedTown]);
 
-  useEffect(() => {
     const fetchRadialChartData = async () => {
       try {
-        const data = await getAccidentsPercentage(selectedTown);
-        setRadialChartData(data);
+        if (isWidgetVisible("radial-chart")) {
+          const data = await getAccidentsPercentage(selectedTown);
+          setRadialChartData(data);
+        }
       } catch (error) {
         console.error("Error fetching radial chart data: ", error);
       }
     };
     fetchRadialChartData();
-  }, [selectedTown]);
 
-  useEffect(() => {
     const fetchReportChannelData = async () => {
       try {
-        const data = await getAccidentsByReportSource(selectedTown);
-        setReportChannelData(data);
+        if (isWidgetVisible("report-channel")) {
+          const data = await getAccidentsByReportSource(selectedTown);
+          setReportChannelData(data);
+        }
       } catch (error) {
         console.error("Error fetching report channel data: ", error);
       }
     };
     fetchReportChannelData();
-  }, [selectedTown]);
 
+  }, [selectedTown, isEditing, draftLayout, savedLayout]);
 
   useEffect(() => {
     if (!layoutLoading) {
@@ -543,12 +526,7 @@ export default function DashboardPage() {
                       -- Sin selección --
                     </SelectItem>
                     <SelectLabel>Alcaldías CDMX</SelectLabel>
-                    {[
-                      "Álvaro Obregón", "Azcapotzalco", "Benito Juárez", "Coyoacán",
-                      "Cuajimalpa de Morelos", "Cuauhtémoc", "Gustavo A. Madero", "Iztacalco",
-                      "Iztapalapa", "La Magdalena Contreras", "Miguel Hidalgo", "Milpa Alta",
-                      "Tláhuac", "Tlalpan", "Venustiano Carranza", "Xochimilco"
-                    ].map((name, index) => (
+                    {alcaldias.map((name, index) => (
                       <SelectItem
                         key={index}
                         value={name}
