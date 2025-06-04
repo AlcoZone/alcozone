@@ -1,5 +1,5 @@
 import React from "react";
-import { Area, AreaChart, Tooltip, ResponsiveContainer } from "recharts";
+import { Area, AreaChart, Tooltip } from "recharts";
 import {
   Card,
   CardContent,
@@ -7,8 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ChartConfig, ChartContainer } from "@/components/ui/chart";
-import React from "react";
+import { ChartContainer } from "@/components/ui/chart";
 
 type ComparisonWidgetProps = {
   title: string;
