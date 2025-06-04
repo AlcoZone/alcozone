@@ -10,17 +10,17 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import {
-  ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
 
+
 type Props = {
-  data: { accident_date: string; total_accidents: number }[]
-  config: ChartConfig
-  title: string
-  description: string
+  data: { accident_date: string; total_accidents: number }[];
+  config: Record<string, { label: string; color: string }>;
+  title: string;
+  description: string;
 }
 
 const LineGraphWidget = ({
@@ -32,7 +32,7 @@ const LineGraphWidget = ({
   return (
     <Card className="w-full max-w-md p-4 rounded-2xl shadow-md bg-white max-h-[330px] overflow-y-auto">
       <CardHeader>
-        <CardTitle className="text-2xl" style={{ color: "#001391" }}>{title}</CardTitle>
+        <CardTitle className="text-1xl">{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent>
@@ -49,14 +49,25 @@ const LineGraphWidget = ({
               tickFormatter={() => ""}
               tickMargin={8}
             />
-            <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-            <Line
-              dataKey="total_accidents"
-              type="monotone"
-              stroke="var(--color-desktop)"
-              strokeWidth={2}
-              dot={false}
+            <ChartTooltip
+              cursor={false}
+              content={<ChartTooltipContent />}
+              labelFormatter={(label) => {
+                if (!label) return "";
+                const [year, month, day] = label.split("-");
+                return `${day}-${month}-${year}`;
+              }}
             />
+            {Object.entries(config).map(([key, { color }]) => (
+              <Line
+                key={key}
+                dataKey={key}
+                type="monotone"
+                stroke={color}
+                strokeWidth={2}
+                dot={false}
+              />
+            ))}
           </LineChart>
         </ChartContainer>
       </CardContent>

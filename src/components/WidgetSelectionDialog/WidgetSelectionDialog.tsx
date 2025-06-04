@@ -94,7 +94,6 @@ const WidgetSelectionDialog = ({
                     ? "opacity-50 cursor-not-allowed"
                     : "cursor-pointer rounded transition-all duration-700 ease-in-out hover:text-blue-850 group",
                   isSelected ? "shadow-xl/30 p-4 text-blue-850" : "p-2 pl-5"
-                  //selectedWidgetId !== null && !isSelected && "text-muted-foreground",
                 )}
               >
                 <h3

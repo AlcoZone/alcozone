@@ -1,5 +1,5 @@
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
-import { Card } from "@/components/ui/card";
+import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import { Car, Bike, LifeBuoy, User } from "lucide-react";
 
 type Accidente = {
@@ -41,17 +41,12 @@ const AccidentCauseTableWidget = ({
 
   return (
     <Card className="w-full max-w-md p-4 rounded-2xl shadow-md bg-white max-h-[350px] overflow-y-auto">
-      <div className="flex items-center justify-between mb-4">
-        <div>
-          <p className="text-m font-bold" style={{ color: "#001391" }}>
-            {title}
-          </p>
-          <p className="text-sm" style={{ color: "#0636A7" }}>
-            {subtitle}
-          </p>
-        </div>
+      <div>
+        <CardTitle className="text-1xl">
+          {title}
+        </CardTitle>
+        <CardDescription>{subtitle}</CardDescription>
       </div>
-
       <div className="max-h-[300px] overflow-y-auto">
         <Table>
           <TableBody>

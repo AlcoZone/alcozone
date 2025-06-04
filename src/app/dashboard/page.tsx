@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 import { Responsive, WidthProvider } from "react-grid-layout";
 
@@ -39,6 +39,15 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+  SelectLabel,
+  SelectGroup,
+} from '@/components/ui/select';
 import { cn } from "@/lib/utils";
 import api from "@/services/api";
 import { WidgetDetail } from "@/types/WidgetDetail";
@@ -49,6 +58,13 @@ import { DonutChartWidget } from "@/components/DonutChartWidget/DonutChartWidget
 import AccidentCauseTableWidget from "@/components/Table/AccidentCauseTableWidget";
 import ReportChannelWidget from "@/components/ReportChannelWidget/ReportChannelWidget";
 import LineGraphWidget from "@/components/LineGraph/LineGraphWidget";
+import { getMonthlyAccidents } from "@/services/widgets/getMonthlyAccidents";
+import { getAccidentsCount } from "@/services/widgets/getAccidentsCount";
+import { getDailyAccidents } from "@/services/widgets/getDailyAccidents";
+import { getAccidentsPercentage } from "@/services/widgets/getAccidentsPercentage";
+import { getAccidentsByReportSource } from "@/services/widgets/getAccidentsByReportSource";
+import { Accidente, ComparisonData, LineGraphData, RadialChartData, ReportChannelData } from "@/types/WidgetsData";
+
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -86,6 +102,90 @@ export default function DashboardPage() {
   const [isSaving, setIsSaving] = useState(false);
 
   const rowHeight = 100;
+
+  const alcaldias = [
+    "Álvaro Obregón", "Azcapotzalco", "Benito Juárez", "Coyoacán",
+    "Cuajimalpa de Morelos", "Cuauhtémoc", "Gustavo A. Madero", "Iztacalco",
+    "Iztapalapa", "La Magdalena Contreras", "Miguel Hidalgo", "Milpa Alta",
+    "Tláhuac", "Tlalpan", "Venustiano Carranza", "Xochimilco"
+  ];
+  const [selectedTown, setSelectedTown] = useState('');
+  const [comparisonData, setComparisonData] = useState<ComparisonData[]>([]);
+  const [accidentCauseData, setAccidentCauseData] = useState<Accidente[]>([]);
+  const [lineGraphData, setLineGraphData] = useState<LineGraphData[]>([]);
+  const [radialChartData, setRadialChartData] = useState<RadialChartData[]>([]);
+  const [reportChannelData, setReportChannelData] = useState<ReportChannelData[]>([]);
+
+  const handleTownChange = (value: string) => {
+    if (value === "clear") {
+      setSelectedTown("");
+    } else {
+      setSelectedTown(value);
+    }
+  };
+
+  useEffect(() => {
+    const fetchComparisonData = async () => {
+      try {
+        if (isWidgetVisible("comparison")) {
+          const data = await getMonthlyAccidents(selectedTown);
+          setComparisonData(data);
+        }
+      } catch (error) {
+        console.error("Error fetching comparison data: ", error);
+      }
+    };
+    fetchComparisonData();
+
+    const fetchAccidentCauseData = async () => {
+      try {
+        if (isWidgetVisible("accident-cause-table")) {
+          const data = await getAccidentsCount(selectedTown);
+          setAccidentCauseData(data);
+        }
+      } catch (error) {
+        console.error("Error fetching accident cause data: ", error);
+      }
+    };
+    fetchAccidentCauseData();
+
+    const fetchLineGraphData = async () => {
+      try {
+        if (isWidgetVisible("line-graph")) {
+          const data = await getDailyAccidents(selectedTown);
+          setLineGraphData(data);
+        }
+      } catch (error) {
+        console.error("Error fetching daily accidents data: ", error);
+      }
+    };
+    fetchLineGraphData();
+
+    const fetchRadialChartData = async () => {
+      try {
+        if (isWidgetVisible("radial-chart")) {
+          const data = await getAccidentsPercentage(selectedTown);
+          setRadialChartData(data);
+        }
+      } catch (error) {
+        console.error("Error fetching radial chart data: ", error);
+      }
+    };
+    fetchRadialChartData();
+
+    const fetchReportChannelData = async () => {
+      try {
+        if (isWidgetVisible("report-channel")) {
+          const data = await getAccidentsByReportSource(selectedTown);
+          setReportChannelData(data);
+        }
+      } catch (error) {
+        console.error("Error fetching report channel data: ", error);
+      }
+    };
+    fetchReportChannelData();
+
+  }, [selectedTown, draftLayout, savedLayout]);
 
   useEffect(() => {
     if (!layoutLoading) {
@@ -356,84 +456,108 @@ export default function DashboardPage() {
               className="text-xl font-semibold border-none px-2 py-1 bg-white focus-visible:ring-0 focus-visible:ring-offset-0"
             />
           ) : (
-            <Popover open={open} onOpenChange={setOpen}>
-              <PopoverTrigger asChild>
-                <Button variant="outline" className="w-[220px] justify-between">
-                  {selectedDashboard === null
-                    ? "Nuevo Dashboard"
-                    : availableDashboards.find(
+            <div className="flex justify-between items-center mb-6 gap-4">
+              <Popover open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className="w-[220px] justify-between">
+                    {selectedDashboard === null
+                      ? "Nuevo Dashboard"
+                      : availableDashboards.find(
                         (d) => d.id === selectedDashboard
                       )?.name || "Selecciona un dashboard"}
-                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-[220px] p-0">
-                <Command>
-                  <CommandInput placeholder="Buscar..." className="text-sm" />
-                  <CommandList>
-                    <CommandEmpty>No hay dashboards.</CommandEmpty>
-                    <CommandGroup>
-                      {availableDashboards.map((d) => (
-                        <div
-                          key={d.id}
-                          className="flex items-center justify-between px-2"
-                        >
-                          <CommandItem
-                            value={d.id}
-                            onSelect={(val) => {
-                              setSelectedDashboard(val);
-                              localStorage.setItem(
-                                "selectedDashboardUuid",
-                                val
-                              );
-                              setOpen(false);
-                              const selected = dashboards.find(
-                                (db) => db.uuid === val
-                              );
-                              setDraftName(selected?.name || "");
-                            }}
-                            className="flex-1 flex items-center space-x-2 overflow-hidden"
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[220px] p-0">
+                  <Command>
+                    <CommandInput placeholder="Buscar..." className="text-sm" />
+                    <CommandList>
+                      <CommandEmpty>No hay dashboards.</CommandEmpty>
+                      <CommandGroup>
+                        {availableDashboards.map((d) => (
+                          <div
+                            key={d.id}
+                            className="flex items-center justify-between px-2"
                           >
-                            <Check
-                              className={`h-4 w-4 flex-shrink-0 ${
-                                selectedDashboard === d.id
+                            <CommandItem
+                              value={d.id}
+                              onSelect={(val) => {
+                                setSelectedDashboard(val);
+                                localStorage.setItem(
+                                  "selectedDashboardUuid",
+                                  val
+                                );
+                                setOpen(false);
+                                const selected = dashboards.find(
+                                  (db) => db.uuid === val
+                                );
+                                setDraftName(selected?.name || "");
+                              }}
+                              className="flex-1 flex items-center space-x-2 overflow-hidden"
+                            >
+                              <Check
+                                className={`h-4 w-4 flex-shrink-0 ${selectedDashboard === d.id
                                   ? "opacity-100"
                                   : "opacity-0"
-                              }`}
-                            />
-                            <span className="truncate">{d.name}</span>
-                          </CommandItem>
+                                  }`}
+                              />
+                              <span className="truncate">{d.name}</span>
+                            </CommandItem>
 
-                          <Trash2
-                            size={16}
-                            className="ml-2 flex-shrink-0 cursor-pointer"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDeleteDashboard(d.name, d.id);
-                            }}
-                          />
-                        </div>
-                      ))}
-                      <CommandItem
-                        className="text-primary font-medium mt-1 border-t pt-2 cursor-pointer"
-                        onSelect={() => {
-                          setOpen(false);
-                          setSelectedDashboard(null);
-                          setSavedLayout([]);
-                          setDraftLayout([]);
-                          setSavedName("Nuevo Dashboard");
-                          setDraftName("Nuevo Dashboard");
-                          setIsEditing(true);
-                        }}
+                            <Trash2
+                              size={16}
+                              className="ml-2 flex-shrink-0 cursor-pointer"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteDashboard(d.name, d.id);
+                              }}
+                            />
+                          </div>
+                        ))}
+                        <CommandItem
+                          className="text-primary font-medium mt-1 border-t pt-2 cursor-pointer"
+                          onSelect={() => {
+                            setOpen(false);
+                            setSelectedDashboard(null);
+                            setSavedLayout([]);
+                            setDraftLayout([]);
+                            setSavedName("Nuevo Dashboard");
+                            setDraftName("Nuevo Dashboard");
+                            setIsEditing(true);
+                          }}
+                        >
+                          <CirclePlus className="mr-2 h-4 w-4" />
+                          Nuevo Dashboard
+                        </CommandItem>
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+
+              <Select onValueChange={handleTownChange} value={selectedTown}>
+                <SelectTrigger className="w-[250px] ml-[500px]">
+                  <SelectValue placeholder="Selecciona una alcaldía" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="clear" className="cursor-pointer">
+                      -- Sin selección --
+                    </SelectItem>
+                    <SelectLabel>Alcaldías CDMX</SelectLabel>
+                    {alcaldias.map((name, index) => (
+                      <SelectItem
+                        key={index}
+                        value={name}
+                        className="cursor-pointer transition-colors transition-transform duration-300 ease-in-out origin-left hover:scale-110 hover:!text-blue-850 text-sm m-0 data-[state=checked]:!text-blue-850"
                       >
-                        <CirclePlus className="mr-2 h-4 w-4" />
-                        Agregar Dashboard
-                      </CommandItem>
-                    </CommandGroup>
-                  </CommandList>
-                </Command>
-              </PopoverContent>
-            </Popover>
+                        {name}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
           )}
         </div>
 
@@ -601,20 +725,16 @@ export default function DashboardPage() {
             )}
             <ComparisonWidget
               title="Accidentes por Mes"
-              data={[
-                { month_name: "January", accidents: "15432" },
-                { month_name: "February", accidents: "16208" },
-                { month_name: "March", accidents: "17021" },
-                { month_name: "April", accidents: "14850" },
-                { month_name: "May", accidents: "15200" },
-              ]}
+              data={comparisonData}
               config={{
                 accidents: {
                   label: "Accidentes",
                   color: "#8884d8",
                 },
               }}
-              footer="Datos totales sin distinguir alcaldía"
+              footer={selectedTown
+                ? `Datos para ${selectedTown}`
+                : "Datos totales"}
               chartHeight={getHeight("comparison")}
             />
           </div>
@@ -633,13 +753,10 @@ export default function DashboardPage() {
             )}
             <RadialChartWidget
               title="Causas de accidentes"
-              description="Porcentaje de accidentes"
-              footer=""
-              data={[
-                { percentage: 28.47, subType: "Choque con lesionados" },
-                { percentage: 9.72, subType: "Motociclista" },
-                { percentage: 9.43, subType: "Atropellado" },
-              ]}
+              description={selectedTown
+                ? `Porcentaje de accidentes en ${selectedTown}`
+                : "Porcentaje de accidentes"}
+              data={radialChartData}
             />
           </div>
         )}
@@ -678,25 +795,10 @@ export default function DashboardPage() {
             )}
             <AccidentCauseTableWidget
               title="Tipos de accidentes"
-              subtitle="Datos totales sin distinguir alcaldía"
-              data={[
-                {
-                  subType: "Choque con lesionados",
-                  accidentCount: 4614,
-                },
-                {
-                  subType: "Motociclista",
-                  accidentCount: 1576,
-                },
-                {
-                  subType: "Atropellado",
-                  accidentCount: 1528,
-                },
-                {
-                  subType: "Ciclista",
-                  accidentCount: 232,
-                },
-              ]}
+              subtitle={selectedTown
+                ? `Datos para ${selectedTown}`
+                : "Datos totales"}
+              data={accidentCauseData}
             />
           </div>
         )}
@@ -714,21 +816,15 @@ export default function DashboardPage() {
             )}
             <ReportChannelWidget
               title="Canales de reporte"
-              description="Distribución de accidentes según el medio utilizado para reportarlos"
+              description={selectedTown
+                ? `Accidentes en ${selectedTown} según canal de reporte`
+                : "Accidentes según canal de reporte"}
               chartHeight={330}
-              data={[
-                { report_source: "LLAMADA DEL 911", total_accidents: 12845 },
-                { report_source: "RADIO", total_accidents: 914 },
-                { report_source: "REDES", total_accidents: 35 },
-                { report_source: "BOTÓN DE AUXILIO", total_accidents: 866 },
-                { report_source: "CÁMARA", total_accidents: 43 },
-                { report_source: "APLICATIVOS", total_accidents: 50 },
-                { report_source: "LLAMADA APP911", total_accidents: 46 },
-              ]}
+              data={reportChannelData}
               config={{
-                report: {
-                  label: "Reportes",
-                  color: "#0095FF",
+                total_accidents: {
+                  label: "Accidentes",
+                  color: "#8884d8",
                 },
               }}
             />
@@ -746,31 +842,12 @@ export default function DashboardPage() {
             )}
             <LineGraphWidget
               title="Tendencia diaria de accidentes"
-              description="Número de accidentes registrados por día"
-              data={[
-                { accident_date: "01-05-2025", total_accidents: 120 },
-                { accident_date: "02-05-2025", total_accidents: 95 },
-                { accident_date: "03-05-2025", total_accidents: 130 },
-                { accident_date: "04-05-2025", total_accidents: 655 },
-                { accident_date: "05-05-2025", total_accidents: 453 },
-                { accident_date: "06-05-2025", total_accidents: 123 },
-                { accident_date: "07-05-2025", total_accidents: 232 },
-                { accident_date: "08-05-2025", total_accidents: 213 },
-                { accident_date: "09-05-2025", total_accidents: 321 },
-                { accident_date: "10-05-2025", total_accidents: 130 },
-                { accident_date: "11-05-2025", total_accidents: 213 },
-                { accident_date: "12-05-2025", total_accidents: 768 },
-                { accident_date: "13-05-2025", total_accidents: 456 },
-                { accident_date: "14-05-2025", total_accidents: 546 },
-                { accident_date: "15-05-2025", total_accidents: 345 },
-                { accident_date: "16-05-2025", total_accidents: 234 },
-                { accident_date: "17-05-2025", total_accidents: 65 },
-                { accident_date: "18-05-2025", total_accidents: 345 },
-                { accident_date: "19-05-2025", total_accidents: 234 },
-                { accident_date: "20-05-2025", total_accidents: 243 },
-              ]}
+              description={selectedTown
+                ? `Número de accidentes registrados por día en ${selectedTown}`
+                : "Número de accidentes registrados por día"}
+              data={lineGraphData}
               config={{
-                desktop: {
+                total_accidents: {
                   label: "Accidentes",
                   color: "#8950FC",
                 },
