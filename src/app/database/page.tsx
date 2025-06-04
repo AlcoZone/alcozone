@@ -1,19 +1,16 @@
 "use client";
 
-import { Banner } from "@/components/Banner/Banner";
-import { Menu } from "@/components/Menu/Menu";
 import { Table } from "@/components/Table/Table";
 import api from "@/services/api";
 import React, { useState, useEffect } from "react";
 
 export default function DatabasePage() {
-  const [menuHidden, setMenuHidden] = useState(false);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const [startDate, setStartDate] = useState("2022-01-01");
-  const [endDate, setEndDate] = useState("2022-02-01");
+  const [endDate, setEndDate] = useState("2022-01-01");
 
   const [tempStartDate, setTempStartDate] = useState(startDate);
   const [tempEndDate, setTempEndDate] = useState(endDate);
@@ -76,22 +73,8 @@ export default function DatabasePage() {
     }
   };
 
-
   return (
     <>
-      <Menu variant="user">
-        <div
-          className="bg-white shadow-xl rounded-xl p-6 space-y-4 transition-all duration-300"
-          style={{
-            marginTop: "50px",
-            marginLeft: "-250px",
-            marginRight: "30px",
-            bottom: "50px",
-            height: "calc(100vh - 100px)",
-            width: "calc(100vw - 300px)",
-            overflowY: "auto",
-          }}
-        >
           <div className="flex justify-between items-center mb-4">
             <h1 className="text-2xl font-bold text-blue-850">Accidentes</h1>
             <div className="text-gray-700 font-semibold">
@@ -136,7 +119,7 @@ export default function DatabasePage() {
           {!loading && !error && (
             <div
               style={{
-                maxHeight: "580px",
+                maxHeight: "620px",
                 overflowX: "hidden",
               }}
             >
@@ -168,8 +151,6 @@ export default function DatabasePage() {
               />
             </div>
           )}
-        </div>
-      </Menu>
     </>
   );
 }
