@@ -117,8 +117,7 @@ export const widgetRegistry: Record<string, RegistryEntry> = {
     component: () =>
       React.createElement(ReportChannelWidget, {
         title: "Canales de reporte",
-        description:
-          "Distribución de accidentes según el medio utilizado para reportarlos",
+        description: "Accidentes según canal de reporte",
         chartHeight: 330,
         data: [
           { report_source: "LLAMADA DEL 911", total_accidents: 12845 },
@@ -130,9 +129,9 @@ export const widgetRegistry: Record<string, RegistryEntry> = {
           { report_source: "LLAMADA APP911", total_accidents: 78 },
         ],
         config: {
-          report: {
-            label: "Reportes",
-            color: "#0095FF",
+          total_accidents: {
+            label: "Accidentes",
+            color: "#8884d8",
           },
         },
       }),
@@ -145,29 +144,29 @@ export const widgetRegistry: Record<string, RegistryEntry> = {
         title: "Tendencia diaria de accidentes",
         description: "Número de accidentes registrados por día",
         data: [
-          { accident_date: "01-05-2025", total_accidents: 120 },
-          { accident_date: "02-05-2025", total_accidents: 95 },
-          { accident_date: "03-05-2025", total_accidents: 130 },
-          { accident_date: "04-05-2025", total_accidents: 655 },
-          { accident_date: "05-05-2025", total_accidents: 453 },
-          { accident_date: "06-05-2025", total_accidents: 123 },
-          { accident_date: "07-05-2025", total_accidents: 232 },
-          { accident_date: "08-05-2025", total_accidents: 213 },
-          { accident_date: "09-05-2025", total_accidents: 321 },
-          { accident_date: "10-05-2025", total_accidents: 130 },
-          { accident_date: "11-05-2025", total_accidents: 213 },
-          { accident_date: "12-05-2025", total_accidents: 768 },
-          { accident_date: "13-05-2025", total_accidents: 456 },
-          { accident_date: "14-05-2025", total_accidents: 546 },
-          { accident_date: "15-05-2025", total_accidents: 345 },
-          { accident_date: "16-05-2025", total_accidents: 234 },
-          { accident_date: "17-05-2025", total_accidents: 65 },
-          { accident_date: "18-05-2025", total_accidents: 345 },
-          { accident_date: "19-05-2025", total_accidents: 234 },
-          { accident_date: "20-05-2025", total_accidents: 243 },
+          { accident_date: "2025-05-01", total_accidents: 120 },
+          { accident_date: "2025-05-02", total_accidents: 95 },
+          { accident_date: "2025-05-03", total_accidents: 130 },
+          { accident_date: "2025-05-04", total_accidents: 655 },
+          { accident_date: "2025-05-05", total_accidents: 453 },
+          { accident_date: "2025-05-06", total_accidents: 123 },
+          { accident_date: "2025-05-07", total_accidents: 232 },
+          { accident_date: "2025-05-08", total_accidents: 213 },
+          { accident_date: "2025-05-09", total_accidents: 321 },
+          { accident_date: "2025-05-10", total_accidents: 130 },
+          { accident_date: "2025-05-11", total_accidents: 213 },
+          { accident_date: "2025-05-12", total_accidents: 768 },
+          { accident_date: "2025-05-13", total_accidents: 456 },
+          { accident_date: "2025-05-14", total_accidents: 546 },
+          { accident_date: "2025-05-15", total_accidents: 345 },
+          { accident_date: "2025-05-16", total_accidents: 234 },
+          { accident_date: "2025-05-17", total_accidents: 65 },
+          { accident_date: "2025-05-18", total_accidents: 345 },
+          { accident_date: "2025-05-19", total_accidents: 234 },
+          { accident_date: "2025-05-20", total_accidents: 243 },
         ],
         config: {
-          desktop: {
+          total_accidents: {
             label: "Accidentes",
             color: "#8950FC",
           },
