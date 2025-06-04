@@ -13,7 +13,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import { GridItem, useDashboardLayout } from "@/hooks/useDashboardLayout";
 
-import { BarChartWidget } from '@/components/BarChartWidget/BarChartWidget';
+import { BarChartWidget } from "@/components/BarChartWidget/BarChartWidget";
 import { ComparisonWidgetResizable as ComparisonWidget } from "@/components/ComparisonWidget/ComparisonWidgetResizable";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -64,7 +64,6 @@ import { getDailyAccidents } from "@/services/widgets/getDailyAccidents";
 import { getAccidentsPercentage } from "@/services/widgets/getAccidentsPercentage";
 import { getAccidentsByReportSource } from "@/services/widgets/getAccidentsByReportSource";
 import { Accidente, ComparisonData, LineGraphData, RadialChartData, ReportChannelData } from "@/types/WidgetsData";
-
 
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
@@ -232,22 +231,39 @@ export default function DashboardPage() {
     return item ? item.h * rowHeight : 300;
   };
 
-  // add-widget handler
+  function findSlot(layout: GridItem[], w: number, h: number, cols = 12) {
+    for (let y = 0; ; y++) {
+      for (let x = 0; x <= cols - w; x++) {
+        const collides = layout.some((it) => {
+          const xOverlap = x < it.x + it.w && x + w > it.x;
+          const yOverlap = y < it.y + it.h && y + h > it.y;
+          return xOverlap && yOverlap;
+        });
+        if (!collides) return { x, y };
+      }
+    }
+  }
+
   const handleAddWidget = (widget: WidgetDetail) => {
-    const newItem: GridItem = {
-      id: 0,
-      uuid: uuidv4(),
-      widgetUuid: widget.uuid,
-      name: widget.name,
-      i: widget.name,
-      x: 0,
-      y: 0,
-      w: widget.minWidth,
-      h: widget.minHeight,
-      minW: widget.minWidth,
-      minH: widget.minHeight,
-    };
-    setDraftLayout((prev) => [...prev, newItem]);
+    setDraftLayout((prev) => {
+      const { x, y } = findSlot(prev, widget.minWidth, widget.minHeight);
+
+      const newItem: GridItem = {
+        id: 0,
+        uuid: uuidv4(),
+        widgetUuid: widget.uuid,
+        name: widget.name,
+        i: widget.name,
+        x,
+        y,
+        w: widget.minWidth,
+        h: widget.minHeight,
+        minW: widget.minWidth,
+        minH: widget.minHeight,
+      };
+
+      return [...prev, newItem];
+    });
     setHasChanges(true);
   };
 
@@ -278,18 +294,18 @@ export default function DashboardPage() {
       return;
     }
 
-    setAvailableDashboards((prev) =>
-      prev.filter((d) => d.id !== dashboardUuidToDelete)
+    const updatedDashboards = availableDashboards.filter(
+      (d) => d.id !== dashboardUuidToDelete
     );
+
+    setAvailableDashboards(updatedDashboards);
 
     if (selectedDashboard === dashboardUuidToDelete) {
       localStorage.removeItem("selectedDashboardUuid");
       setSelectedDashboard(null);
 
-      if (availableDashboards.length > 0) {
-        const remaining = availableDashboards.filter(
-          (d) => d.id !== dashboardUuidToDelete
-        );
+      if (updatedDashboards.length > 0) {
+        const remaining = updatedDashboards;
         if (remaining.length) {
           const next = remaining[0].id;
           setSelectedDashboard(next);
@@ -300,6 +316,12 @@ export default function DashboardPage() {
             setDraftName(found.name);
           }
         }
+      } else {
+        setSavedLayout([]);
+        setDraftLayout([]);
+        setSavedName("Nuevo Dashboard");
+        setDraftName("Nuevo Dashboard");
+        setIsEditing(true);
       }
     }
     try {
@@ -373,7 +395,7 @@ export default function DashboardPage() {
 
     const changed =
       JSON.stringify(sanitizeLayout(draftLayout)) !==
-      JSON.stringify(sanitizeLayout(savedLayout)) || draftName !== savedName;
+        JSON.stringify(sanitizeLayout(savedLayout)) || draftName !== savedName;
 
     setHasChanges(changed);
   }, [draftLayout, draftName, savedLayout, savedName]);
@@ -420,13 +442,10 @@ export default function DashboardPage() {
   return (
     <main
       className={cn(
-        "p-6 transition-colors h-100 w-full",
-        isEditing && "bg-muted"
+        "transition-colors w-full",
+        isEditing && "bg-muted",
+        isEditing ? "cursor-grab" : "cursor-default"
       )}
-      style={{
-        cursor: isEditing ? "grab" : "default",
-        minHeight: "calc(100vh - 175px)",
-      }}
     >
       <div className="flex justify-between items-center mb-6 gap-4">
         <div className="flex-1">
@@ -618,6 +637,7 @@ export default function DashboardPage() {
 
       <ResponsiveGridLayout
         className="layout"
+        key={selectedDashboard ?? "empty-layout"}
         layouts={{ lg: isEditing ? draftLayout : savedLayout }}
         breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480 }}
         cols={{ lg: 12, md: 10, sm: 6, xs: 2 }}
@@ -655,16 +675,40 @@ export default function DashboardPage() {
               title="Top 2 Alcaldías con más accidentes por mes"
               description="Comparativa mensual de las alcaldías con más accidentes"
               data={[
-                { month_name: "Enero", town: "Cuauhtémoc", total_accidents: 25 },
-                { month_name: "Enero", town: "Benito Juárez", total_accidents: 18 },
-                { month_name: "Febrero", town: "Cuauhtémoc", total_accidents: 20 },
-                { month_name: "Febrero", town: "Benito Juárez", total_accidents: 22 },
-                { month_name: "Marzo", town: "Cuauhtémoc", total_accidents: 40 },
-                { month_name: "Marzo", town: "Benito Juárez", total_accidents: 26 },
+                {
+                  month_name: "Enero",
+                  town: "Cuauhtémoc",
+                  total_accidents: 25,
+                },
+                {
+                  month_name: "Enero",
+                  town: "Benito Juárez",
+                  total_accidents: 18,
+                },
+                {
+                  month_name: "Febrero",
+                  town: "Cuauhtémoc",
+                  total_accidents: 20,
+                },
+                {
+                  month_name: "Febrero",
+                  town: "Benito Juárez",
+                  total_accidents: 22,
+                },
+                {
+                  month_name: "Marzo",
+                  town: "Cuauhtémoc",
+                  total_accidents: 40,
+                },
+                {
+                  month_name: "Marzo",
+                  town: "Benito Juárez",
+                  total_accidents: 26,
+                },
               ]}
               colors={{
-                "Cuauhtémoc": "#0095FF",
-                "Benito Juárez": "#00E096"
+                Cuauhtémoc: "#0095FF",
+                "Benito Juárez": "#00E096",
               }}
             />
           </div>
@@ -745,7 +789,9 @@ export default function DashboardPage() {
             className="relative overflow-visible"
           >
             {isEditing && (
-              <RemoveButton onClick={() => handleRemoveWidget("accident-cause-table")} />
+              <RemoveButton
+                onClick={() => handleRemoveWidget("accident-cause-table")}
+              />
             )}
             <AccidentCauseTableWidget
               title="Tipos de accidentes"
@@ -764,7 +810,9 @@ export default function DashboardPage() {
             className="relative overflow-visible"
           >
             {isEditing && (
-              <RemoveButton onClick={() => handleRemoveWidget("report-channel")} />
+              <RemoveButton
+                onClick={() => handleRemoveWidget("report-channel")}
+              />
             )}
             <ReportChannelWidget
               title="Canales de reporte"
