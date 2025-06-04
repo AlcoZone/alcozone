@@ -22,8 +22,8 @@ const meta: Meta<typeof Menu> = {
             role,
             name,
             email: "test@example.com",
-            logout: async () => {
-            },
+            logout: async () => {},
+            updateDisplayName: async () => {},
           }}
         >
           <Story />
