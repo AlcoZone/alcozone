@@ -186,7 +186,7 @@ export default function DashboardPage() {
     };
     fetchReportChannelData();
 
-  }, [selectedTown, isEditing, draftLayout, savedLayout]);
+  }, [selectedTown, draftLayout, savedLayout]);
 
   useEffect(() => {
     if (!layoutLoading) {
