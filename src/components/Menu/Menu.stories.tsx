@@ -47,21 +47,21 @@ const children = (
 );
 
 export const DataVisualizer: Story = {
-  render: () => <Menu>{children}</Menu>,
+  render: () => <Menu/>,
   parameters: {
     authRole: "datavisualizer",
   },
 };
 
 export const DataManager: Story = {
-  render: () => <Menu>{children}</Menu>,
+  render: () => <Menu/>,
   parameters: {
     authRole: "datamanager",
   },
 };
 
 export const Administrator: Story = {
-  render: () => <Menu>{children}</Menu>,
+  render: () => <Menu/>,
   parameters: {
     authRole: "admin",
   },
