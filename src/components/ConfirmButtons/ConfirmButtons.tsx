@@ -7,6 +7,7 @@ const ConfirmButtonsVariants: Record<string, { text: string; color: string; roun
     login: { text: "Iniciar sesión", color: "bg-neutral-550", rounded: true },
     save: { text: "Guardar", color: "bg-neutral-550", rounded: true },
     changeUser: { text: "Cambiar usuario", color: "bg-neutral-550", rounded: true },
+    resetPassword: { text: "Enviar", color: "bg-neutral-550", rounded: true },
 };
 
 type ConfirmButtonsProps = {
