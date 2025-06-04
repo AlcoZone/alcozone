@@ -111,7 +111,7 @@ const LoginPage: React.FC = () => {
             </p>
             <p
               className="mt-4 text-base text-gray-700 cursor-pointer hover:font-semibold"
-              onClick={() => router.push("/legal/privacy")}
+              onClick={() => router.push("/privacy")}
             >
               Aviso de privacidad
             </p>

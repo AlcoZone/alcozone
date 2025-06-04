@@ -7,12 +7,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { ChartConfig, ChartContainer } from "@/components/ui/chart";
 
 type ComparisonWidgetProps = {
   title: string;
   data: Array<{ month_name: string; accidents: string | number }>;
   config: Record<string, { label: string; color: string }>;
   footer: string;
+  chartHeight: number;
 };
 
 export const ComparisonWidget: React.FC<ComparisonWidgetProps> = ({
@@ -20,6 +22,7 @@ export const ComparisonWidget: React.FC<ComparisonWidgetProps> = ({
   data,
   config,
   footer,
+  chartHeight,
 }) => {
   function CustomTooltip({ active, payload }: any) {
     if (active && payload && payload.length) {
@@ -33,8 +36,12 @@ export const ComparisonWidget: React.FC<ComparisonWidgetProps> = ({
               const chartConfig = config[entry.dataKey];
               return (
                 <div key={index} className="flex justify-between gap-4">
-                  <span className="text-muted-foreground">{chartConfig.label}:</span>
-                  <span style={{ color: chartConfig.color }}>{entry.value}</span>
+                  <span className="text-muted-foreground">
+                    {chartConfig.label}:
+                  </span>
+                  <span style={{ color: chartConfig.color }}>
+                    {entry.value}
+                  </span>
                 </div>
               );
             })}
@@ -96,5 +103,3 @@ export const ComparisonWidget: React.FC<ComparisonWidgetProps> = ({
     </div>
   );
 };
-
-

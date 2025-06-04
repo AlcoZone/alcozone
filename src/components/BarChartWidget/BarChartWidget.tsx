@@ -36,7 +36,6 @@ export const BarChartWidget = ({
   data,
   colors = {},
 }: BarChartWidgetProps) => {
-
   const groupedByMonth: Record<string, Record<string, number>> = {};
 
   data.forEach(({ month_name, town, total_accidents }) => {
@@ -53,9 +52,7 @@ export const BarChartWidget = ({
   }));
 
   // Obtenemos lista de towns únicos para dibujar una <Bar /> por cada uno
-  const uniqueTowns = Array.from(
-    new Set(data.map((d) => d.town))
-  );
+  const uniqueTowns = Array.from(new Set(data.map((d) => d.town)));
 
   return (
     <Card className="w-full">
@@ -76,7 +73,9 @@ export const BarChartWidget = ({
                 <Bar
                   key={town}
                   dataKey={town}
-                  fill={colors[town] || defaultColors[index % defaultColors.length]}
+                  fill={
+                    colors[town] || defaultColors[index % defaultColors.length]
+                  }
                 />
               ))}
             </BarChart>
@@ -84,17 +83,9 @@ export const BarChartWidget = ({
         </div>
       </CardContent>
 
-      <CardFooter className="text-center text-sm font-medium">
-        
-      </CardFooter>
+      <CardFooter className="text-center text-sm font-medium"></CardFooter>
     </Card>
   );
 };
 
 const defaultColors = ["#8884d8", "#82ca9d", "#ffc658", "#ff8042"];
-
-
-
-
-
-
