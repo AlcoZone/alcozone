@@ -663,6 +663,7 @@ export default function DashboardPage() {
                 { town: "Iztapalapa", total_accidents: "2747" },
                 { town: "Gustavo A. Madero", total_accidents: "1846" },
               ]}
+              chartHeight={getHeight("donut")}
             />
           </div>
         )}
