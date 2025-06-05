@@ -641,6 +641,7 @@ export default function DashboardPage() {
                 { percentage: 9.72, subType: "Motociclista" },
                 { percentage: 9.43, subType: "Atropellado" },
               ]}
+              chartHeight={getHeight("radial-chart")}
             />
           </div>
         )}
