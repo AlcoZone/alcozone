@@ -1,5 +1,4 @@
-import React from "react";
-import { Area, AreaChart, Tooltip } from "recharts";
+import { Area, AreaChart, Tooltip, ResponsiveContainer } from "recharts";
 import {
   Card,
   CardContent,

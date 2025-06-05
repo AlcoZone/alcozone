@@ -22,7 +22,7 @@ const sampleData = [
 
 const sampleConfig = {
   total_accidents: {
-    label: "Reportes",
+    label: "Accidentes",
     color: "#0095FF",
   },
 };

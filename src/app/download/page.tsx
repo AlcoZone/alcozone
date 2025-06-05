@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Menu } from "@/components/Menu/Menu";
 import { Table } from "@/components/Table/Table";
 import { getRevisionCsv } from "@/services/csv/getRevisionCSV";
 import { getRevisionCsvList } from "@/services/csv/getRevisionCSVlist"; 
@@ -22,7 +21,7 @@ export default function CsvPage() {
   return (
     <>
         <div
-          className="bg-white shadow-xl rounded-xl p-6 space-y-4 transition-all duration-300"
+          className="bg-gray-242 shadow-xl rounded-xl p-6 space-y-4 transition-all duration-300"
           style={{
             marginTop: "50px",
             marginRight: "30px",
