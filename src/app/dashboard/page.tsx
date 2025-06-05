@@ -718,7 +718,6 @@ export default function DashboardPage() {
             <ReportChannelWidget
               title="Canales de reporte"
               description="Distribución de accidentes según el medio utilizado para reportarlos"
-              chartHeight={330}
               data={[
                 { report_source: "LLAMADA DEL 911", total_accidents: 12845 },
                 { report_source: "RADIO", total_accidents: 914 },
@@ -734,6 +733,7 @@ export default function DashboardPage() {
                   color: "#0095FF",
                 },
               }}
+              chartHeight={getHeight("report-channel")}
             />
           </div>
         )}

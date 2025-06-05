@@ -3,12 +3,7 @@
 import { TrendingUp } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
@@ -56,12 +51,22 @@ const ReportChannelWidget = ({
                 axisLine={false}
                 tickFormatter={(value) => value.slice(0, 3)}
               />
-              <YAxis scale="log" domain={["auto", "auto"]} ticks={[10, 100, 1000, 10000]} />
-              {<ChartTooltip
-                cursor={false}
-                content={<ChartTooltipContent indicator="dashed" />}
-              />}
-              <Bar dataKey="total_accidents" fill="var(--color-desktop)" radius={4} />
+              <YAxis
+                scale="log"
+                domain={["auto", "auto"]}
+                ticks={[10, 100, 1000, 10000]}
+              />
+              {
+                <ChartTooltip
+                  cursor={false}
+                  content={<ChartTooltipContent indicator="dashed" />}
+                />
+              }
+              <Bar
+                dataKey="total_accidents"
+                fill="var(--color-desktop)"
+                radius={4}
+              />
             </BarChart>
           </ChartContainer>
         </CardContent>
