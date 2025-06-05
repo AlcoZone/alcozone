@@ -883,6 +883,7 @@ export default function DashboardPage() {
                   color: "#8950FC",
                 },
               }}
+              chartHeight={getHeight("line-graph")}
             />
           </div>
         )}
