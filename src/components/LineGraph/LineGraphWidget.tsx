@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { CartesianGrid, Line, LineChart, XAxis } from "recharts"
+import { CartesianGrid, Line, LineChart, XAxis } from "recharts";
 
 import {
   Card,
@@ -8,39 +8,44 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart"
-
+} from "@/components/ui/chart";
 
 type Props = {
   data: { accident_date: string; total_accidents: number }[];
   config: Record<string, { label: string; color: string }>;
   title: string;
   description: string;
-}
+  chartHeight: number;
+};
 
-const LineGraphWidget = ({
+const LineGraphWidget: React.FC<Props> = ({
   data,
   config,
   title,
   description,
-}: Props) => {
+  chartHeight,
+}) => {
   return (
-    <Card className="w-full max-w-md p-4 rounded-2xl shadow-md bg-white max-h-[330px] overflow-y-auto">
-      <CardHeader>
+    <Card className={`w-full h-full`}>
+      <CardHeader className="text-center">
         <CardTitle className="text-1xl">{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
-      <CardContent>
-        <ChartContainer config={config}>
-          <LineChart
-            data={data}
-            margin={{ left: 12, right: 12 }}
-          >
+
+      <CardContent className="flex-1">
+        <ChartContainer
+          config={config}
+          style={{
+            width: "100%",
+            height: chartHeight - 10,
+          }}
+        >
+          <LineChart data={data} margin={{ left: 12, right: 12 }}>
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="accident_date"
@@ -72,7 +77,7 @@ const LineGraphWidget = ({
         </ChartContainer>
       </CardContent>
     </Card>
-  )
-}
+  );
+};
 
 export default LineGraphWidget;

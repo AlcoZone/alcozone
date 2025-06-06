@@ -34,9 +34,7 @@ const ReportChannelWidget = ({
     <div className="w-full h-full">
       <Card className="flex flex-col h-full w-full">
         <CardHeader>
-          <CardTitle className="text-1xl">
-            {title}
-          </CardTitle>
+          <CardTitle className="text-1xl">{title}</CardTitle>
           <CardDescription>{description}</CardDescription>
         </CardHeader>
         <CardContent className="flex-1">
@@ -53,17 +51,19 @@ const ReportChannelWidget = ({
                 axisLine={false}
                 tickFormatter={(value) => value.slice(0, 3)}
               />
-              <YAxis scale="log" domain={["auto", "auto"]} ticks={[1, 10, 100, 1000, 10000]} />
-              {<ChartTooltip
-                cursor={false}
-                content={<ChartTooltipContent indicator="dashed" />}
-              />}
+              <YAxis
+                scale="log"
+                domain={["auto", "auto"]}
+                ticks={[1, 10, 100, 1000, 10000]}
+              />
+              {
+                <ChartTooltip
+                  cursor={false}
+                  content={<ChartTooltipContent indicator="dashed" />}
+                />
+              }
               {Object.entries(config).map(([key, { color }]) => (
-                <Bar
-                  key={key}
-                  dataKey={key}
-                  fill={color}
-                  radius={4} />
+                <Bar key={key} dataKey={key} fill={color} radius={4} />
               ))}
             </BarChart>
           </ChartContainer>

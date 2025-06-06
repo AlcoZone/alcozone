@@ -1,11 +1,9 @@
 import {
-  Label,
   PolarGrid,
   PolarRadiusAxis,
   RadialBar,
   RadialBarChart,
-  ResponsiveContainer,
-} from "recharts"
+} from "recharts";
 
 import {
   Card,
@@ -14,94 +12,118 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
+import { ChartContainer } from "@/components/ui/chart";
 
-const MAX_VALUE = 100
+const MAX_VALUE = 100;
 
 export type RadialChartProps = {
-  title: string
-  footer?: string
+  title: string;
+  footer?: string;
   data: {
-    percentage?: number
-    subType?: string
-  }[]
-  fill?: string
-  description?: string
-}
+    percentage?: number;
+    subType?: string;
+  }[];
+  description?: string;
+  chartHeight?: number;
+};
 
-export const RadialChartWidget = ({
+export const RadialChartWidget: React.FC<RadialChartProps> = ({
   title,
   footer,
   data,
   description = "Porcentaje de accidentes",
-}: RadialChartProps) => {
-  const colors = ["#6463D6", "#F99C30", "#2FBFDE"]
+  chartHeight,
+}) => {
+  const colors = ["#6463D6", "#F99C30", "#2FBFDE"];
 
   return (
-    <div style={{ paddingTop: "1px" }}>
-      <Card className="flex flex-col max-w-1xl mx-auto">
-        <CardHeader className="items-center py-1 px-2">
-          <CardTitle className="text-1xl">{title}</CardTitle>
-          <CardDescription>{description}</CardDescription>
-        </CardHeader>
-        <CardContent className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1">
-          {data.map((item, index) => {
-            const translateClass = index === 1 ? "translate-y-6" : "translate-y-0"
+    <Card className={`w-full ${chartHeight ? "h-full" : ""}`}>
+      <CardHeader className="items-center text-center">
+        <CardTitle className="text-1xl">{title}</CardTitle>
+        <CardDescription>{description}</CardDescription>
+      </CardHeader>
 
-            // Usa 0 si percentage no está definido
-            const percentage = typeof item.percentage === "number" ? item.percentage : 0
-            const subType = item.subType ?? ""
+      <CardContent
+        className={
+          chartHeight
+            ? "flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1"
+            : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1"
+        }
+      >
+        {data.map((item, index) => {
+          const percentage =
+            typeof item.percentage === "number" ? item.percentage : 0;
+          const subType = item.subType ?? "";
 
-            const chartData = [
-              { name: subType, value: percentage, fill: colors[index] ?? "#ccc" },
-              { name: "Resto", value: MAX_VALUE - percentage, fill: "#eee" },
-            ]
+          const chartData = [
+            { name: subType, value: percentage, fill: colors[index] ?? "#ccc" },
+            { name: "Resto", value: MAX_VALUE - percentage, fill: "#eee" },
+          ];
 
-            return (
-              <div
-                key={index}
-                className={`mx-auto aspect-square w-full max-w-[200px] min-w-[100px] transform ${translateClass}`}
+          return (
+            <div
+              key={index}
+              className={`relative mx-auto w-full aspect-square ${
+                chartHeight
+                  ? `h-[${chartHeight}px]`
+                  : "max-w-[200px] min-w-[100px]"
+              }`}
+            >
+              <ChartContainer
+                config={{}}
+                style={{
+                  width: "100%",
+                  height: chartHeight !== undefined ? chartHeight - 150 : 210,
+                }}
               >
-                <div style={{ position: "relative", width: "100%", height: "100%" }}>
-                  <ResponsiveContainer width="100%" height="100%">
-                    <RadialBarChart
-                      data={chartData}
-                      startAngle={0}
-                      endAngle={270}
-                      innerRadius="80%"
-                      outerRadius="115%"
-                    >
-                      <PolarGrid gridType="circle" radialLines={false} stroke="#eee" />
-                      <RadialBar dataKey="value" background cornerRadius={10} />
-                      <PolarRadiusAxis tick={false} tickLine={false} axisLine={false} />
-                    </RadialBarChart>
-                  </ResponsiveContainer>
-                  <div
-                    style={{
-                      position: "absolute",
-                      top: "50%",
-                      left: "50%",
-                      transform: "translate(-50%, -50%)",
-                      textAlign: "center",
-                      pointerEvents: "none",
-                    }}
-                  >
-                    <div className="text-3xl font-bold fill-foreground">
-                      {percentage.toLocaleString(undefined, { minimumFractionDigits: 2 })}%
-                    </div>
-                    <div className="text-base fill-muted-foreground">{subType}</div>
-                  </div>
+                <RadialBarChart
+                  data={chartData}
+                  startAngle={0}
+                  endAngle={270}
+                  innerRadius="80%"
+                  outerRadius="115%"
+                >
+                  <PolarGrid
+                    gridType="circle"
+                    radialLines={false}
+                    stroke="#eee"
+                  />
+                  <RadialBar dataKey="value" background cornerRadius={10} />
+                  <PolarRadiusAxis
+                    tick={false}
+                    tickLine={false}
+                    axisLine={false}
+                  />
+                </RadialBarChart>
+              </ChartContainer>
+
+              <div
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  textAlign: "center",
+                  pointerEvents: "none",
+                }}
+              >
+                <div className="text-3xl font-bold fill-foreground">
+                  {percentage.toLocaleString(undefined, {
+                    minimumFractionDigits: 2,
+                  })}
+                  %
                 </div>
+                <div className="text-base fill-muted-foreground">{subType}</div>
               </div>
-            )
-          })}
-        </CardContent>
+            </div>
+          );
+        })}
+      </CardContent>
 
-        <CardFooter className="flex flex-col gap-2 text-sm">
-          {footer && <span>{footer}</span>}
-        </CardFooter>
-      </Card>
-    </div>
-  )
-}
-
+      <CardFooter className="flex flex-col gap-2 text-sm">
+        {footer && <span>{footer}</span>}
+      </CardFooter>
+    </Card>
+  );
+};

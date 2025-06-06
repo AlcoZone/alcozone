@@ -14,7 +14,7 @@ import { v4 as uuidv4 } from "uuid";
 import { GridItem, useDashboardLayout } from "@/hooks/useDashboardLayout";
 
 import { BarChartWidget } from "@/components/BarChartWidget/BarChartWidget";
-import { ComparisonWidgetResizable as ComparisonWidget } from "@/components/ComparisonWidget/ComparisonWidgetResizable";
+import { ComparisonWidget } from "@/components/ComparisonWidget/ComparisonWidget";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -47,7 +47,7 @@ import {
   SelectValue,
   SelectLabel,
   SelectGroup,
-} from '@/components/ui/select';
+} from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import api from "@/services/api";
 import { WidgetDetail } from "@/types/WidgetDetail";
@@ -63,8 +63,13 @@ import { getAccidentsCount } from "@/services/widgets/getAccidentsCount";
 import { getDailyAccidents } from "@/services/widgets/getDailyAccidents";
 import { getAccidentsPercentage } from "@/services/widgets/getAccidentsPercentage";
 import { getAccidentsByReportSource } from "@/services/widgets/getAccidentsByReportSource";
-import { Accidente, ComparisonData, LineGraphData, RadialChartData, ReportChannelData } from "@/types/WidgetsData";
-
+import {
+  Accidente,
+  ComparisonData,
+  LineGraphData,
+  RadialChartData,
+  ReportChannelData,
+} from "@/types/WidgetsData";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -104,17 +109,31 @@ export default function DashboardPage() {
   const rowHeight = 100;
 
   const alcaldias = [
-    "Álvaro Obregón", "Azcapotzalco", "Benito Juárez", "Coyoacán",
-    "Cuajimalpa de Morelos", "Cuauhtémoc", "Gustavo A. Madero", "Iztacalco",
-    "Iztapalapa", "La Magdalena Contreras", "Miguel Hidalgo", "Milpa Alta",
-    "Tláhuac", "Tlalpan", "Venustiano Carranza", "Xochimilco"
+    "Álvaro Obregón",
+    "Azcapotzalco",
+    "Benito Juárez",
+    "Coyoacán",
+    "Cuajimalpa de Morelos",
+    "Cuauhtémoc",
+    "Gustavo A. Madero",
+    "Iztacalco",
+    "Iztapalapa",
+    "La Magdalena Contreras",
+    "Miguel Hidalgo",
+    "Milpa Alta",
+    "Tláhuac",
+    "Tlalpan",
+    "Venustiano Carranza",
+    "Xochimilco",
   ];
-  const [selectedTown, setSelectedTown] = useState('');
+  const [selectedTown, setSelectedTown] = useState("");
   const [comparisonData, setComparisonData] = useState<ComparisonData[]>([]);
   const [accidentCauseData, setAccidentCauseData] = useState<Accidente[]>([]);
   const [lineGraphData, setLineGraphData] = useState<LineGraphData[]>([]);
   const [radialChartData, setRadialChartData] = useState<RadialChartData[]>([]);
-  const [reportChannelData, setReportChannelData] = useState<ReportChannelData[]>([]);
+  const [reportChannelData, setReportChannelData] = useState<
+    ReportChannelData[]
+  >([]);
 
   const handleTownChange = (value: string) => {
     if (value === "clear") {
@@ -184,7 +203,6 @@ export default function DashboardPage() {
       }
     };
     fetchReportChannelData();
-
   }, [selectedTown, draftLayout, savedLayout]);
 
   useEffect(() => {
@@ -459,12 +477,15 @@ export default function DashboardPage() {
             <div className="flex justify-between items-center mb-6 gap-4">
               <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
-                  <Button variant="outline" className="w-[220px] justify-between">
+                  <Button
+                    variant="outline"
+                    className="w-[220px] justify-between"
+                  >
                     {selectedDashboard === null
                       ? "Nuevo Dashboard"
                       : availableDashboards.find(
-                        (d) => d.id === selectedDashboard
-                      )?.name || "Selecciona un dashboard"}
+                          (d) => d.id === selectedDashboard
+                        )?.name || "Selecciona un dashboard"}
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                   </Button>
                 </PopoverTrigger>
@@ -496,10 +517,11 @@ export default function DashboardPage() {
                               className="flex-1 flex items-center space-x-2 overflow-hidden"
                             >
                               <Check
-                                className={`h-4 w-4 flex-shrink-0 ${selectedDashboard === d.id
-                                  ? "opacity-100"
-                                  : "opacity-0"
-                                  }`}
+                                className={`h-4 w-4 flex-shrink-0 ${
+                                  selectedDashboard === d.id
+                                    ? "opacity-100"
+                                    : "opacity-0"
+                                }`}
                               />
                               <span className="truncate">{d.name}</span>
                             </CommandItem>
@@ -710,6 +732,7 @@ export default function DashboardPage() {
                 Cuauhtémoc: "#0095FF",
                 "Benito Juárez": "#00E096",
               }}
+              chartHeight={getHeight("bar-chart")}
             />
           </div>
         )}
@@ -732,9 +755,9 @@ export default function DashboardPage() {
                   color: "#8884d8",
                 },
               }}
-              footer={selectedTown
-                ? `Datos para ${selectedTown}`
-                : "Datos totales"}
+              footer={
+                selectedTown ? `Datos para ${selectedTown}` : "Datos totales"
+              }
               chartHeight={getHeight("comparison")}
             />
           </div>
@@ -753,10 +776,13 @@ export default function DashboardPage() {
             )}
             <RadialChartWidget
               title="Causas de accidentes"
-              description={selectedTown
-                ? `Porcentaje de accidentes en ${selectedTown}`
-                : "Porcentaje de accidentes"}
+              description={
+                selectedTown
+                  ? `Porcentaje de accidentes en ${selectedTown}`
+                  : "Porcentaje de accidentes"
+              }
               data={radialChartData}
+              chartHeight={getHeight("radial-chart")}
             />
           </div>
         )}
@@ -778,6 +804,7 @@ export default function DashboardPage() {
                 { town: "Iztapalapa", total_accidents: "2747" },
                 { town: "Gustavo A. Madero", total_accidents: "1846" },
               ]}
+              chartHeight={getHeight("donut")}
             />
           </div>
         )}
@@ -795,10 +822,11 @@ export default function DashboardPage() {
             )}
             <AccidentCauseTableWidget
               title="Tipos de accidentes"
-              subtitle={selectedTown
-                ? `Datos para ${selectedTown}`
-                : "Datos totales"}
+              subtitle={
+                selectedTown ? `Datos para ${selectedTown}` : "Datos totales"
+              }
               data={accidentCauseData}
+              chartHeight={getHeight("accident-cause-table")}
             />
           </div>
         )}
@@ -816,10 +844,11 @@ export default function DashboardPage() {
             )}
             <ReportChannelWidget
               title="Canales de reporte"
-              description={selectedTown
-                ? `Accidentes en ${selectedTown} según canal de reporte`
-                : "Accidentes según canal de reporte"}
-              chartHeight={330}
+              description={
+                selectedTown
+                  ? `Accidentes en ${selectedTown} según canal de reporte`
+                  : "Accidentes según canal de reporte"
+              }
               data={reportChannelData}
               config={{
                 total_accidents: {
@@ -827,6 +856,7 @@ export default function DashboardPage() {
                   color: "#8884d8",
                 },
               }}
+              chartHeight={getHeight("report-channel")}
             />
           </div>
         )}
@@ -842,9 +872,11 @@ export default function DashboardPage() {
             )}
             <LineGraphWidget
               title="Tendencia diaria de accidentes"
-              description={selectedTown
-                ? `Número de accidentes registrados por día en ${selectedTown}`
-                : "Número de accidentes registrados por día"}
+              description={
+                selectedTown
+                  ? `Número de accidentes registrados por día en ${selectedTown}`
+                  : "Número de accidentes registrados por día"
+              }
               data={lineGraphData}
               config={{
                 total_accidents: {
@@ -852,6 +884,7 @@ export default function DashboardPage() {
                   color: "#8950FC",
                 },
               }}
+              chartHeight={getHeight("line-graph")}
             />
           </div>
         )}
