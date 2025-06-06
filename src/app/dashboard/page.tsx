@@ -826,6 +826,7 @@ export default function DashboardPage() {
                 selectedTown ? `Datos para ${selectedTown}` : "Datos totales"
               }
               data={accidentCauseData}
+              chartHeight={getHeight("accident-cause-table")}
             />
           </div>
         )}
