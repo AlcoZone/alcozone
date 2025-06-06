@@ -60,6 +60,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (user) {
       const updatedUser = { ...user, displayName: newName } as User;
       setUser(updatedUser);
+      setName(newName);
     }
   };
 
