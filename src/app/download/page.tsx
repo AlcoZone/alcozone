@@ -5,7 +5,7 @@ import { Table } from "@/components/Table/Table";
 import { getRevisionCsv } from "@/services/csv/getRevisionCSV";
 import { getRevisionCsvList } from "@/services/csv/getRevisionCSVlist";
 import type { DatasetItem } from "@/types/DataSetItem";
-import { deleteRevision } from "@/services/delete/deleteRevision";
+import { deleteRevision } from "@/services/csv/deleteRevision";
 import { ToastContainer, toast } from "react-toastify";
 
 
@@ -53,6 +53,11 @@ export default function CsvPage() {
               {
                 label: "Eliminar",
                 onClick: async (row) => {
+                  const confirmed = window.confirm(
+                    `¿Seguro que deseas borrar el dashboard "${row.name}"?`
+                  );
+                  if (!confirmed) return;
+                  
                   try {
                     await deleteRevision(row.uuid);
                     toast.success("Revisión eliminada correctamente");
