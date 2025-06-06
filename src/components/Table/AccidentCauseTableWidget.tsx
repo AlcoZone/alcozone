@@ -1,4 +1,3 @@
-// TODO: fix this widget in home
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import {
   Card,
