@@ -42,7 +42,7 @@ const LineGraphWidget: React.FC<Props> = ({
           config={config}
           style={{
             width: "100%",
-            height: chartHeight - 10,
+            height: chartHeight - 80,
           }}
         >
           <LineChart data={data} margin={{ left: 12, right: 12 }}>
