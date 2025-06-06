@@ -1,43 +1,35 @@
-import type { Meta, StoryObj } from "@storybook/react"
-import LineChartMultiple from "./LineGraphWidget"
+import type { Meta, StoryObj } from "@storybook/react";
+import LineGraphWidget from "./LineGraphWidget";
 
-const meta: Meta<typeof LineChartMultiple> = {
+const meta: Meta<typeof LineGraphWidget> = {
   title: "Components/LineChartMultiple",
-  component: LineChartMultiple,
+  component: LineGraphWidget,
   tags: ["autodocs"],
-}
-export default meta
+};
+export default meta;
 
-type Story = StoryObj<typeof LineChartMultiple>
+type Story = StoryObj<typeof LineGraphWidget>;
 
 const sampleData = [
-  { month: "January", fecha1: 186, fecha2: 80 },
-  { month: "February", fecha1: 305, fecha2: 200 },
-  { month: "March", fecha1: 237, fecha2: 120 },
-  { month: "April", fecha1: 73, fecha2: 190 },
-  { month: "May", fecha1: 209, fecha2: 130 },
-  { month: "June", fecha1: 214, fecha2: 140 },
-]
+  { accident_date: "2025-05-01", total_accidents: 180 },
+  { accident_date: "2025-05-02", total_accidents: 150 },
+  { accident_date: "2025-05-03", total_accidents: 200 },
+  { accident_date: "2025-05-04", total_accidents: 210 },
+  { accident_date: "2025-05-05", total_accidents: 90 },
+];
 
 const sampleConfig = {
-  desktop: {
-    label: "fecha1",
-    color: "#8950FC",
+  total_accidents: {
+    label: "Accidentes",
+    color: "#001391",
   },
-  mobile: {
-    label: "Fecha2",
-    color: "#F64E60",
-  },
-}
-
+};
 
 export const Default: Story = {
   args: {
     data: sampleData,
     config: sampleConfig,
-    title: "Accidentes por alcoholismo",
-    description: "2023 vs 2024",
-    summary: "2.1% vs año pasado",
-    accidents: "56, 799",
+    title: "Accidentes diarios",
+    description: "Total de accidentes reportados por día",
   },
-}
+};

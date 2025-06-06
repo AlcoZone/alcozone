@@ -1,19 +1,36 @@
 "use client";
 
-import { User, getIdToken, onAuthStateChanged, signOut } from "firebase/auth";
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  User,
+  getIdToken,
+  onAuthStateChanged,
+  signOut,
+  updateProfile,
+} from "firebase/auth";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+} from "react";
 import { useRouter } from "next/navigation";
 import { ROLE_MAP } from "@/utils/roleMap";
 import { auth } from "@/lib/firebaseClient";
 import { getUserLogin } from "@/services/User/getUserLogin";
 import type { AuthContextProps } from "@/types/AuthContextProps";
 
-const AuthContext = createContext<AuthContextProps>({
+export const AuthContext = createContext<AuthContextProps>({
   user: null,
   loading: true,
   idToken: null,
   role: null,
+  name: null,
   email: null,
+  updateDisplayName: () => {}, 
+  logout: async () => {},
+  refreshUser: async () => {},
+  updateFirebaseDisplayName: async () => {},
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -22,30 +39,70 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [idToken, setIdToken] = useState<string | null>(null);
   const [role, setRole] = useState<string | null>(null);
   const [email, setEmail] = useState<string | null>(null);
+  const [name, setName] = useState<string | null>(null);
   const router = useRouter();
 
   const logout = async () => {
     try {
-      await signOut(auth); 
+      await signOut(auth);
       setUser(null);
       setIdToken(null);
       setRole(null);
       setEmail(null);
-      router.push("/auth/login"); 
+      setName(null);
+      router.push("/auth/login");
     } catch (error) {
       console.error("Error al cerrar sesión:", error);
     }
   };
 
+  const updateDisplayName = (newName: string) => {
+    if (user) {
+      const updatedUser = { ...user, displayName: newName } as User;
+      setUser(updatedUser);
+    }
+  };
+
+  const updateFirebaseDisplayName = async (newName: string) => {
+    if (!auth.currentUser) return;
+    try {
+      await updateProfile(auth.currentUser, { displayName: newName });
+      setName(newName);
+    } catch (error) {
+      console.error("Error actualizando displayName en Firebase:", error);
+    }
+  };
+
+  const refreshUser = useCallback(async () => {
+    const firebaseUser = auth.currentUser;
+    if (!firebaseUser) return;
+
+    try {
+      const token = await getIdToken(firebaseUser);
+      setIdToken(token);
+
+      const userLogin = await getUserLogin();
+      setEmail(userLogin.email || null);
+      setRole(
+        userLogin?.role_id && ROLE_MAP[userLogin.role_id]
+          ? ROLE_MAP[userLogin.role_id]
+          : null
+      );
+
+      setName(firebaseUser.displayName || null); 
+    } catch (error) {
+      console.error("Error actualizando usuario:", error);
+    }
+  }, []);
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setUser(firebaseUser);
-
       if (firebaseUser) {
         try {
           const token = await getIdToken(firebaseUser);
           setIdToken(token);
-          
+
           const userLogin = await getUserLogin();
 
           if (!userLogin?.role_id || !ROLE_MAP[userLogin.role_id]) {
@@ -54,29 +111,42 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           } else {
             setRole(ROLE_MAP[userLogin.role_id]);
           }
-          
-          setEmail(userLogin.email || null);
 
+          setEmail(userLogin.email || null);
         } catch (error) {
           console.error("Error obteniendo userLogin:", error);
           setIdToken(null);
           setRole(null);
           setEmail(null);
         }
+        await refreshUser();
       } else {
         setIdToken(null);
         setRole(null);
         setEmail(null);
+        setName(null);
       }
-
       setLoading(false);
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [refreshUser]);
 
   return (
-    <AuthContext.Provider value={{ user, loading, idToken, role, email,logout }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        idToken,
+        role,
+        name,
+        email,
+        updateDisplayName,
+        logout,
+        refreshUser,
+        updateFirebaseDisplayName,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

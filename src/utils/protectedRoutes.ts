@@ -25,5 +25,5 @@ export const protectedRoutes: Record<RoleType, Set<string>> = {
     "/account",
     "/dashboard",
     "/map",
-  ]),
+  ])
 };

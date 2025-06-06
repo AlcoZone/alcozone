@@ -1,27 +1,34 @@
-import type { Meta, StoryObj } from "@storybook/react"
-import { RadialChartWidget } from "./RadialChartWidget"
+import type { Meta, StoryObj } from "@storybook/react";
+import { RadialChartWidget } from "./RadialChartWidget";
 
 const meta: Meta<typeof RadialChartWidget> = {
-  title: "Widgets/RadialChartWidget",
+  title: "Components/RadialChartWidget",
   component: RadialChartWidget,
   tags: ["autodocs"],
-  parameters: {
-    layout: "centered",
-  },
-}
+};
 
-export default meta
+export default meta;
 
-type Story = StoryObj<typeof RadialChartWidget>
+type Story = StoryObj<typeof RadialChartWidget>;
 
-export const Default: Story = {
+export const PorcentajePorTipoDeAccidente: Story = {
   args: {
-    title: "Causa de accidentes",
-    footer: "Porcentaje de accidentes",
+    title: "Tipos de accidente",
+    description: "Porcentaje de accidentes",
+    footer: "",
     data: [
-      { label: "Peatonal", value: 15, fill: "#8884d8" },
-      { label: "Automovilístico", value: 50, fill: "#82ca9d" },
-      { label: "Motociclista", value: 35, fill: "#ffc658" },
+      {
+        percentage: 28.47,
+        subType: "Choque con lesionados",
+      },
+      {
+        percentage: 9.72,
+        subType: "Motociclista",
+      },
+      {
+        percentage: 9.43,
+        subType: "Atropellado",
+      },
     ],
   },
-}
+};

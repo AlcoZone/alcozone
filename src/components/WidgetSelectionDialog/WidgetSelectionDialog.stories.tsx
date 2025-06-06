@@ -2,10 +2,12 @@ import type { Meta, StoryObj } from "@storybook/react";
 import WidgetSelectionDialog from "./WidgetSelectionDialog";
 import { WidgetDetail } from "@/types/WidgetDetail";
 import { ComparisonWidget } from "@/components/ComparisonWidget/ComparisonWidget";
-import { Default as ComparisonWidgetStory } from "@/components/ComparisonWidget/ComparisonWidget.stories";
-import { BarChartWidget } from "@/components/BarChartWidget/BarChartWidget";
-import { Default as BarChartWidgetStory } from "@/components/BarChartWidget/BarChartWidget.stories";
+import { GeneralAccidents as ComparisonWidgetStory } from "@/components/ComparisonWidget/ComparisonWidget.stories";
+import { action } from "@storybook/addon-actions";
 
+
+
+import React, { useState } from "react";
 
 const meta: Meta<typeof WidgetSelectionDialog> = {
   title: "Components/WidgetSelectionDialog",
@@ -17,38 +19,31 @@ export default meta;
 type Story = StoryObj<typeof WidgetSelectionDialog>;
 
 const exampleComparisonWidget: WidgetDetail[] = [
-    {
-      id: 1,
-      name: "Accidentes por Mes",
-      description: "Comparación mensual de accidentes.",
-      preview: (<ComparisonWidget {...ComparisonWidgetStory.args as React.ComponentProps<typeof ComparisonWidget>} />),
-    },
-];
-
-const exampleMultipleWidgets: WidgetDetail[] = [
-    {
-      id: 1,
-      name: "Accidentes por Mes",
-      description: "Comparación mensual de accidentes.",
-      preview: (<ComparisonWidget {...ComparisonWidgetStory.args as React.ComponentProps<typeof ComparisonWidget>} />),
-    },
-
-    {
-      id: 2,
-      name: "Accidentes Relacionados con el Alcohol frente a Otras Causas",
-      description: "Comparación entre los accidentes relacionados con el alcohol y aquellos causados por otros factores.",
-      preview: (<BarChartWidget {...BarChartWidgetStory.args as React.ComponentProps<typeof BarChartWidget>} />),
-    },
+  {
+    id: 1,
+    uuid: "widget-1",
+    name: "AccidentesMensuales",
+    title: "Accidentes por Mes",
+    description: "Comparación mensual de accidentes.",
+    minWidth: 4,
+    minHeight: 2,
+    preview: (<ComparisonWidget {...ComparisonWidgetStory.args as React.ComponentProps<typeof ComparisonWidget>} />),
+  },
 ];
 
 export const Default: Story = {
-  args: {
-    widgets: exampleComparisonWidget,
-  },
-};
+  render: () => {
+    const [added, setAdded] = useState<string[]>([]);
 
-export const MultipleWidgets: Story = {
-  args: {
-    widgets: exampleMultipleWidgets,
+    return (
+      <WidgetSelectionDialog
+        widgets={exampleComparisonWidget}
+        addedWidgetUuids={added}
+        onAddWidget={(widget) => {
+          action("Widget agregado")(widget);
+          setAdded((prev) => [...prev, widget.uuid]);
+        }}
+      />
+    );
   },
 };
