@@ -47,7 +47,7 @@ export const BarChartWidget: React.FC<BarChartWidgetProps> = ({
 
   const uniqueTowns = Array.from(new Set(data.map((d) => d.town)));
 
-  const defaultHeight = 200;
+  const defaultHeight = 205;
 
   return (
     <Card className={`w-full ${chartHeight ? "h-full" : ""}`}>
