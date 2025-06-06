@@ -1,83 +1,91 @@
 import React from "react";
-import { Bar, BarChart, Tooltip } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from "recharts";
 import {
   Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
 } from "@/components/ui/card";
+import { ChartContainer } from "@/components/ui/chart";
 
-export type BarChartWidgetProps = {
-  title: string;
-  description: string;
-  data: { month: string; [key: string]: number }[];
-  categories: string[];
-  categoryColors: string[];
+type AccidenteData = {
+  month_name: string;
+  town: string;
+  total_accidents: number;
 };
 
-export const BarChartWidget = ({
+export type BarChartWidgetProps = {
+  title?: string;
+  description?: string;
+  data: AccidenteData[];
+  colors?: Record<string, string>; // opcional: colores por town
+  chartHeight?: number;
+};
+
+export const BarChartWidget: React.FC<BarChartWidgetProps> = ({
   title,
   description,
   data,
-  categories,
-  categoryColors,
-}: BarChartWidgetProps) => {
-  const totals = categories.reduce((acc, category) => {
-    acc[category] = data.reduce((sum, item) => sum + item[category], 0);
-    return acc;
-  }, {} as Record<string, number>);
+  colors = {},
+  chartHeight,
+}) => {
+  const groupedByMonth: Record<string, Record<string, number>> = {};
+
+  data.forEach(({ month_name, town, total_accidents }) => {
+    if (!groupedByMonth[month_name]) {
+      groupedByMonth[month_name] = {};
+    }
+    groupedByMonth[month_name][town] = total_accidents;
+  });
+
+  const chartData = Object.entries(groupedByMonth).map(([month, towns]) => ({
+    month_name: month,
+    ...towns,
+  }));
+
+  const uniqueTowns = Array.from(new Set(data.map((d) => d.town)));
+
+  const defaultHeight = 205;
 
   return (
-    <div style={{ paddingTop: "1px" }}>
-      <Card className="w-full">
-        <CardHeader className="text-center">
-          <CardTitle>{title}</CardTitle>
-          <CardDescription>{description}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <BarChart width={500} height={250} data={data}>
+    <Card className={`w-full ${chartHeight ? "h-full" : ""}`}>
+      <CardHeader className="text-center">
+        {title && <CardTitle>{title}</CardTitle>}
+        {description && <CardDescription>{description}</CardDescription>}
+      </CardHeader>
+
+      <CardContent className={chartHeight ? "flex-1" : ""}>
+        <ChartContainer
+          config={{}}
+          style={{
+            width: "100%",
+            height:
+              chartHeight !== undefined ? chartHeight - 130 : defaultHeight,
+          }}
+        >
+          <BarChart data={chartData}>
+            <XAxis dataKey="month_name" />
+            <YAxis />
             <Tooltip />
-            {categories.map((category, index) => (
+            <Legend />
+            {uniqueTowns.map((town, index) => (
               <Bar
-                key={category}
-                dataKey={category}
-                stackId="a"
-                fill={categoryColors[index]}
-                radius={index === 0 ? [4, 4, 0, 0] : [0, 0, 4, 4]}
+                key={town}
+                dataKey={town}
+                fill={
+                  colors[town] || defaultColors[index % defaultColors.length]
+                }
               />
             ))}
           </BarChart>
-          <div className="flex gap-4 justify-center mt-4 text-sm">
-            {categories.map((category, index) => (
-              <div key={category} className="flex items-center gap-2">
-                <div
-                  style={{
-                    width: "12px",
-                    height: "12px",
-                    backgroundColor: categoryColors[index],
-                  }}
-                />
-                <span>{category}</span>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-        <CardFooter className="flex-col items-center gap-2 text-sm text-center">
-          {categories.map((category) => (
-            <div key={category} className="flex gap-2 font-medium leading-none">
-              Total por {category}: {totals[category]}
-            </div>
-          ))}
-        </CardFooter>
-      </Card>
-    </div>
+        </ChartContainer>
+      </CardContent>
+
+      <CardFooter className="text-center text-sm font-medium"></CardFooter>
+    </Card>
   );
 };
 
-
-
-
-
-
+const defaultColors = ["#8884d8", "#82ca9d", "#ffc658", "#ff8042"];
