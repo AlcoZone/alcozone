@@ -74,6 +74,8 @@ const LoginPage: React.FC = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Correo electrónico"
                 type="email"
+                data-testid="email-input"
+                
               />
               <div className="relative w-full">
                 <TextInput
@@ -82,6 +84,7 @@ const LoginPage: React.FC = () => {
                   placeholder="Contraseña"
                   type="password"
                   showPasswordToggle
+                  data-testid="password-input"
                 />
               </div>
             </div>
@@ -89,18 +92,21 @@ const LoginPage: React.FC = () => {
             <div className="w-full h-14">
               <div className="w-full h-full scale-y-120 origin-top [&_button]:w-full [&_button]:h-full [&_button]:scale-y-[0.75]">
                 <ConfirmButtons
+                  data-testid="login-button"
                   variant="login"
                   onClick={handleLogin}
                   disabled={loadingLogin}
                 />
               </div>
               {error && (
-                <p className="text-red-600 font-medium text-sm mt-2 text-center">
+                <p data-testid= "login-error"
+                   className="text-red-600 font-medium text-sm mt-2 text-center">
                   {error}
                 </p>
               )}
               {loadingLogin && (
-                <p className="text-blue-700 text-center mt-2">Ingresando...</p>
+                <p data-testid= "login-loading"
+                className="text-blue-700 text-center mt-2">Ingresando...</p>
               )}
             </div>
             <p

@@ -17,6 +17,8 @@ import { ComparisonWidget } from '@/components/ComparisonWidget/ComparisonWidget
 import { Card, CardContent } from '@/components/ui/card';
 import AccidentCauseTableWidget from '@/components/Table/AccidentCauseTableWidget';
 
+import Spinner from '@/components/Spinner/Spinner';
+
 type Accidente = {
   subType?: string;
   accidentCount: number;
@@ -44,21 +46,11 @@ function generateColors(towns: string[]): Record<string, string> {
   return colorsMap;
 }
 
-// Componente reutilizable de carga con spinner
-const LoadingWidget = ({ message = "Loading..." }: { message?: string }) => (
-  <div className="flex justify-center items-center h-full">
-    <div className="flex flex-col items-center">
-    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#001391] mb-2"></div>
-
-      <p className="text-center text-xl font-sans">{message}</p>
-    </div>
-  </div>
-);
-
 const MainPage = () => {
   const router = useRouter();
   const [user, setUser] = useState<{ email: string } | null>(null);
 
+  
   const [donutChartData, setDonutChartData] = useState<AccidenteDonut[]>([]);
   const [radialData, setRadialData] = useState<{ percentage: number; subType: string }[]>([]);
   const [comparisonData, setComparisonData] = useState<{ month_name: string; accidents: string }[]>([]);
@@ -66,11 +58,19 @@ const MainPage = () => {
   const [barChartColors, setBarChartColors] = useState<Record<string, string>>({});
   const [accidentCauseData, setAccidentCauseData] = useState<Accidente[]>([]);
 
+  
   const [loadingDonut, setLoadingDonut] = useState(true);
   const [loadingRadial, setLoadingRadial] = useState(true);
   const [loadingComparison, setLoadingComparison] = useState(true);
   const [loadingBar, setLoadingBar] = useState(true);
   const [loadingTable, setLoadingTable] = useState(true);
+
+  
+  const [errorDonut, setErrorDonut] = useState(false);
+  const [errorRadial, setErrorRadial] = useState(false);
+  const [errorComparison, setErrorComparison] = useState(false);
+  const [errorBar, setErrorBar] = useState(false);
+  const [errorTable, setErrorTable] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -81,62 +81,72 @@ const MainPage = () => {
 
   useEffect(() => {
     const fetchDonutData = async () => {
+      setLoadingDonut(true);
+      setErrorDonut(false);
       try {
-        setLoadingDonut(true);
         const response = await api.get<AccidenteDonut[]>('/widgets/dangerous-town');
         setDonutChartData(response.data);
       } catch (error) {
         console.error("Error cargando DonutChart:", error);
+        setErrorDonut(true);
       } finally {
         setLoadingDonut(false);
       }
     };
 
     const fetchRadialData = async () => {
+      setLoadingRadial(true);
+      setErrorRadial(false);
       try {
-        setLoadingRadial(true);
         const radial = await getAccidentsPercentage();
         setRadialData(radial);
       } catch (error) {
         console.error("Error cargando RadialChart:", error);
+        setErrorRadial(true);
       } finally {
         setLoadingRadial(false);
       }
     };
 
     const fetchBarData = async () => {
+      setLoadingBar(true);
+      setErrorBar(false);
       try {
-        setLoadingBar(true);
         const barData = await getDangerousTownPerMonth();
         setBarChartData(barData);
         const towns = barData.map((d: any) => d.town);
         setBarChartColors(generateColors(towns));
       } catch (error) {
         console.error("Error cargando BarChart:", error);
+        setErrorBar(true);
       } finally {
         setLoadingBar(false);
       }
     };
 
     const fetchComparisonData = async () => {
+      setLoadingComparison(true);
+      setErrorComparison(false);
       try {
-        setLoadingComparison(true);
         const comparison = await getMonthlyAccidents();
         setComparisonData(comparison);
       } catch (error) {
         console.error("Error cargando Comparison:", error);
+        setErrorComparison(true);
       } finally {
         setLoadingComparison(false);
       }
     };
 
     const fetchTableData = async () => {
+      setLoadingTable(true);
+      setErrorTable(false);
       try {
-        setLoadingTable(true);
         const accidentCauses = await getAccidentsCount();
         setAccidentCauseData(accidentCauses);
       } catch (error) {
         console.error("Error cargando Table:", error);
+        setErrorTable(true);
       } finally {
         setLoadingTable(false);
       }
@@ -152,11 +162,13 @@ const MainPage = () => {
   return (
     <div className="flex flex-wrap h-screen overflow-auto px-4 pb-4 gap-4">
       {/* DonutChartWidget */}
-      <div className="w-full md:w-[calc(33.33%-1rem)]">
+      <div className="w-full md:w-[calc(33.33%-1rem)]" data-testid="donut-widget-container">
         <Card className="bg-transparent shadow-none border-none h-full flex flex-col pt-3 pb-0">
           <CardContent className="flex-1 flex flex-col px-0">
             {loadingDonut ? (
-              <LoadingWidget />
+              <Spinner />
+            ) : errorDonut ? (
+              <div data-testid="error-message">No se pudo cargar el widget</div>
             ) : (
               <DonutChartWidget
                 data={donutChartData}
@@ -170,11 +182,13 @@ const MainPage = () => {
       </div>
 
       {/* RadialChartWidget */}
-      <div className="w-full md:w-[calc(66.66%-1rem)]">
+      <div className="w-full md:w-[calc(66.66%-1rem)]" data-testid="radial-widget-container">
         <Card className="bg-transparent shadow-none border-none h-full flex flex-col pt-3 pb-0">
           <CardContent className="flex-1 flex flex-col px-0">
             {loadingRadial ? (
-              <LoadingWidget />
+              <Spinner />
+            ) : errorRadial ? (
+              <div data-testid="error-message">No se pudo cargar el widget</div>
             ) : (
               <RadialChartWidget title="Causas de accidentes" data={radialData} />
             )}
@@ -183,11 +197,13 @@ const MainPage = () => {
       </div>
 
       {/* BarChartWidget */}
-      <div className="w-full md:w-[calc(33.33%-1rem)]">
+      <div className="w-full md:w-[calc(33.33%-1rem)]" data-testid="bar-widget-container">
         <Card className="bg-transparent shadow-none border-none h-full flex flex-col pt-3 pb-0">
           <CardContent className="flex-1 flex flex-col px-0">
             {loadingBar ? (
-              <LoadingWidget />
+              <Spinner />
+            ) : errorBar ? (
+              <div data-testid="error-message">No se pudo cargar el widget</div>
             ) : (
               <BarChartWidget
                 data={barChartData}
@@ -201,17 +217,20 @@ const MainPage = () => {
       </div>
 
       {/* ComparisonWidget */}
-      <div className="w-full md:w-[calc(33.33%-1rem)]">
+      <div className="w-full md:w-[calc(33.33%-1rem)]" data-testid="comparison-widget-container">
         <Card className="bg-transparent shadow-none border-none h-full flex flex-col pt-3 pb-0">
           <CardContent className="flex-1 flex flex-col px-0">
             {loadingComparison ? (
-              <LoadingWidget />
+              <Spinner />
+            ) : errorComparison ? (
+              <div data-testid="error-message">No se pudo cargar el widget</div>
             ) : (
               <ComparisonWidget
                 title="Accidentes por mes"
                 data={comparisonData}
                 footer="Año 2024"
                 config={comparisonConfig}
+                data-testid="comparison-widget"
               />
             )}
           </CardContent>
@@ -219,17 +238,15 @@ const MainPage = () => {
       </div>
 
       {/* AccidentCauseTableWidget */}
-      <div className="w-full md:w-[calc(33.33%-1rem)]">
+      <div className="w-full md:w-[calc(33.33%-1rem)]" data-testid="table-widget-container">
         <Card className="bg-transparent shadow-none border-none h-full flex flex-col pt-3 pb-0">
           <CardContent className="flex-1 flex flex-col px-0">
             {loadingTable ? (
-              <LoadingWidget />
+              <Spinner />
+            ) : errorTable ? (
+              <div data-testid="error-message">No se pudo cargar el widget</div>
             ) : (
-              <AccidentCauseTableWidget
-                data={accidentCauseData}
-                title="Tipos de accidentes"
-                subtitle="Año 2024"
-              />
+              <AccidentCauseTableWidget data={accidentCauseData} />
             )}
           </CardContent>
         </Card>
@@ -239,3 +256,4 @@ const MainPage = () => {
 };
 
 export default MainPage;
+

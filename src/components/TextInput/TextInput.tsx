@@ -11,7 +11,7 @@ type TextInputProps = {
   placeholder: string;
   type?: string;
   showPasswordToggle?: boolean;
-};
+} & React.InputHTMLAttributes<HTMLInputElement>; 
 
 export const TextInput = ({
   value,
@@ -19,6 +19,7 @@ export const TextInput = ({
   placeholder,
   type = "text",
   showPasswordToggle = false,
+  ...props
 }: TextInputProps) => {
   const [show, setShow] = useState(false);
 
@@ -32,13 +33,15 @@ export const TextInput = ({
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className="pr-10" 
+        className="pr-10"
+        {...props} 
       />
       {showPasswordToggle && isPassword && (
         <button
           type="button"
           onClick={() => setShow((prev) => !prev)}
           className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600"
+          data-testid="toggle-password-visibility" 
         >
           {show ? <VisibilityIcon fontSize="small" /> : <VisibilityOffIcon fontSize="small" />}
         </button>

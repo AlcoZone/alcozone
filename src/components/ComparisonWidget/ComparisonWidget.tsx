@@ -8,14 +8,6 @@ import {
 } from "@/components/ui/card";
 import { ChartConfig, ChartContainer } from "@/components/ui/chart";
 
-type ComparisonWidgetProps = {
-  title: string;
-  data: Array<{ month_name: string; accidents: string | number }>;
-  config: Record<string, { label: string; color: string }>;
-  footer: string;
-  chartHeight: number;
-};
-
 export const ComparisonWidget: React.FC<ComparisonWidgetProps> = ({
   title,
   data,
@@ -28,13 +20,13 @@ export const ComparisonWidget: React.FC<ComparisonWidgetProps> = ({
       const month = payload[0].payload.month_name;
 
       return (
-        <div className="rounded-md border bg-white p-3 shadow-sm">
-          <p className="text-sm font-bold">{month}</p>
+        <div className="rounded-md border bg-white p-3 shadow-sm" data-testid="custom-tooltip">
+          <p className="text-sm font-bold" data-testid="tooltip-month">{month}</p>
           <div className="mt-1 space-y-1 text-sm">
             {payload.map((entry: any, index: number) => {
               const chartConfig = config[entry.dataKey];
               return (
-                <div key={index} className="flex justify-between gap-4">
+                <div key={index} className="flex justify-between gap-4" data-testid={`tooltip-entry-${index}`}>
                   <span className="text-muted-foreground">
                     {chartConfig.label}:
                   </span>
@@ -53,13 +45,13 @@ export const ComparisonWidget: React.FC<ComparisonWidgetProps> = ({
   }
 
   return (
-    <div style={{ paddingTop: "1px" }}>
+    <div style={{ paddingTop: "1px" }} data-testid="comparison-widget">
       <Card className="w-full">
-        <CardHeader className="text-center">
-          <CardTitle>{title}</CardTitle>
+        <CardHeader className="text-center" data-testid="widget-header">
+          <CardTitle data-testid="widget-title">{title}</CardTitle>
         </CardHeader>
-        <CardContent>
-          <div style={{ width: "100%", height: 210 }}>
+        <CardContent data-testid="widget-content">
+          <div style={{ width: "100%", height: 210 }} data-testid="chart-wrapper">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart
                 data={data.map((item) => ({
@@ -67,6 +59,7 @@ export const ComparisonWidget: React.FC<ComparisonWidgetProps> = ({
                   accidents: Number(item.accidents),
                 }))}
                 margin={{ left: 12, right: 12 }}
+                data-testid="area-chart"
               >
                 <Tooltip
                   content={<CustomTooltip />}
@@ -82,6 +75,7 @@ export const ComparisonWidget: React.FC<ComparisonWidgetProps> = ({
                       fill={chartConfig.color}
                       fillOpacity={0.6}
                       stroke={chartConfig.color}
+                      data-testid={`area-${key}`}
                     />
                   );
                 })}
@@ -89,10 +83,10 @@ export const ComparisonWidget: React.FC<ComparisonWidgetProps> = ({
             </ResponsiveContainer>
           </div>
         </CardContent>
-        <CardFooter>
+        <CardFooter data-testid="widget-footer">
           <div className="flex w-full items-start gap-2 text-sm">
             <div className="grid gap-2">
-              <div className="flex items-center gap-2 leading-none text-muted-foreground">
+              <div className="flex items-center gap-2 leading-none text-muted-foreground" data-testid="footer-text">
                 {footer}
               </div>
             </div>

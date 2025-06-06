@@ -141,7 +141,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         role,
         name,
         email,
-        updateDisplayName
+        updateDisplayName,
         logout,
         refreshUser,
         updateFirebaseDisplayName,
