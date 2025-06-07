@@ -150,6 +150,8 @@ export default function DashboardPage() {
   };
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
+  const [tempStartDate, setTempStartDate] = useState(startDate);
+  const [tempEndDate, setTempEndDate] = useState(endDate);
 
   function formatDate(dateString: string): string {
     if (!dateString) return '';
@@ -174,8 +176,8 @@ export default function DashboardPage() {
     const fetchAccidentCauseData = async () => {
       try {
         if (isWidgetVisible("accident-cause-table")) {
-          const formattedStartDate = startDate ? FormatDate(startDate) : undefined;
-          const formattedEndDate = endDate ? FormatDate(endDate) : undefined;
+          const formattedStartDate = startDate ? formatDate(startDate) : undefined;
+          const formattedEndDate = endDate ? formatDate(endDate) : undefined;
           const data = await getAccidentsCount(selectedTown, formattedStartDate, formattedEndDate);
           setAccidentCauseData(data);
         }
@@ -200,9 +202,9 @@ export default function DashboardPage() {
     const fetchRadialChartData = async () => {
       try {
         if (isWidgetVisible("radial-chart")) {
-          const formattedStartDate = startDate ? FormatDate(startDate) : undefined;
-          const formattedEndDate = endDate ? FormatDate(endDate) : undefined;
-          const data = await getAccidentsPercentage(selectedTown,formattedStartDate, formattedEndDate);
+          const formattedStartDate = startDate ? formatDate(startDate) : undefined;
+          const formattedEndDate = endDate ? formatDate(endDate) : undefined;
+          const data = await getAccidentsPercentage(selectedTown, formattedStartDate, formattedEndDate);
           setRadialChartData(data);
         }
       } catch (error) {
@@ -214,8 +216,8 @@ export default function DashboardPage() {
     const fetchReportChannelData = async () => {
       try {
         if (isWidgetVisible("report-channel")) {
-          const formattedStartDate = startDate ? FormatDate(startDate) : undefined;
-          const formattedEndDate = endDate ? FormatDate(endDate) : undefined;
+          const formattedStartDate = startDate ? formatDate(startDate) : undefined;
+          const formattedEndDate = endDate ? formatDate(endDate) : undefined;
           const data = await getAccidentsByReportSource(selectedTown, formattedStartDate, formattedEndDate);
           setReportChannelData(data);
         }
@@ -226,31 +228,31 @@ export default function DashboardPage() {
     fetchReportChannelData();
 
     const fetchBarData = async () => {
-      try{
+      try {
         if (!isWidgetVisible("bar-chart")) return
-        const formattedStartDate = startDate ? FormatDate(startDate) : undefined;
-        const formattedEndDate = endDate ? FormatDate(endDate) : undefined;
+        const formattedStartDate = startDate ? formatDate(startDate) : undefined;
+        const formattedEndDate = endDate ? formatDate(endDate) : undefined;
 
         const data = await getDangerousTownPerMonth(selectedTown,
-          formattedStartDate,formattedEndDate
+          formattedStartDate, formattedEndDate
         );
 
         setBarChartData(data);
-      }catch(error){
+      } catch (error) {
         console.error("Error fetching radial chart data: ", error);
       }
     }
     fetchBarData();
 
-  const fetchAccidentDonut = async () => {
-      try{
+    const fetchAccidentDonut = async () => {
+      try {
         if (!isWidgetVisible("donut")) return
-        const formattedStartDate = startDate ? FormatDate(startDate) : undefined;
-        const formattedEndDate = endDate ? FormatDate(endDate) : undefined;
+        const formattedStartDate = startDate ? formatDate(startDate) : undefined;
+        const formattedEndDate = endDate ? formatDate(endDate) : undefined;
         const data = await getDangerousTown(formattedStartDate, formattedEndDate)
 
         setDonutChartData(data)
-      }catch(error){
+      } catch (error) {
         console.error("Error fetching donut data: ", error);
       }
     }
@@ -466,7 +468,7 @@ export default function DashboardPage() {
 
     const changed =
       JSON.stringify(sanitizeLayout(draftLayout)) !==
-        JSON.stringify(sanitizeLayout(savedLayout)) || draftName !== savedName;
+      JSON.stringify(sanitizeLayout(savedLayout)) || draftName !== savedName;
 
     setHasChanges(changed);
   }, [draftLayout, draftName, savedLayout, savedName]);
@@ -510,6 +512,17 @@ export default function DashboardPage() {
   const isWidgetVisible = (name: string) =>
     (isEditing ? draftLayout : savedLayout).some((w) => w.name === name);
 
+  const handleSearch = () => {
+    if (new Date(tempEndDate) >= new Date(tempStartDate)) {
+      setStartDate(tempStartDate);
+      setEndDate(tempEndDate);
+      setError(null);
+    } else {
+      alert("La fecha final debe ser igual o posterior a la fecha inicial");
+    }
+  };
+
+
   return (
     <main
       className={cn(
@@ -537,8 +550,8 @@ export default function DashboardPage() {
                     {selectedDashboard === null
                       ? "Nuevo Dashboard"
                       : availableDashboards.find(
-                          (d) => d.id === selectedDashboard
-                        )?.name || "Selecciona un dashboard"}
+                        (d) => d.id === selectedDashboard
+                      )?.name || "Selecciona un dashboard"}
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                   </Button>
                 </PopoverTrigger>
@@ -570,11 +583,10 @@ export default function DashboardPage() {
                               className="flex-1 flex items-center space-x-2 overflow-hidden"
                             >
                               <Check
-                                className={`h-4 w-4 flex-shrink-0 ${
-                                  selectedDashboard === d.id
-                                    ? "opacity-100"
-                                    : "opacity-0"
-                                }`}
+                                className={`h-4 w-4 flex-shrink-0 ${selectedDashboard === d.id
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                                  }`}
                               />
                               <span className="truncate">{d.name}</span>
                             </CommandItem>
@@ -612,20 +624,47 @@ export default function DashboardPage() {
               <div className="flex items-center gap-2 px-30">
                 <input
                   type="date"
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
+                  value={tempStartDate}
+                  onChange={(e) => {
+                    setTempStartDate(e.target.value); // siempre actualiza el temporal
+                  }}
+                  onBlur={() => {
+                    if (!endDate || new Date(tempStartDate) <= new Date(endDate)) {
+                      setStartDate(tempStartDate); // acepta si válido
+                    } else {
+                      alert("La fecha de inicio no puede ser posterior a la fecha final");
+                      setTempStartDate(startDate); // revierte al valor válido
+                    }
+                  }}
+                  max={endDate || undefined}
                   className="border rounded px-2 py-1"
                   aria-label="Fecha inicio"
                 />
+
                 <span className="mx-1">-</span>
+
                 <input
                   type="date"
-                  value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
+                  value={tempEndDate}
+                  onChange={(e) => {
+                    setTempEndDate(e.target.value);
+                  }}
+                  onBlur={() => {
+                    if (!startDate || new Date(tempEndDate) >= new Date(startDate)) {
+                      setEndDate(tempEndDate);
+                    } else {
+                      alert("La fecha final no puede ser anterior a la fecha inicial");
+                      setTempEndDate(endDate);
+                    }
+                  }}
+                  min={startDate || undefined}
                   className="border rounded px-2 py-1"
                   aria-label="Fecha fin"
                 />
               </div>
+
+
+
 
               <Select onValueChange={handleTownChange} value={selectedTown}>
                 <SelectTrigger className="w-[250px] ml-[-120px]">
@@ -947,4 +986,8 @@ export function RemoveButton({
       <X size={18} />
     </button>
   );
+}
+
+function setError(arg0: null) {
+  throw new Error("Function not implemented.");
 }
