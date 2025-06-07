@@ -7,7 +7,7 @@ export const getDangerousTownPerMonth = async (town?: string, startDate?: string
   if (endDate) params.append("endDate", endDate)
   const endpoint = `/widgets/dangerous-town-month?${params.toString()}`;
   try {
-    const res = await api.get(endpoint);
+    const res = await api.get(endpoint, { timeout: 10000 });
     return res.data;
   } catch (err) {
     console.error("API error: ", err);

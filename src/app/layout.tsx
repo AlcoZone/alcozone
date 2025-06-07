@@ -18,7 +18,7 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body>
+      <body className="bg-[#F2F2F2]">
         <AuthProvider>
           <AuthGuard>
             {isPublicRoute ? (
