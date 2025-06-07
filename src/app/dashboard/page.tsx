@@ -626,14 +626,14 @@ export default function DashboardPage() {
                   type="date"
                   value={tempStartDate}
                   onChange={(e) => {
-                    setTempStartDate(e.target.value); // siempre actualiza el temporal
+                    setTempStartDate(e.target.value); 
                   }}
                   onBlur={() => {
                     if (!endDate || new Date(tempStartDate) <= new Date(endDate)) {
-                      setStartDate(tempStartDate); // acepta si válido
+                      setStartDate(tempStartDate); 
                     } else {
                       alert("La fecha de inicio no puede ser posterior a la fecha final");
-                      setTempStartDate(startDate); // revierte al valor válido
+                      setTempStartDate(startDate); 
                     }
                   }}
                   max={endDate || undefined}
