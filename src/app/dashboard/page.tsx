@@ -64,12 +64,16 @@ import { getDailyAccidents } from "@/services/widgets/getDailyAccidents";
 import { getAccidentsPercentage } from "@/services/widgets/getAccidentsPercentage";
 import { getAccidentsByReportSource } from "@/services/widgets/getAccidentsByReportSource";
 import {
+  AccidentDonut,
   Accidente,
+  BarChartData,
   ComparisonData,
   LineGraphData,
   RadialChartData,
   ReportChannelData,
 } from "@/types/WidgetsData";
+import { getDangerousTownPerMonth } from "@/services/widgets/getDangerousTownPerMonth";
+import { getDangerousTown } from "@/services/widgets/getDangerousTown";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -134,6 +138,8 @@ export default function DashboardPage() {
   const [reportChannelData, setReportChannelData] = useState<
     ReportChannelData[]
   >([]);
+  const [barChartData, setBarChartData] = useState<BarChartData[]>([]);
+  const [donutChartData, setDonutChartData] = useState<AccidentDonut[]>([]);
 
   const handleTownChange = (value: string) => {
     if (value === "clear") {
@@ -142,12 +148,21 @@ export default function DashboardPage() {
       setSelectedTown(value);
     }
   };
+  const [startDate, setStartDate] = useState('')
+  const [endDate, setEndDate] = useState('')
 
+  function formatDate(dateString: string): string {
+    if (!dateString) return '';
+    const [year, month, day] = dateString.split("-");
+    return `${day}/${month}/${year}`;
+  }
   useEffect(() => {
     const fetchComparisonData = async () => {
       try {
         if (isWidgetVisible("comparison")) {
-          const data = await getMonthlyAccidents(selectedTown);
+          const formattedStartDate = startDate ? formatDate(startDate) : undefined;
+          const formattedEndDate = endDate ? formatDate(endDate) : undefined;
+          const data = await getMonthlyAccidents(selectedTown, formattedStartDate, formattedEndDate);
           setComparisonData(data);
         }
       } catch (error) {
@@ -159,7 +174,9 @@ export default function DashboardPage() {
     const fetchAccidentCauseData = async () => {
       try {
         if (isWidgetVisible("accident-cause-table")) {
-          const data = await getAccidentsCount(selectedTown);
+          const formattedStartDate = startDate ? FormatDate(startDate) : undefined;
+          const formattedEndDate = endDate ? FormatDate(endDate) : undefined;
+          const data = await getAccidentsCount(selectedTown, formattedStartDate, formattedEndDate);
           setAccidentCauseData(data);
         }
       } catch (error) {
@@ -183,7 +200,9 @@ export default function DashboardPage() {
     const fetchRadialChartData = async () => {
       try {
         if (isWidgetVisible("radial-chart")) {
-          const data = await getAccidentsPercentage(selectedTown);
+          const formattedStartDate = startDate ? FormatDate(startDate) : undefined;
+          const formattedEndDate = endDate ? FormatDate(endDate) : undefined;
+          const data = await getAccidentsPercentage(selectedTown,formattedStartDate, formattedEndDate);
           setRadialChartData(data);
         }
       } catch (error) {
@@ -195,7 +214,9 @@ export default function DashboardPage() {
     const fetchReportChannelData = async () => {
       try {
         if (isWidgetVisible("report-channel")) {
-          const data = await getAccidentsByReportSource(selectedTown);
+          const formattedStartDate = startDate ? FormatDate(startDate) : undefined;
+          const formattedEndDate = endDate ? FormatDate(endDate) : undefined;
+          const data = await getAccidentsByReportSource(selectedTown, formattedStartDate, formattedEndDate);
           setReportChannelData(data);
         }
       } catch (error) {
@@ -203,7 +224,39 @@ export default function DashboardPage() {
       }
     };
     fetchReportChannelData();
-  }, [selectedTown, draftLayout, savedLayout]);
+
+    const fetchBarData = async () => {
+      try{
+        if (!isWidgetVisible("bar-chart")) return
+        const formattedStartDate = startDate ? FormatDate(startDate) : undefined;
+        const formattedEndDate = endDate ? FormatDate(endDate) : undefined;
+
+        const data = await getDangerousTownPerMonth(selectedTown,
+          formattedStartDate,formattedEndDate
+        );
+
+        setBarChartData(data);
+      }catch(error){
+        console.error("Error fetching radial chart data: ", error);
+      }
+    }
+    fetchBarData();
+
+  const fetchAccidentDonut = async () => {
+      try{
+        if (!isWidgetVisible("donut")) return
+        const formattedStartDate = startDate ? FormatDate(startDate) : undefined;
+        const formattedEndDate = endDate ? FormatDate(endDate) : undefined;
+        const data = await getDangerousTown(formattedStartDate, formattedEndDate)
+
+        setDonutChartData(data)
+      }catch(error){
+        console.error("Error fetching donut data: ", error);
+      }
+    }
+    fetchAccidentDonut();
+
+  }, [selectedTown, draftLayout, savedLayout, endDate, startDate]);
 
   useEffect(() => {
     if (!layoutLoading) {
@@ -556,9 +609,26 @@ export default function DashboardPage() {
                   </Command>
                 </PopoverContent>
               </Popover>
+              <div className="flex items-center gap-2 px-30">
+                <input
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  className="border rounded px-2 py-1"
+                  aria-label="Fecha inicio"
+                />
+                <span className="mx-1">-</span>
+                <input
+                  type="date"
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                  className="border rounded px-2 py-1"
+                  aria-label="Fecha fin"
+                />
+              </div>
 
               <Select onValueChange={handleTownChange} value={selectedTown}>
-                <SelectTrigger className="w-[250px] ml-[500px]">
+                <SelectTrigger className="w-[250px] ml-[-120px]">
                   <SelectValue placeholder="Selecciona una alcaldía" />
                 </SelectTrigger>
                 <SelectContent>
@@ -696,38 +766,7 @@ export default function DashboardPage() {
             <BarChartWidget
               title="Top 2 Alcaldías con más accidentes por mes"
               description="Comparativa mensual de las alcaldías con más accidentes"
-              data={[
-                {
-                  month_name: "Enero",
-                  town: "Cuauhtémoc",
-                  total_accidents: 25,
-                },
-                {
-                  month_name: "Enero",
-                  town: "Benito Juárez",
-                  total_accidents: 18,
-                },
-                {
-                  month_name: "Febrero",
-                  town: "Cuauhtémoc",
-                  total_accidents: 20,
-                },
-                {
-                  month_name: "Febrero",
-                  town: "Benito Juárez",
-                  total_accidents: 22,
-                },
-                {
-                  month_name: "Marzo",
-                  town: "Cuauhtémoc",
-                  total_accidents: 40,
-                },
-                {
-                  month_name: "Marzo",
-                  town: "Benito Juárez",
-                  total_accidents: 26,
-                },
-              ]}
+              data={barChartData}
               colors={{
                 Cuauhtémoc: "#0095FF",
                 "Benito Juárez": "#00E096",
@@ -800,10 +839,7 @@ export default function DashboardPage() {
               title="Alcadías Peligrosas"
               footer="Alcaldías con más accidentes"
               centerLabel="Total accidentes"
-              data={[
-                { town: "Iztapalapa", total_accidents: "2747" },
-                { town: "Gustavo A. Madero", total_accidents: "1846" },
-              ]}
+              data={donutChartData}
               chartHeight={getHeight("donut")}
             />
           </div>
