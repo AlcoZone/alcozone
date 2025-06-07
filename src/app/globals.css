@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -153,7 +157,4 @@
       --chart-5: 340 75% 55%;
     }
   }
-
-
-  
 }

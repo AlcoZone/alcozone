@@ -1,5 +1,5 @@
 import * as React from "react";
-import { PieChart, Pie, Cell, Label } from "recharts";
+import { PieChart, Pie, Cell, Label, LabelProps } from "recharts";
 
 import {
   Card,
@@ -84,9 +84,10 @@ export const DonutChartWidget: React.FC<DonutChartProps> = ({
               ))}
               <Label
                 position="center"
-                content={({ viewBox }) => {
+                content={({ viewBox }: LabelProps) => {
                   if (!viewBox) return null;
-                  const { cx, cy } = viewBox;
+                  const cx = (viewBox as any).cx || 0;
+                  const cy = (viewBox as any).cy || 0;
                   return (
                     <text
                       x={cx}
