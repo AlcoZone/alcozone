@@ -740,16 +740,17 @@ export default function DashboardPage() {
         onLayoutChange={(newLayout) => {
           if (isEditing) {
             setDraftLayout((prev) =>
-              newLayout.map((updated: GridItem) => {
+              newLayout.map((updated) => {
                 const original = prev.find((item) => item.name === updated.i);
+                if (!original) return original;
                 return {
                   ...original,
                   x: updated.x,
                   y: updated.y,
                   w: updated.w,
                   h: updated.h,
-                };
-              })
+                } as GridItem;
+              }).filter((item): item is GridItem => item !== undefined)
             );
           }
         }}
@@ -929,7 +930,7 @@ export default function DashboardPage() {
   );
 }
 
-export function RemoveButton({
+function RemoveButton({
   onClick,
   className = "",
 }: {
