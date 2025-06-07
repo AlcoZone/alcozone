@@ -511,18 +511,6 @@ export default function DashboardPage() {
 
   const isWidgetVisible = (name: string) =>
     (isEditing ? draftLayout : savedLayout).some((w) => w.name === name);
-
-  const handleSearch = () => {
-    if (new Date(tempEndDate) >= new Date(tempStartDate)) {
-      setStartDate(tempStartDate);
-      setEndDate(tempEndDate);
-      setError(null);
-    } else {
-      alert("La fecha final debe ser igual o posterior a la fecha inicial");
-    }
-  };
-
-
   return (
     <main
       className={cn(
