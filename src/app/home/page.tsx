@@ -210,7 +210,7 @@ const MainPage = () => {
               <ComparisonWidget
                 title="Accidentes por mes"
                 data={comparisonData}
-                footer="Año 2024"
+                footer=""
                 config={comparisonConfig}
               />
             )}

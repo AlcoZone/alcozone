@@ -151,7 +151,7 @@ export default function DashboardPage() {
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
 
-  function FormatDate(dateString: string): string {
+  function formatDate(dateString: string): string {
     if (!dateString) return '';
     const [year, month, day] = dateString.split("-");
     return `${day}/${month}/${year}`;
@@ -160,8 +160,8 @@ export default function DashboardPage() {
     const fetchComparisonData = async () => {
       try {
         if (isWidgetVisible("comparison")) {
-          const formattedStartDate = startDate ? FormatDate(startDate) : undefined;
-          const formattedEndDate = endDate ? FormatDate(endDate) : undefined;
+          const formattedStartDate = startDate ? formatDate(startDate) : undefined;
+          const formattedEndDate = endDate ? formatDate(endDate) : undefined;
           const data = await getMonthlyAccidents(selectedTown, formattedStartDate, formattedEndDate);
           setComparisonData(data);
         }
