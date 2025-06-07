@@ -975,7 +975,3 @@ export function RemoveButton({
     </button>
   );
 }
-
-function setError(arg0: null) {
-  throw new Error("Function not implemented.");
-}
