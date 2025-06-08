@@ -64,12 +64,16 @@ import { getDailyAccidents } from "@/services/widgets/getDailyAccidents";
 import { getAccidentsPercentage } from "@/services/widgets/getAccidentsPercentage";
 import { getAccidentsByReportSource } from "@/services/widgets/getAccidentsByReportSource";
 import {
+  AccidentDonut,
   Accidente,
+  BarChartData,
   ComparisonData,
   LineGraphData,
   RadialChartData,
   ReportChannelData,
 } from "@/types/WidgetsData";
+import { getDangerousTownPerMonth } from "@/services/widgets/getDangerousTownPerMonth";
+import { getDangerousTown } from "@/services/widgets/getDangerousTown";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -134,6 +138,8 @@ export default function DashboardPage() {
   const [reportChannelData, setReportChannelData] = useState<
     ReportChannelData[]
   >([]);
+  const [barChartData, setBarChartData] = useState<BarChartData[]>([]);
+  const [donutChartData, setDonutChartData] = useState<AccidentDonut[]>([]);
 
   const handleTownChange = (value: string) => {
     if (value === "clear") {
@@ -142,12 +148,23 @@ export default function DashboardPage() {
       setSelectedTown(value);
     }
   };
+  const [startDate, setStartDate] = useState('')
+  const [endDate, setEndDate] = useState('')
+  const [tempStartDate, setTempStartDate] = useState(startDate);
+  const [tempEndDate, setTempEndDate] = useState(endDate);
 
+  function formatDate(dateString: string): string {
+    if (!dateString) return '';
+    const [year, month, day] = dateString.split("-");
+    return `${day}/${month}/${year}`;
+  }
   useEffect(() => {
     const fetchComparisonData = async () => {
       try {
         if (isWidgetVisible("comparison")) {
-          const data = await getMonthlyAccidents(selectedTown);
+          const formattedStartDate = startDate ? formatDate(startDate) : undefined;
+          const formattedEndDate = endDate ? formatDate(endDate) : undefined;
+          const data = await getMonthlyAccidents(selectedTown, formattedStartDate, formattedEndDate);
           setComparisonData(data);
         }
       } catch (error) {
@@ -159,7 +176,9 @@ export default function DashboardPage() {
     const fetchAccidentCauseData = async () => {
       try {
         if (isWidgetVisible("accident-cause-table")) {
-          const data = await getAccidentsCount(selectedTown);
+          const formattedStartDate = startDate ? formatDate(startDate) : undefined;
+          const formattedEndDate = endDate ? formatDate(endDate) : undefined;
+          const data = await getAccidentsCount(selectedTown, formattedStartDate, formattedEndDate);
           setAccidentCauseData(data);
         }
       } catch (error) {
@@ -183,7 +202,9 @@ export default function DashboardPage() {
     const fetchRadialChartData = async () => {
       try {
         if (isWidgetVisible("radial-chart")) {
-          const data = await getAccidentsPercentage(selectedTown);
+          const formattedStartDate = startDate ? formatDate(startDate) : undefined;
+          const formattedEndDate = endDate ? formatDate(endDate) : undefined;
+          const data = await getAccidentsPercentage(selectedTown, formattedStartDate, formattedEndDate);
           setRadialChartData(data);
         }
       } catch (error) {
@@ -195,7 +216,9 @@ export default function DashboardPage() {
     const fetchReportChannelData = async () => {
       try {
         if (isWidgetVisible("report-channel")) {
-          const data = await getAccidentsByReportSource(selectedTown);
+          const formattedStartDate = startDate ? formatDate(startDate) : undefined;
+          const formattedEndDate = endDate ? formatDate(endDate) : undefined;
+          const data = await getAccidentsByReportSource(selectedTown, formattedStartDate, formattedEndDate);
           setReportChannelData(data);
         }
       } catch (error) {
@@ -203,7 +226,39 @@ export default function DashboardPage() {
       }
     };
     fetchReportChannelData();
-  }, [selectedTown, draftLayout, savedLayout]);
+
+    const fetchBarData = async () => {
+      try {
+        if (!isWidgetVisible("bar-chart")) return
+        const formattedStartDate = startDate ? formatDate(startDate) : undefined;
+        const formattedEndDate = endDate ? formatDate(endDate) : undefined;
+
+        const data = await getDangerousTownPerMonth(selectedTown,
+          formattedStartDate, formattedEndDate
+        );
+
+        setBarChartData(data);
+      } catch (error) {
+        console.error("Error fetching radial chart data: ", error);
+      }
+    }
+    fetchBarData();
+
+    const fetchAccidentDonut = async () => {
+      try {
+        if (!isWidgetVisible("donut")) return
+        const formattedStartDate = startDate ? formatDate(startDate) : undefined;
+        const formattedEndDate = endDate ? formatDate(endDate) : undefined;
+        const data = await getDangerousTown(formattedStartDate, formattedEndDate)
+
+        setDonutChartData(data)
+      } catch (error) {
+        console.error("Error fetching donut data: ", error);
+      }
+    }
+    fetchAccidentDonut();
+
+  }, [selectedTown, draftLayout, savedLayout, endDate, startDate]);
 
   useEffect(() => {
     if (!layoutLoading) {
@@ -413,7 +468,7 @@ export default function DashboardPage() {
 
     const changed =
       JSON.stringify(sanitizeLayout(draftLayout)) !==
-        JSON.stringify(sanitizeLayout(savedLayout)) || draftName !== savedName;
+      JSON.stringify(sanitizeLayout(savedLayout)) || draftName !== savedName;
 
     setHasChanges(changed);
   }, [draftLayout, draftName, savedLayout, savedName]);
@@ -456,7 +511,6 @@ export default function DashboardPage() {
 
   const isWidgetVisible = (name: string) =>
     (isEditing ? draftLayout : savedLayout).some((w) => w.name === name);
-
   return (
     <main
       className={cn(
@@ -484,8 +538,8 @@ export default function DashboardPage() {
                     {selectedDashboard === null
                       ? "Nuevo Dashboard"
                       : availableDashboards.find(
-                          (d) => d.id === selectedDashboard
-                        )?.name || "Selecciona un dashboard"}
+                        (d) => d.id === selectedDashboard
+                      )?.name || "Selecciona un dashboard"}
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                   </Button>
                 </PopoverTrigger>
@@ -517,11 +571,10 @@ export default function DashboardPage() {
                               className="flex-1 flex items-center space-x-2 overflow-hidden"
                             >
                               <Check
-                                className={`h-4 w-4 flex-shrink-0 ${
-                                  selectedDashboard === d.id
-                                    ? "opacity-100"
-                                    : "opacity-0"
-                                }`}
+                                className={`h-4 w-4 flex-shrink-0 ${selectedDashboard === d.id
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                                  }`}
                               />
                               <span className="truncate">{d.name}</span>
                             </CommandItem>
@@ -556,9 +609,53 @@ export default function DashboardPage() {
                   </Command>
                 </PopoverContent>
               </Popover>
+              <div className="flex items-center gap-2 px-30">
+                <input
+                  type="date"
+                  value={tempStartDate}
+                  onChange={(e) => {
+                    setTempStartDate(e.target.value); 
+                  }}
+                  onBlur={() => {
+                    if (!endDate || new Date(tempStartDate) <= new Date(endDate)) {
+                      setStartDate(tempStartDate); 
+                    } else {
+                      alert("La fecha de inicio no puede ser posterior a la fecha final");
+                      setTempStartDate(startDate); 
+                    }
+                  }}
+                  max={endDate || undefined}
+                  className="border rounded px-2 py-1"
+                  aria-label="Fecha inicio"
+                />
+
+                <span className="mx-1">-</span>
+
+                <input
+                  type="date"
+                  value={tempEndDate}
+                  onChange={(e) => {
+                    setTempEndDate(e.target.value);
+                  }}
+                  onBlur={() => {
+                    if (!startDate || new Date(tempEndDate) >= new Date(startDate)) {
+                      setEndDate(tempEndDate);
+                    } else {
+                      alert("La fecha final no puede ser anterior a la fecha inicial");
+                      setTempEndDate(endDate);
+                    }
+                  }}
+                  min={startDate || undefined}
+                  className="border rounded px-2 py-1"
+                  aria-label="Fecha fin"
+                />
+              </div>
+
+
+
 
               <Select onValueChange={handleTownChange} value={selectedTown}>
-                <SelectTrigger className="w-[250px] ml-[500px]">
+                <SelectTrigger className="w-[250px] ml-[-120px]">
                   <SelectValue placeholder="Selecciona una alcaldía" />
                 </SelectTrigger>
                 <SelectContent>
@@ -670,16 +767,17 @@ export default function DashboardPage() {
         onLayoutChange={(newLayout) => {
           if (isEditing) {
             setDraftLayout((prev) =>
-              newLayout.map((updated: GridItem) => {
+              newLayout.map((updated) => {
                 const original = prev.find((item) => item.name === updated.i);
+                if (!original) return original;
                 return {
                   ...original,
                   x: updated.x,
                   y: updated.y,
                   w: updated.w,
                   h: updated.h,
-                };
-              })
+                } as GridItem;
+              }).filter((item): item is GridItem => item !== undefined)
             );
           }
         }}
@@ -696,38 +794,7 @@ export default function DashboardPage() {
             <BarChartWidget
               title="Top 2 Alcaldías con más accidentes por mes"
               description="Comparativa mensual de las alcaldías con más accidentes"
-              data={[
-                {
-                  month_name: "Enero",
-                  town: "Cuauhtémoc",
-                  total_accidents: 25,
-                },
-                {
-                  month_name: "Enero",
-                  town: "Benito Juárez",
-                  total_accidents: 18,
-                },
-                {
-                  month_name: "Febrero",
-                  town: "Cuauhtémoc",
-                  total_accidents: 20,
-                },
-                {
-                  month_name: "Febrero",
-                  town: "Benito Juárez",
-                  total_accidents: 22,
-                },
-                {
-                  month_name: "Marzo",
-                  town: "Cuauhtémoc",
-                  total_accidents: 40,
-                },
-                {
-                  month_name: "Marzo",
-                  town: "Benito Juárez",
-                  total_accidents: 26,
-                },
-              ]}
+              data={barChartData}
               colors={{
                 Cuauhtémoc: "#0095FF",
                 "Benito Juárez": "#00E096",
@@ -800,10 +867,7 @@ export default function DashboardPage() {
               title="Alcadías Peligrosas"
               footer="Alcaldías con más accidentes"
               centerLabel="Total accidentes"
-              data={[
-                { town: "Iztapalapa", total_accidents: "2747" },
-                { town: "Gustavo A. Madero", total_accidents: "1846" },
-              ]}
+              data={donutChartData}
               chartHeight={getHeight("donut")}
             />
           </div>
@@ -893,7 +957,7 @@ export default function DashboardPage() {
   );
 }
 
-export function RemoveButton({
+function RemoveButton({
   onClick,
   className = "",
 }: {

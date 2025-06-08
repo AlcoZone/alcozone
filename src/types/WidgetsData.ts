@@ -22,3 +22,14 @@ export type ReportChannelData = {
   report_source: string;
   total_accidents: number;
 };
+
+export type BarChartData = {
+  month_name: string;
+  town: string
+  total_accidents: number
+}
+
+export type AccidentDonut = {
+  town: string;
+  total_accidents: string;
+}
