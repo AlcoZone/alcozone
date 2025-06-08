@@ -1,10 +1,14 @@
 //este es para el radial widget
 import api from "../api";
 
-export const getAccidentsPercentage = async (town?: string) => {
-  const endpoint = town
-    ? `/widgets/accidents-percentage?town=${encodeURIComponent(town)}`
-    : "/widgets/accidents-percentage";
+export const getAccidentsPercentage = async (town?: string, startDate?: string, endDate?: string) => {
+  const params = new URLSearchParams();
+
+  if (town) params.append("town", town);
+  if (startDate) params.append("startDate", startDate);
+  if (endDate) params.append("endDate", endDate)
+    
+  const endpoint = `/widgets/accidents-percentage?${params.toString()}`
   try {
     const res = await api.get(endpoint);
     return res.data;

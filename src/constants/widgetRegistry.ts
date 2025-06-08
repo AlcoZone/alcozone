@@ -171,6 +171,7 @@ export const widgetRegistry: Record<string, RegistryEntry> = {
             color: "#8950FC",
           },
         },
+        chartHeight: 200,
       }),
   },
 };

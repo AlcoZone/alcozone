@@ -7,11 +7,16 @@ import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 
+interface Circle {
+    latitude: number;
+    longitude: number;
+}
+
 interface MapProps {
     coordinates: LatLngExpression | LatLngTuple,
     zoom?: number,
     circleRadius?: number
-    circles: Array<Object>
+    circles: Circle[]
 }
 
 const defaults = {
