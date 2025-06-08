@@ -57,7 +57,7 @@ const LoadingWidget = ({ message = "Loading..." }: { message?: string }) => (
 
 const MainPage = () => {
   const router = useRouter();
-  const [user, setUser] = useState<{ email: string } | null>(null);
+  const [user, setUser] = useState<{ email: string | null } | null>(null);
 
   const [donutChartData, setDonutChartData] = useState<AccidenteDonut[]>([]);
   const [radialData, setRadialData] = useState<{ percentage: number; subType: string }[]>([]);
@@ -74,7 +74,7 @@ const MainPage = () => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user ? user : null);
+      setUser(user ? { email: user.email } : null);
     });
     return () => unsubscribe();
   }, []);
@@ -210,7 +210,7 @@ const MainPage = () => {
               <ComparisonWidget
                 title="Accidentes por mes"
                 data={comparisonData}
-                footer="Año 2024"
+                footer=""
                 config={comparisonConfig}
               />
             )}
