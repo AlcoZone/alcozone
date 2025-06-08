@@ -74,6 +74,7 @@ const LoginPage: React.FC = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Correo electrónico"
                 type="email"
+                data-testid="email-input"
               />
               <div className="relative w-full">
                 <TextInput
@@ -82,6 +83,7 @@ const LoginPage: React.FC = () => {
                   placeholder="Contraseña"
                   type="password"
                   showPasswordToggle
+                  data-testid="password-input"
                 />
               </div>
             </div>
@@ -92,6 +94,7 @@ const LoginPage: React.FC = () => {
                   variant="login"
                   onClick={handleLogin}
                   disabled={loadingLogin}
+                  data-testid="login-button"
                 />
               </div>
               {error && (

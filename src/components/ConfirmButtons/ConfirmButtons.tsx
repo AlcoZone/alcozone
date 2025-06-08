@@ -34,12 +34,16 @@ type ConfirmButtonsProps = {
   variant: keyof typeof ConfirmButtonsVariants;
   onClick?: () => void;
   disabled?: boolean;
+  id?: string;
+  "data-testid"?: string;
 };
 
 const ConfirmButtons = ({
   variant,
   onClick,
   disabled,
+  id,
+  "data-testid": dataTestId
 }: ConfirmButtonsProps) => {
   const { text, color, rounded } = ConfirmButtonsVariants[variant];
 
@@ -47,9 +51,8 @@ const ConfirmButtons = ({
     <Button
       onClick={onClick}
       disabled={disabled}
-      className={cn("cursor-pointer text-lg transition duration-500", color, {
-        "rounded-full": rounded,
-      })}
+      data-testid={dataTestId}
+      className={cn("cursor-pointer text-lg transition duration-500", color, { "rounded-full": rounded })}
     >
       {text}
     </Button>

@@ -651,11 +651,8 @@ export default function DashboardPage() {
                 />
               </div>
 
-
-
-
               <Select onValueChange={handleTownChange} value={selectedTown}>
-                <SelectTrigger className="w-[250px] ml-[-120px]">
+                <SelectTrigger className="w-[250px] ml-[-120px]" data-testid="town-filter">
                   <SelectValue placeholder="Selecciona una alcaldía" />
                 </SelectTrigger>
                 <SelectContent>
@@ -669,6 +666,7 @@ export default function DashboardPage() {
                         key={index}
                         value={name}
                         className="cursor-pointer transition-colors transition-transform duration-300 ease-in-out origin-left hover:scale-110 hover:!text-blue-850 text-sm m-0 data-[state=checked]:!text-blue-850"
+                        data-testid={`town-${name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "-")}`}
                       >
                         {name}
                       </SelectItem>
@@ -695,6 +693,7 @@ export default function DashboardPage() {
               onClick={handleSave}
               disabled={isSaving}
               className="text-white bg-[#001391]/80 hover:bg-[#001391]"
+              data-testid="save-dashboard"
             >
               {isSaving ? (
                 <span className="flex items-center">
@@ -734,6 +733,7 @@ export default function DashboardPage() {
                 setIsEditing(true);
               }}
               className="text-white bg-neutral-550 hover:bg-neutral-600"
+              data-testid="edit-dashboard"
             >
               <Pencil className="mr-2 h-4 w-4" /> Editar
             </Button>
@@ -900,6 +900,7 @@ export default function DashboardPage() {
             key="report-channel"
             style={{ width: "100%", height: "100%" }}
             className="relative overflow-visible"
+            data-testid="report-channel-widget-in-dashboard"
           >
             {isEditing && (
               <RemoveButton
@@ -971,6 +972,7 @@ function RemoveButton({
         onClick();
       }}
       className={`non-draggable absolute -top-2 -right-2 z-10 ${className} cursor-pointer bg-white rounded-full shadow-md p-0.5 pointer-events-auto`}
+      data-testid="remove-widget"
     >
       <X size={18} />
     </button>
