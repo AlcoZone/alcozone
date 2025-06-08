@@ -141,7 +141,12 @@ export default function DashboardPage() {
   const [barChartData, setBarChartData] = useState<BarChartData[]>([]);
   const [donutChartData, setDonutChartData] = useState<AccidentDonut[]>([]);
 
+  const hasWidgets = () => draftLayout.length > 0;
   const handleTownChange = (value: string) => {
+    if (!hasWidgets()) {
+      alert("Agrega al menos un widget antes de aplicar filtros");
+      return;
+    }
     if (value === "clear") {
       setSelectedTown("");
     } else {
@@ -152,6 +157,7 @@ export default function DashboardPage() {
   const [endDate, setEndDate] = useState('')
   const [tempStartDate, setTempStartDate] = useState(startDate);
   const [tempEndDate, setTempEndDate] = useState(endDate);
+
 
   function formatDate(dateString: string): string {
     if (!dateString) return '';
@@ -511,6 +517,7 @@ export default function DashboardPage() {
 
   const isWidgetVisible = (name: string) =>
     (isEditing ? draftLayout : savedLayout).some((w) => w.name === name);
+
   return (
     <main
       className={cn(
@@ -614,14 +621,14 @@ export default function DashboardPage() {
                   type="date"
                   value={tempStartDate}
                   onChange={(e) => {
-                    setTempStartDate(e.target.value); 
+                    setTempStartDate(e.target.value);
                   }}
                   onBlur={() => {
                     if (!endDate || new Date(tempStartDate) <= new Date(endDate)) {
-                      setStartDate(tempStartDate); 
+                      setStartDate(tempStartDate);
                     } else {
                       alert("La fecha de inicio no puede ser posterior a la fecha final");
-                      setTempStartDate(startDate); 
+                      setTempStartDate(startDate);
                     }
                   }}
                   max={endDate || undefined}
