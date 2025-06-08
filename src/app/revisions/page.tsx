@@ -67,6 +67,7 @@ export default function CsvPage() {
                         {header: "Archivo", accessor: "name"},
                         {header: "Registros", accessor: "dataQuantity"},
                         {header: "Fecha de carga", accessor: "date"},
+                        {header: "Estatus", accessor: "status"},
                     ]}
                     data={datasets}
                     actions={[

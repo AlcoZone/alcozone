@@ -1,4 +1,3 @@
-//TODO Implement Spinner when loading data for map
 "use client"
 
 import api from "@/services/api";
@@ -7,6 +6,8 @@ import { useMemo, useEffect, useState } from "react";
 import MapConfigModal from "@/components/MapConfigModal/MapConfigModal";
 import {MapConfig} from "@/types/MapConfig";
 import {ClusterData} from "@/types/ClusterData";
+import {format} from "date-fns";
+import {toast, ToastContainer} from "react-toastify";
 
 const MapPage = () => {
     const [roadblocks, setRoadblocks] = useState({});
@@ -18,6 +19,8 @@ const MapPage = () => {
         type: "predictive",
         data_source: "revision",
         revision: "latest",
+        from: null,
+        to: null,
     });
 
     const InteractiveMap = useMemo(() => dynamic(
@@ -31,8 +34,18 @@ const MapPage = () => {
     const getPredictions = async () => {
         setLoading(true);
         try {
-            const response = await api.get(`/predict?revision=${mapConfig.revision}`);
+            let url;
+            if (mapConfig.data_source == "revision") {
+                url = `/predict?revision=${mapConfig.revision}`
+            } else {
+                url = `/predict?startDate=${format(mapConfig.from, "dd-MM-yyyy")}&endDate=${format(mapConfig.to, "dd-MM-yyyy")}`
+            }
+
+            const response = await api.get(url);
             setRoadblocks(response.data);
+        } catch (e) {
+            toast.error("Error al obtener Predicciones")
+            setRoadblocks([]);
         } finally {
             setLoading(false);
         }
@@ -41,7 +54,14 @@ const MapPage = () => {
     const getClusters = async () => {
         setLoading(true);
         try {
-            const response = await api.get(`/clusterize?revision=${mapConfig.revision}`);
+            let url;
+            if (mapConfig.data_source == "revision") {
+                url = `/clusterize?revision=${mapConfig.revision}`
+            } else {
+                url = `/clusterize?startDate=${format(mapConfig.from, "dd-MM-yyyy")}&endDate=${format(mapConfig.to, "dd-MM-yyyy")}`
+            }
+
+            const response = await api.get(url);
             setClusters(response.data.clusters);
         } finally {
             setLoading(false);
@@ -114,6 +134,7 @@ const MapPage = () => {
                     />
                 </div>
             </div>
+            <ToastContainer />
         </>
     );
 };

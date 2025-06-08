@@ -1,6 +1,6 @@
 "use client";
 
-import React, { PropsWithChildren } from "react";
+import React from "react";
 import {
   SidebarProvider,
   Sidebar,
@@ -20,8 +20,7 @@ const allRoutes = [
   { path: "/users", variant: "users" },
   { path: "/map", variant: "map" },
   { path: "/account", variant: "account" },
-  { path: "/upload", variant: "upload" },
-  { path: "/download", variant: "download" },
+  { path: "/revisions", variant: "revisions" },
 ];
 
 export const Menu = () => {
@@ -61,7 +60,7 @@ export const Menu = () => {
                       .filter(
                         ({ path }) =>
                           allowedRoutes.has(path) &&
-                          !["/account", "/upload", "/download"].includes(path)
+                          !["/account", "/revisions"].includes(path)
                       )
                       .map(({ path, variant }) => (
                         <Link href={path} key={path}>
@@ -74,7 +73,7 @@ export const Menu = () => {
                     OTROS
                   </p>
                   <nav className="space-y-2">
-                    {["/account", "/upload", "/download"]
+                    {["/account", "/revisions"]
                       .filter((path) => allowedRoutes.has(path))
                       .map((path) => {
                         const variant = path.replace("/", "") as Parameters<
@@ -103,5 +102,5 @@ export const Menu = () => {
         </div>
       </SidebarProvider>
     );
-  };
+  }
 }

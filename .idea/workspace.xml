@@ -4,13 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fe832c68-9285-4b49-afa8-2909f9e1c3ca" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/components/RevisionUploadDialog/RevisionUploadDialog.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/utils/validateCSV.ts" afterDir="false" />
+    <list default="true" id="fe832c68-9285-4b49-afa8-2909f9e1c3ca" name="Changes" comment="[Add] Upload Revision Button&#10;[Add] CSV Validation">
+      <change afterPath="$PROJECT_DIR$/src/components/CalendarWithEnabledDates/CalendarWithEnabledDates.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/download/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/download/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/csv/getRevisionCSV.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/csv/getRevisionCSV.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/download/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/revisions/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/map/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/map/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/MapConfigModal/MapConfigModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/MapConfigModal/MapConfigModal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Menu/Menu.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Menu/Menu.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/TabSwitchButtons/TabSwitchButtons.stories.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/TabSwitchButtons/TabSwitchButtons.stories.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/TabSwitchButtons/TabSwitchButtons.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/TabSwitchButtons/TabSwitchButtons.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/types/MapConfig.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/types/MapConfig.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/protectedRoutes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/protectedRoutes.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -19,6 +24,11 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="feature/upload-revision" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -41,24 +51,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;feature/add-interactive-map&quot;,
-    &quot;js.debugger.nextJs.config.created.client&quot;: &quot;true&quot;,
-    &quot;js.debugger.nextJs.config.created.server&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
-    &quot;npm.Next.js: server-side.executor&quot;: &quot;Run&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/Users/riickster/Development/Personal/ITESM/alcozone/node_modules/typescript/lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "feature/add-interactive-map",
+    "kotlin-language-version-configured": "true",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "yarn",
+    "npm.Next.js: server-side.executor": "Run",
+    "ts.external.directory.path": "/Users/riickster/Development/Personal/ITESM/alcozone/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
@@ -104,5 +110,20 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="[Add] Upload Revision Button&#10;[Add] CSV Validation" />
+    <option name="LAST_COMMIT_MESSAGE" value="[Add] Upload Revision Button&#10;[Add] CSV Validation" />
   </component>
 </project>
