@@ -1,6 +1,6 @@
 "use client";
 
-import React, { PropsWithChildren } from "react";
+import React from "react";
 import {
   SidebarProvider,
   Sidebar,
@@ -20,8 +20,7 @@ const allRoutes = [
   { path: "/users", variant: "users" },
   { path: "/map", variant: "map" },
   { path: "/account", variant: "account" },
-  { path: "/upload", variant: "upload" },
-  { path: "/download", variant: "download" },
+  { path: "/revisions", variant: "revisions" },
 ];
 
 export const Menu = () => {
@@ -38,7 +37,7 @@ export const Menu = () => {
 
     return (
       <SidebarProvider>
-        <div className="flex min-h-screen">
+        <div className="flex min-h-screen" data-testid="menu-sidebar">
           <Sidebar className="w-56 fixed top-0 left-0 h-screen z-50 border-r bg-white text-black flex flex-col justify-between">
             <SidebarContent>
               <div className="flex items-center justify-center py-6">
@@ -61,7 +60,7 @@ export const Menu = () => {
                     .filter(
                       ({ path }) =>
                         allowedRoutes.has(path) &&
-                        !["/account", "/upload", "/download"].includes(path)
+                        !["/account", "/revisions"].includes(path)
                     )
                     .map(({ path, variant }) => (
                       <Link href={path} key={path}>
@@ -74,14 +73,14 @@ export const Menu = () => {
                   OTROS
                 </p>
                 <nav className="space-y-2">
-                  {["/account", "/upload", "/download"]
+                  {["/account", "/revisions"]
                     .filter((path) => allowedRoutes.has(path))
                     .map((path) => {
                       const variant = path.replace("/", "") as Parameters<
                         typeof TabSwitchButtons
                       >[0]["variant"];
 
-                
+
                       const testId =
                         path === "/account"
                           ? { "data-testid": "account-button" }

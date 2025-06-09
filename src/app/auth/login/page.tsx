@@ -27,6 +27,7 @@ const LoginPage: React.FC = () => {
     setLoadingLogin(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
+      router.push("/home");
     } catch (error: any) {
       console.log(error.code)
       switch (error.code) {
@@ -70,21 +71,22 @@ const LoginPage: React.FC = () => {
 
             <div className="w-full space-y-6 mb-8 text-lg [&_input]:h-14 [&_input]:w-full [&_input]:text-lg">
               <TextInput
+                testId="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Correo electrónico"
                 type="email"
-                data-testid="email-input"
-                
+                data-testid="input-txtinput-email"
               />
               <div className="relative w-full">
                 <TextInput
+                  testId="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Contraseña"
                   type="password"
                   showPasswordToggle
-                  data-testid="password-input"
+                  data-testid="input-txtinput-password"
                 />
               </div>
             </div>
@@ -92,10 +94,11 @@ const LoginPage: React.FC = () => {
             <div className="w-full h-14">
               <div className="w-full h-full scale-y-120 origin-top [&_button]:w-full [&_button]:h-full [&_button]:scale-y-[0.75]">
                 <ConfirmButtons
-                  data-testid="login-button"
+                  testId="btn-login"
                   variant="login"
                   onClick={handleLogin}
                   disabled={loadingLogin}
+                  data-testid="btn-login"
                 />
               </div>
               {error && (
@@ -110,12 +113,14 @@ const LoginPage: React.FC = () => {
               )}
             </div>
             <p
+              data-testid="forgot-password-link"
               className="mt-20 text-base text-gray-700 cursor-pointer hover:font-semibold"
               onClick={() => router.push("/auth/forgotPassword")}
             >
               ¿Olvidaste tu contraseña?
             </p>
             <p
+              data-testid="privacy-link"
               className="mt-4 text-base text-gray-700 cursor-pointer hover:font-semibold"
               onClick={() => router.push("/privacy")}
             >

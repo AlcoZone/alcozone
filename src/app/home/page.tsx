@@ -48,7 +48,7 @@ function generateColors(towns: string[]): Record<string, string> {
 
 const MainPage = () => {
   const router = useRouter();
-  const [user, setUser] = useState<{ email: string } | null>(null);
+  const [user, setUser] = useState<{ email: string | null } | null>(null);
 
   
   const [donutChartData, setDonutChartData] = useState<AccidenteDonut[]>([]);
@@ -74,7 +74,7 @@ const MainPage = () => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user ? user : null);
+      setUser(user ? { email: user.email } : null);
     });
     return () => unsubscribe();
   }, []);
@@ -228,7 +228,7 @@ const MainPage = () => {
               <ComparisonWidget
                 title="Accidentes por mes"
                 data={comparisonData}
-                footer="Año 2024"
+                footer=""
                 config={comparisonConfig}
                 data-testid="comparison-widget"
               />

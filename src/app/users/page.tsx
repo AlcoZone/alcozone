@@ -14,11 +14,6 @@ const roleMap: Record<Role, number> = {
 };
 const actions = [
   {
-    label: "Modificar",
-    onClick: (row: any) => alert(`Modificar: ${row.name}`),
-    className: "text-blue-600 hover:underline cursor-pointer font-medium",
-  },
-  {
     label: "Eliminar",
     onClick: async (row: UserRow) => {
       const confirmed = window.confirm(`¿Estás seguro de eliminar a ${row.name}?`);
@@ -38,7 +33,7 @@ const actions = [
 
 let fetchUsers: () => Promise<void>;
 
-export default function DatabasePage() {
+export default function UserPage() {
   const [newUser, setNewUser] = useState<NewUser>({ user: "", email: "", password: "", role: "" });
   const [error, setError] = useState<string>("");
   const [data, setData] = useState<UserRow[]>([]);
@@ -75,36 +70,42 @@ export default function DatabasePage() {
 
   const handleSubmit = async () => {
     setError("");
-
+  
     if (!newUser.user || !newUser.email || !newUser.password || !newUser.role) {
       setError("Por favor, complete todos los campos.");
       return;
     }
-
+  
+    const emailRegex = /^[^@]+@[^@]+\.[^@]+$/;
+    if (!emailRegex.test(newUser.email)) {
+      setError("Correo electrónico inválido.");
+      return;
+    }
+  
     if (newUser.password.length < 6) {
       setError("La contraseña debe tener al menos 6 caracteres.");
       return;
     }
-
+  
     const emailExists = data.some(user => user.email === newUser.email);
     if (emailExists) {
       setError("El correo electrónico ya está en uso.");
       return;
     }
-
+  
     const roleId = roleMap[newUser.role as Role];
     if (!roleId) {
       setError("El rol ingresado no es válido. Usa: Administrador, Data Visualizer o Data Manager.");
       return;
     }
-
+  
     const payload = {
       username: newUser.user,
       email: newUser.email,
       password: newUser.password,
       role_id: roleId,
     };
-
+  
     try {
       await api.post("/user/register", payload);
       alert("Usuario registrado exitosamente.");
@@ -114,7 +115,7 @@ export default function DatabasePage() {
       setError(`Error al registrar el usuario: ${error?.response?.data?.message || error.message}`);
     }
   };
-
+  
   return (
     <div className="h-[screen-40px]">
           <h1 className="text-3xl font-bold text-blue-850 mb-4">Usuarios</h1>

@@ -3,7 +3,7 @@ import api from "../api";
 export const getRevisionCsv = async (uuid: string, name = "revision") => {
   try {
     const response = await api.get(`/revision/csv`, {
-      params: { uuid, withData: true },
+      params: { uuid: uuid, withData: true },
       responseType: "blob",
     });
 

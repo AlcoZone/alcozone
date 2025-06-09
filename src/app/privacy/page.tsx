@@ -1,7 +1,12 @@
+"use client";
+
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useRouter } from "next/navigation";
+import ConfirmButtons from "@/components/ConfirmButtons/ConfirmButtons";
 
 const PrivacyPage = () => {
+  const router = useRouter();
   return (
     <div className="h-screen w-full overflow-y-auto">
       <div className="container mx-auto px-4 py-8 max-w-4xl">
@@ -166,11 +171,11 @@ const PrivacyPage = () => {
                 canales oficiales de comunicación.
               </p>
             </section>
-
-            <div className="mt-8 text-sm text-gray-500">
-              <p>
-                Última actualización: {new Date().toLocaleDateString("es-MX")}
-              </p>
+            <div className="flex justify-center mt-8 mb-8">
+              <ConfirmButtons
+                variant="backToLogin"
+                onClick={() => router.push("/auth/login")}
+              />
             </div>
           </CardContent>
         </Card>

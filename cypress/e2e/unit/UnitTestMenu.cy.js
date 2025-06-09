@@ -1,0 +1,52 @@
+describe('Login y verificación de menú', () => {
+    const routes = {
+        home: '/home',
+        dashboard: '/dashboard',
+        database: '/database',
+        users: '/users',
+        map: '/map',
+        account: '/account',
+        revisions: '/revisions',
+      };      
+  
+      beforeEach(() => {
+        cy.clearCookies();
+        cy.clearLocalStorage();
+        indexedDB.deleteDatabase('firebaseLocalStorageDb');
+
+        cy.on('uncaught:exception', (err) => {
+          if (
+            err.message.includes('timeout of') ||
+            err.name === 'AxiosError' ||
+            err.message.includes('Network Error')
+          ) {
+            return false;
+          }
+        });
+      });
+  
+    it('Permite iniciar sesión y navegar por todos los botones del menú', () => {
+      cy.visit('/auth/login');
+  
+      cy.get('[data-testid="input-txtinput-email"]').type('Plaga@gmail.com');
+      cy.get('[data-testid="input-txtinput-password"]').type('plaga666');
+      cy.get('[data-testid="btn-login"]').click();
+  
+      cy.get('[data-testid="login-loading"]').should('contain', 'Ingresando...');
+      cy.url({ timeout: 10000 }).should('include', '/home');
+  
+      Object.keys(routes).forEach((variant) => {
+        cy.get(`[data-testid="menu-btn-${variant}"]`).should('exist');
+      });
+  
+      Object.entries(routes).forEach(([variant, path]) => {
+        cy.get(`[data-testid="menu-btn-${variant}"]`).click();
+        cy.location('pathname', { timeout: 10000 }).should('eq', path);
+
+      });
+  
+      cy.get('[data-testid="menu-btn-logout"]').click();
+      cy.url({ timeout: 10000 }).should('include', '/auth/login');
+
+    });
+  });  
