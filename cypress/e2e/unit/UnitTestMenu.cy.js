@@ -1,4 +1,3 @@
-// cypress/e2e/login_and_menu.cy.ts
 describe('Login y verificación de menú', () => {
     const routes = {
         home: '/home',

@@ -1,5 +1,3 @@
-// cypress/e2e/login_and_menu.cy.ts
-
 describe('Login y verificación de menú (con advertencias controladas)', () => {
     const routes = {
       home: '/home',
