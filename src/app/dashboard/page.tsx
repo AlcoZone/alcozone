@@ -519,7 +519,7 @@ export default function DashboardPage() {
         isEditing ? "cursor-grab" : "cursor-default"
       )}
     >
-      <div className="flex items-center justify-between w-full mx-2">
+      <div className="flex items-start justify-between w-full p-2">
         <div className="flex-1 text-left">
           {isEditing ? (
             <Input
@@ -689,7 +689,7 @@ export default function DashboardPage() {
           )}
         </div>
 
-        <div className="flex-1 flex items-center justify-end gap-5">
+        <div className="flex-1 flex justify-end gap-5">
           {isEditing && !widgetsLoading && !widgetsError && (
             <WidgetSelectionDialog
               widgets={availableWidgets}
