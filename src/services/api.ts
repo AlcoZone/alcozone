@@ -3,7 +3,7 @@ import { getAuth, signOut } from "firebase/auth";
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
-  timeout: 5000,
+  timeout: 15000,
 });
 
 api.interceptors.request.use(
@@ -15,9 +15,6 @@ api.interceptors.request.use(
       const token = await user.getIdToken();
       config.headers.Authorization = `Bearer ${token}`;
     }
-
-    config.headers.Accept = "application/json";
-    console.log("Making request to: ", config.url);
     return config;
   },
   (error) => {
@@ -35,6 +32,5 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
 
 export default api;

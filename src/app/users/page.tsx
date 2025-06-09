@@ -1,65 +1,57 @@
 "use client";
 
-import { Banner } from "@/components/Banner/Banner";
 import ConfirmButtons from "@/components/ConfirmButtons/ConfirmButtons";
-import { Menu } from "@/components/Menu/Menu";
 import { Table } from "@/components/Table/Table";
 import { TableInput } from "@/components/TableInputs/tableInputs";
 import api from "@/services/api";
-import React, { useState, useEffect } from "react";
-
-type Role = "Administrador" | "Data Visualizer" | "Data Manager";
-
-interface UserRow {
-  name: string;
-  email: string;
-  password: string;
-  role: Role | "Desconocido";
-}
-
-interface NewUser {
-  user: string;
-  email: string;
-  password: string;
-  role: string;
-}
+import React, { useState} from "react";
+import {Role, UserRow, NewUser } from "@/types/User";
 
 const roleMap: Record<Role, number> = {
   "Administrador": 1,
   "Data Visualizer": 2,
   "Data Manager": 3,
 };
-
 const actions = [
   {
-    label: "Modificar",
-    onClick: (row: any) => alert(`Modificar: ${row.name}`),
-    className: "text-blue-600 hover:underline cursor-pointer font-medium",
-  },
-  {
     label: "Eliminar",
-    onClick: (row: any) => alert(`Eliminar: ${row.name}`),
+    onClick: async (row: UserRow) => {
+      const confirmed = window.confirm(`¿Estás seguro de eliminar a ${row.name}?`);
+      if (!confirmed) return;
+
+      try {
+        await api.delete(`/users/delete/${row.id}`);
+        alert("Usuario eliminado exitosamente.");
+        await fetchUsers();
+      } catch (error: any) {
+        alert(`Error al eliminar el usuario: ${error?.response?.data?.message || error.message}`);
+      }
+    },
     className: "text-red-500 hover:underline cursor-pointer font-medium",
   },
 ];
 
-export default function DatabasePage() {
-  const [menuHidden, setMenuHidden] = useState(false);
+let fetchUsers: () => Promise<void>;
+
+export default function UserPage() {
   const [newUser, setNewUser] = useState<NewUser>({ user: "", email: "", password: "", role: "" });
   const [error, setError] = useState<string>("");
   const [data, setData] = useState<UserRow[]>([]);
 
-  const fetchUsers = async () => {
+  fetchUsers = async () => {
     try {
       const response = await api.get("/user/all");
       const users = response.data;
 
-      const mappedUsers: UserRow[] = users.map((user: any) => ({
-        name: user.username,
-        email: user.email,
-        password: "***************",
-        role: (Object.keys(roleMap) as Role[]).find(key => roleMap[key] === user.role_id) || "Desconocido",
-      }));
+      const mappedUsers: UserRow[] = users
+        .filter((user: any) => !user.deleted)
+        .map((user: any) => ({
+          id: user.id,
+          name: user.username,
+          email: user.email,
+          password: "***************",
+          role: (Object.keys(roleMap) as Role[]).find(key => roleMap[key] === user.role_id) || "Desconocido",
+        }));
 
       setData(mappedUsers);
     } catch (err) {
@@ -67,7 +59,7 @@ export default function DatabasePage() {
     }
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     fetchUsers();
   }, []);
 
@@ -78,38 +70,44 @@ export default function DatabasePage() {
 
   const handleSubmit = async () => {
     setError("");
-
+  
     if (!newUser.user || !newUser.email || !newUser.password || !newUser.role) {
       setError("Por favor, complete todos los campos.");
       return;
     }
-
+  
+    const emailRegex = /^[^@]+@[^@]+\.[^@]+$/;
+    if (!emailRegex.test(newUser.email)) {
+      setError("Correo electrónico inválido.");
+      return;
+    }
+  
     if (newUser.password.length < 6) {
       setError("La contraseña debe tener al menos 6 caracteres.");
       return;
     }
-
+  
     const emailExists = data.some(user => user.email === newUser.email);
     if (emailExists) {
       setError("El correo electrónico ya está en uso.");
       return;
     }
-
+  
     const roleId = roleMap[newUser.role as Role];
     if (!roleId) {
       setError("El rol ingresado no es válido. Usa: Administrador, Data Visualizer o Data Manager.");
       return;
     }
-
+  
     const payload = {
       username: newUser.user,
       email: newUser.email,
       password: newUser.password,
       role_id: roleId,
     };
-
+  
     try {
-      const response = await api.post("/user/register", payload);
+      await api.post("/user/register", payload);
       alert("Usuario registrado exitosamente.");
       setNewUser({ user: "", email: "", password: "", role: "" });
       await fetchUsers();
@@ -117,26 +115,12 @@ export default function DatabasePage() {
       setError(`Error al registrar el usuario: ${error?.response?.data?.message || error.message}`);
     }
   };
-
+  
   return (
-    <>
-      <Banner />
-      <Menu variant="admin" onToggle={setMenuHidden}>
-        <div
-          className="bg-white shadow-xl rounded-xl p-6 space-y-4 transition-all duration-300"
-          style={{
-            marginTop: "50px",
-            marginLeft: "-220px",
-            marginRight: "30px",
-            bottom: "50px",
-            height: "calc(100vh - 175px)",
-            width: menuHidden ? "calc(100vw - 150px)" : "calc(100vw - 300px)",
-            overflowY: "auto",
-          }}
-        >
-          <h1 className="text-3xl font-bold text-blue-850">Usuarios</h1>
+    <div className="h-[screen-40px]">
+          <h1 className="text-3xl font-bold text-blue-850 mb-4">Usuarios</h1>
 
-          <div className="w-full max-w-full overflow-y-auto" style={{ maxHeight: "320px" }}>
+          <div className="w-full max-w-full overflow-y-auto" style={{ maxHeight: "400px" }}>
             <Table
               variant="withActions"
               columns={[
@@ -149,46 +133,45 @@ export default function DatabasePage() {
               actions={actions}
             />
           </div>
-
-          <h1 className="text-1xl font-bold text-gray-600 text-center">Registrar nuevo usuario</h1>
-
-          <div className="mt-4 flex justify-center">
-            <TableInput
-              label="Usuario"
-              type="text"
-              id="user"
-              value={newUser.user}
-              onChange={handleInputChange}
-              placeholder="Nombre de usuario"
-            />
-            <TableInput
-              label="Correo electrónico"
-              type="email"
-              id="email"
-              value={newUser.email}
-              onChange={handleInputChange}
-              placeholder="Email"
-            />
-            <TableInput
-              label="Contraseña"
-              type="password"
-              id="password"
-              value={newUser.password}
-              onChange={handleInputChange}
-              placeholder="Contraseña"
-            />
-            <TableInput
-              label="Rol"
-              type="text"
-              id="role"
-              value={newUser.role}
-              onChange={handleInputChange}
-              placeholder="Rol"
-            />
+          <div className="mt-10">
+            <h1 style={{ fontSize: "1.375rem" }} className=" font-bold text-gray-600 text-center mb-4">Registrar nuevo usuario</h1>
+            <div className="mt- flex justify-center">
+              <TableInput
+                label="Usuario"
+                type="text"
+                id="user"
+                value={newUser.user}
+                onChange={handleInputChange}
+                placeholder="Nombre de usuario"
+              />
+              <TableInput
+                label="Correo electrónico"
+                type="email"
+                id="email"
+                value={newUser.email}
+                onChange={handleInputChange}
+                placeholder="Email"
+              />
+              <TableInput
+                label="Contraseña"
+                type="password"
+                id="password"
+                value={newUser.password}
+                onChange={handleInputChange}
+                placeholder="Contraseña"
+              />
+              <TableInput
+                label="Rol"
+                type="text"
+                id="role"
+                value={newUser.role}
+                onChange={handleInputChange}
+                placeholder="Rol"
+              />
+            </div>
           </div>
-
           <div className="mt-4 flex justify-center">
-            <ConfirmButtons variant="registerNewUser" onClick={handleSubmit} />
+            <ConfirmButtons variant="registerNewUser" onClick={handleSubmit} testId={"register-button"}/>
           </div>
 
           {error && (
@@ -196,8 +179,6 @@ export default function DatabasePage() {
               {error}
             </div>
           )}
-        </div>
-      </Menu>
-    </>
+    </div>
   );
 }
