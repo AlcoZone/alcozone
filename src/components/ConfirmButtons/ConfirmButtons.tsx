@@ -47,6 +47,7 @@ const ConfirmButtons = ({
     <Button
       onClick={onClick}
       disabled={disabled}
+      data-testid={variant === "registerNewUser" ? "register-button" : undefined}
       className={cn("cursor-pointer text-lg transition duration-500", color, {
         "rounded-full": rounded,
       })}

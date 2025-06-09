@@ -23,4 +23,4 @@ export default {
 
 export const UserIcon = () => <Icon variant="user" width={32} height={32} />;
 export const LockIcon = () => <Icon variant="lock" width={32} height={32} />;
-export const LogoIcon = () => <Icon variant="logo" width={32} height={32} />;
+export const LogoIcon = () => <Icon variant="logo" width={200} height={200} />;

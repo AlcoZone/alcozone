@@ -41,6 +41,7 @@ const TabSwitchButtons = ({ variant, color = "default", onClick }: TabSwitchButt
 
     return (
         <Button variant="ghost"
+            data-testid={`menu-btn-${variant}`}
             onClick={onClick}
             className={cn("cursor-pointer w-full justify-start text-sm gap-2 font-normal px-2 py-1 bg-transparent hover:bg-transparent hover:text-blue-850 transition-all", textColorMap[color])}>
             <span className={cn(iconColorMap[color], "text-base")}>
