@@ -4,10 +4,9 @@ describe("Prueba de Integración - Navegar por el modal y Agregar un Widget", ()
 
     cy.url().then((url) => {
       if (url.includes("/auth/login")) {
-        cy.get('[data-testid="email-input"]').type("plaga@gmail.com");
-        cy.get('[data-testid="password-input"]').type("plaga666");
-        cy.get('[data-testid="toggle-password-visibility"]').click();
-        cy.get('[data-testid="login-button"]').click();
+        cy.get('[data-testid="input-txtinput-email"]').type('plaga@gmail.com');
+        cy.get('[data-testid="input-txtinput-password"]').type('plaga666');
+        cy.get('[data-testid="btn-login"]').click();
       }
 
       cy.url().should("include", "/home");

@@ -21,7 +21,7 @@ describe('Create Revision', () => {
     it('Login and Upload and Verify File', () => {
         cy.visit('/auth/login');
 
-        cy.get('[data-testid="input-txtinput-email"]').type('Plaga@gmail.com');
+        cy.get('[data-testid="input-txtinput-email"]').type('plaga@gmail.com');
         cy.get('[data-testid="input-txtinput-password"]').type('plaga666');
         cy.get('[data-testid="btn-login"]').click();
 

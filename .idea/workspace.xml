@@ -5,17 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fe832c68-9285-4b49-afa8-2909f9e1c3ca" name="Changes" comment="[Add] Upload Revision Button&#10;[Add] CSV Validation">
-      <change afterPath="$PROJECT_DIR$/src/components/CalendarWithEnabledDates/CalendarWithEnabledDates.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/download/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/revisions/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/map/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/map/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/MapConfigModal/MapConfigModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/MapConfigModal/MapConfigModal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Menu/Menu.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Menu/Menu.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/TabSwitchButtons/TabSwitchButtons.stories.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/TabSwitchButtons/TabSwitchButtons.stories.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/TabSwitchButtons/TabSwitchButtons.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/TabSwitchButtons/TabSwitchButtons.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/types/MapConfig.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/types/MapConfig.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/protectedRoutes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/protectedRoutes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cypress.config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cypress/e2e/integration/DashboardAddWidget.cy.ts" beforeDir="false" afterPath="$PROJECT_DIR$/cypress/e2e/integration/DashboardAddWidget.cy.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cypress/e2e/integration/IntegrationCreateRevision.cy.js" beforeDir="false" afterPath="$PROJECT_DIR$/cypress/e2e/integration/IntegrationCreateRevision.cy.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cypress/e2e/unit/DashboardApplyTownFilter.cy.ts" beforeDir="false" afterPath="$PROJECT_DIR$/cypress/e2e/unit/DashboardApplyTownFilter.cy.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cypress/support/commands.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cypress/support/e2e.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/auth/login/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/auth/login/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/TextInput/TextInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/TextInput/TextInput.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -56,7 +54,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "feature/add-interactive-map",
+    "git-widget-placeholder": "Pruebas/AZ-67",
     "kotlin-language-version-configured": "true",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "yarn",
