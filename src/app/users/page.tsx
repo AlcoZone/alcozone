@@ -14,11 +14,6 @@ const roleMap: Record<Role, number> = {
 };
 const actions = [
   {
-    label: "Modificar",
-    onClick: (row: any) => alert(`Modificar: ${row.name}`),
-    className: "text-blue-600 hover:underline cursor-pointer font-medium",
-  },
-  {
     label: "Eliminar",
     onClick: async (row: UserRow) => {
       const confirmed = window.confirm(`¿Estás seguro de eliminar a ${row.name}?`);
@@ -38,7 +33,7 @@ const actions = [
 
 let fetchUsers: () => Promise<void>;
 
-export default function DatabasePage() {
+export default function UserPage() {
   const [newUser, setNewUser] = useState<NewUser>({ user: "", email: "", password: "", role: "" });
   const [error, setError] = useState<string>("");
   const [data, setData] = useState<UserRow[]>([]);
