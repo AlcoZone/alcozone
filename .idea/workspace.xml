@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="fe832c68-9285-4b49-afa8-2909f9e1c3ca" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="fe832c68-9285-4b49-afa8-2909f9e1c3ca" name="Changes" comment="[Add] Upload Revision Button&#10;[Add] CSV Validation">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cypress.config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cypress/e2e/integration/DashboardAddWidget.cy.ts" beforeDir="false" afterPath="$PROJECT_DIR$/cypress/e2e/integration/DashboardAddWidget.cy.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cypress/e2e/integration/IntegrationCreateRevision.cy.js" beforeDir="false" afterPath="$PROJECT_DIR$/cypress/e2e/integration/IntegrationCreateRevision.cy.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cypress/e2e/unit/DashboardApplyTownFilter.cy.ts" beforeDir="false" afterPath="$PROJECT_DIR$/cypress/e2e/unit/DashboardApplyTownFilter.cy.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cypress/support/commands.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cypress/support/e2e.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/auth/login/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/auth/login/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/TextInput/TextInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/TextInput/TextInput.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -10,8 +22,25 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="feature/upload-revision" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;riickster&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/AlcoZone/alcozone.git&quot;,
+    &quot;accountId&quot;: &quot;eacacf3a-bc2b-44dd-935d-208d6f443c9e&quot;
+  }
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
 }</component>
@@ -20,21 +49,44 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;fix/alondra-merge&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "Pruebas/AZ-67",
+    "kotlin-language-version-configured": "true",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "yarn",
+    "npm.Next.js: server-side.executor": "Run",
+    "ts.external.directory.path": "/Users/riickster/Development/Personal/ITESM/alcozone/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
+  </component>
+  <component name="RunManager" selected="npm.Next.js: server-side">
+    <configuration name="Next.js: debug client-side" type="JavascriptDebugType" uri="http://localhost:3000/">
+      <method v="2" />
+    </configuration>
+    <configuration name="Next.js: server-side" type="js.build_tools.npm">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-125ca727e0f0-intellij.indexing.shared.core-IU-243.23654.189" />
-        <option value="bundled-js-predefined-d6986cc7102b-822845ee3bb5-JavaScript-IU-243.23654.189" />
+        <option value="bundled-js-predefined-d6986cc7102b-b26f3e71634d-JavaScript-WS-251.26094.131" />
       </set>
     </attachedChunks>
   </component>
@@ -48,10 +100,28 @@
       <updated>1747183892725</updated>
       <workItem from="1747183894658" duration="315000" />
       <workItem from="1747188140949" duration="69000" />
+      <workItem from="1749196671944" duration="66000" />
+      <workItem from="1749196746053" duration="4706000" />
+      <workItem from="1749313608355" duration="2281000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="[Add] Upload Revision Button&#10;[Add] CSV Validation" />
+    <option name="LAST_COMMIT_MESSAGE" value="[Add] Upload Revision Button&#10;[Add] CSV Validation" />
   </component>
 </project>

@@ -141,7 +141,12 @@ export default function DashboardPage() {
   const [barChartData, setBarChartData] = useState<BarChartData[]>([]);
   const [donutChartData, setDonutChartData] = useState<AccidentDonut[]>([]);
 
+  const hasWidgets = () => draftLayout.length > 0;
   const handleTownChange = (value: string) => {
+    if (!hasWidgets()) {
+      alert("Agrega al menos un widget antes de aplicar filtros");
+      return;
+    }
     if (value === "clear") {
       setSelectedTown("");
     } else {
@@ -152,6 +157,7 @@ export default function DashboardPage() {
   const [endDate, setEndDate] = useState('')
   const [tempStartDate, setTempStartDate] = useState(startDate);
   const [tempEndDate, setTempEndDate] = useState(endDate);
+
 
   function formatDate(dateString: string): string {
     if (!dateString) return '';
@@ -520,6 +526,7 @@ export default function DashboardPage() {
 
   const isWidgetVisible = (name: string) =>
     (isEditing ? draftLayout : savedLayout).some((w) => w.name === name);
+
   return (
     <main
       className={cn(
@@ -528,14 +535,14 @@ export default function DashboardPage() {
         isEditing ? "cursor-grab" : "cursor-default"
       )}
     >
-      <div className="flex justify-between items-center mb-6 gap-4">
-        <div className="flex-1">
+      <div className="flex items-start justify-between w-full p-2">
+        <div className="flex-1 text-left">
           {isEditing ? (
             <Input
               data-testid="input-dashboard-name"
               value={draftName}
               onChange={handleNameChange}
-              className="text-xl font-semibold border-none px-2 py-1 bg-white focus-visible:ring-0 focus-visible:ring-offset-0"
+              className="text-xl font-semibold border-none px-2 py-1 bg-white focus-visible:ring-0 focus-visible:ring-offset-0 max-w-[160px]"
             />
           ) : (
             <div className="flex justify-between items-center mb-6 gap-4">
@@ -627,14 +634,14 @@ export default function DashboardPage() {
                   type="date"
                   value={tempStartDate}
                   onChange={(e) => {
-                    setTempStartDate(e.target.value); 
+                    setTempStartDate(e.target.value);
                   }}
                   onBlur={() => {
                     if (!endDate || new Date(tempStartDate) <= new Date(endDate)) {
-                      setStartDate(tempStartDate); 
+                      setStartDate(tempStartDate);
                     } else {
                       alert("La fecha de inicio no puede ser posterior a la fecha final");
-                      setTempStartDate(startDate); 
+                      setTempStartDate(startDate);
                     }
                   }}
                   max={endDate || undefined}
@@ -664,11 +671,8 @@ export default function DashboardPage() {
                 />
               </div>
 
-
-
-
               <Select onValueChange={handleTownChange} value={selectedTown}>
-                <SelectTrigger className="w-[250px] ml-[-120px]">
+                <SelectTrigger className="w-[250px] ml-[-120px]" data-testid="town-filter">
                   <SelectValue placeholder="Selecciona una alcaldía" />
                 </SelectTrigger>
                 <SelectContent>
@@ -682,6 +686,7 @@ export default function DashboardPage() {
                         key={index}
                         value={name}
                         className="cursor-pointer transition-colors transition-transform duration-300 ease-in-out origin-left hover:scale-110 hover:!text-blue-850 text-sm m-0 data-[state=checked]:!text-blue-850"
+                        data-testid={`town-${name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "-")}`}
                       >
                         {name}
                       </SelectItem>
@@ -702,13 +707,21 @@ export default function DashboardPage() {
           )}
         </div>
 
-        <div className="flex-1 text-right">
+        <div className="flex-1 flex justify-end gap-5">
+          {isEditing && !widgetsLoading && !widgetsError && (
+            <WidgetSelectionDialog
+              widgets={availableWidgets}
+              addedWidgetUuids={draftLayout.map((i) => i.widgetUuid)}
+              onAddWidget={handleAddWidget}
+            />
+          )}
           {hasChanges && isEditing ? (
             <Button
               data-testid="btn-dashboard-save"
               onClick={handleSave}
               disabled={isSaving}
               className="text-white bg-[#001391]/80 hover:bg-[#001391]"
+              data-testid="save-dashboard"
             >
               {isSaving ? (
                 <span className="flex items-center">
@@ -749,16 +762,10 @@ export default function DashboardPage() {
                 setIsEditing(true);
               }}
               className="text-white bg-neutral-550 hover:bg-neutral-600"
+              data-testid="edit-dashboard"
             >
               <Pencil className="mr-2 h-4 w-4" /> Editar
             </Button>
-          )}
-          {isEditing && !widgetsLoading && !widgetsError && (
-            <WidgetSelectionDialog
-              widgets={availableWidgets}
-              addedWidgetUuids={draftLayout.map((i) => i.widgetUuid)}
-              onAddWidget={handleAddWidget}
-            />
           )}
         </div>
       </div>
@@ -915,6 +922,7 @@ export default function DashboardPage() {
             key="report-channel"
             style={{ width: "100%", height: "100%" }}
             className="relative overflow-visible"
+            data-testid="report-channel-widget-in-dashboard"
           >
             {isEditing && (
               <RemoveButton
@@ -986,6 +994,7 @@ function RemoveButton({
         onClick();
       }}
       className={`non-draggable absolute -top-2 -right-2 z-10 ${className} cursor-pointer bg-white rounded-full shadow-md p-0.5 pointer-events-auto`}
+      data-testid="remove-widget"
     >
       <X size={18} />
     </button>

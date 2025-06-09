@@ -48,7 +48,7 @@ export function Table<T extends Record<string, any>>({
         </TableHeader>
         <TableBody>
           {data.map((row, rowIndex) => (
-            <TableRow key={rowIndex}>
+            <TableRow key={rowIndex} data-testid={row.name}>
               {columns.map((col) => (
                 <TableCell key={String(col.accessor)}>
                   {row[col.accessor]}

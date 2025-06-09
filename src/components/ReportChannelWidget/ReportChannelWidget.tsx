@@ -35,14 +35,14 @@ const ReportChannelWidget = ({
       <Card className="flex flex-col h-full w-full">
         <CardHeader>
           <CardTitle className="text-1xl">{title}</CardTitle>
-          <CardDescription>{description}</CardDescription>
+          <CardDescription data-testid="report-channel-widget-description">{description}</CardDescription>
         </CardHeader>
         <CardContent className="flex-1">
           <ChartContainer
             config={config}
             style={{ width: "100%", height: chartHeight - 130 }}
           >
-            <BarChart data={data}>
+            <BarChart data={data} data-testid="report-channel-bar-chart">
               <CartesianGrid vertical={false} />
               <XAxis
                 dataKey="report_source"
