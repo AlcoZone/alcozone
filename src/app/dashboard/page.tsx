@@ -519,13 +519,13 @@ export default function DashboardPage() {
         isEditing ? "cursor-grab" : "cursor-default"
       )}
     >
-      <div className="flex justify-between items-center mb-6 gap-4">
-        <div className="flex-1">
+      <div className="flex items-start justify-between w-full p-2">
+        <div className="flex-1 text-left">
           {isEditing ? (
             <Input
               value={draftName}
               onChange={handleNameChange}
-              className="text-xl font-semibold border-none px-2 py-1 bg-white focus-visible:ring-0 focus-visible:ring-offset-0"
+              className="text-xl font-semibold border-none px-2 py-1 bg-white focus-visible:ring-0 focus-visible:ring-offset-0 max-w-[160px]"
             />
           ) : (
             <div className="flex justify-between items-center mb-6 gap-4">
@@ -689,7 +689,14 @@ export default function DashboardPage() {
           )}
         </div>
 
-        <div className="flex-1 text-right">
+        <div className="flex-1 flex justify-end gap-5">
+          {isEditing && !widgetsLoading && !widgetsError && (
+            <WidgetSelectionDialog
+              widgets={availableWidgets}
+              addedWidgetUuids={draftLayout.map((i) => i.widgetUuid)}
+              onAddWidget={handleAddWidget}
+            />
+          )}
           {hasChanges && isEditing ? (
             <Button
               onClick={handleSave}
@@ -737,13 +744,6 @@ export default function DashboardPage() {
             >
               <Pencil className="mr-2 h-4 w-4" /> Editar
             </Button>
-          )}
-          {isEditing && !widgetsLoading && !widgetsError && (
-            <WidgetSelectionDialog
-              widgets={availableWidgets}
-              addedWidgetUuids={draftLayout.map((i) => i.widgetUuid)}
-              onAddWidget={handleAddWidget}
-            />
           )}
         </div>
       </div>
