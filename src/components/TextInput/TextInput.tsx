@@ -27,14 +27,14 @@ export const TextInput = ({
   const inputType = showPasswordToggle && isPassword ? (show ? "text" : "password") : type;
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full" data-testid={`wrapper-txtinput-${testId}`}>
       <Input
         type={inputType}
         value={value}
         onChange={onChange}
         placeholder={placeholder}
         className="pr-10" 
-        {...props} 
+        {...props}
       />
       {showPasswordToggle && isPassword && (
         <button

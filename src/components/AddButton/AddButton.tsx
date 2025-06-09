@@ -8,7 +8,7 @@ const AddButton = (props: AddButtonProps) => {
     return (
         <Button
             {...props}
-            className="cursor-pointer w-10 h-10 flex items-center justify-center rounded-full bg-lime-750 transition duration-500 hover:bg-lime-600">
+            className="cursor-pointer w-10 h-10 flex items-center justify-center rounded-full bg-blue-850 transition duration-500 hover:bg-blue-700">
             <RiAddLargeLine className="size-8" />
         </Button>
     );

@@ -4,7 +4,7 @@ import { ReactNode } from "react";
 import { IoHome, IoPersonSharp } from "react-icons/io5";
 import { FaChartColumn } from "react-icons/fa6";
 import { FaDatabase, FaMapMarkedAlt } from "react-icons/fa";
-import { RiFileUploadFill, RiFileDownloadFill } from "react-icons/ri";
+import { RiFileDownloadFill } from "react-icons/ri";
 import { SlLogout } from "react-icons/sl";
 
 
@@ -15,8 +15,7 @@ const TabSwitchButtonsVariants: Record<string, { icon: ReactNode; text: string }
     users: { icon: <FaDatabase/>, text: "Base de datos usuarios" },
     map: { icon: <FaMapMarkedAlt/>, text: "Mapa interactivo" },
     account: { icon: <IoPersonSharp/>, text: "Mi cuenta" },
-    upload: { icon: <RiFileUploadFill/>, text: "Cargar archivo" },
-    download: { icon: <RiFileDownloadFill/>, text: "Descargar archivos" },
+    revisions: { icon: <RiFileDownloadFill/>, text: "Revisiones" },
     logout: { icon: <SlLogout/>, text: "Cerrar sesión" },
 };
 
@@ -41,6 +40,7 @@ const TabSwitchButtons = ({ variant, color = "default", onClick }: TabSwitchButt
 
     return (
         <Button variant="ghost"
+            data-testid={`menu-btn-${variant}`}
             onClick={onClick}
             className={cn("cursor-pointer w-full justify-start text-sm gap-2 font-normal px-2 py-1 bg-transparent hover:bg-transparent hover:text-blue-850 transition-all", textColorMap[color])}>
             <span className={cn(iconColorMap[color], "text-base")}>
