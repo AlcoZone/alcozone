@@ -56,6 +56,7 @@ export default function CsvPage() {
                 <button
                     onClick={() => setDialogOpen(true)}
                     className="bg-green-500 text-white font-semibold px-4 py-2 rounded hover:bg-green-700 transition"
+                    data-testid={"addButton"}
                 >
                     + Añadir Revisión
                 </button>

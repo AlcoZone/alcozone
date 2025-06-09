@@ -73,6 +73,7 @@ export function RevisionUploadDialog({
                     <div>
                         <Label htmlFor="revision-name">Nombre de Revisión</Label>
                         <Input
+                            data-testid={"input-revision-name"}
                             id="revision-name"
                             value={revisionName}
                             onChange={(e) => setRevisionName(e.target.value)}
@@ -108,6 +109,7 @@ export function RevisionUploadDialog({
                             accept=".csv"
                             className="hidden"
                             disabled={validating}
+                            data-testid={"file-upload"}
                             onChange={(e) => {
                                 const f = e.target.files?.[0];
                                 if (f) handleFileChange(f);
@@ -120,6 +122,7 @@ export function RevisionUploadDialog({
                     <Button
                         onClick={handleSubmit}
                         disabled={!revisionName || !file || !isValid || validating}
+                        data-testid={"create-revision"}
                     >
                         Crear Revisión
                     </Button>
