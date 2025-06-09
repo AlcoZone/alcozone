@@ -1,5 +1,7 @@
 describe("Prueba Unitaria - Aplicar filtro por alcaldía", () => {
   beforeEach(() => {
+    cy.visit('/');
+
     cy.url().then((url) => {
       if (url.includes("/auth/login")) {
         cy.get('[data-testid="input-txtinput-email"]').type('plaga@gmail.com');

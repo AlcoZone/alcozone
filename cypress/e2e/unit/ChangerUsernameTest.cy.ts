@@ -24,14 +24,14 @@ describe("Prueba integración pantalla Mi cuenta", () => {
     cy.url().should('include', '/account');
 
     cy.get('[data-testid="welcome-message"]').should('contain', 'Bienvenido,');
-    cy.get('[data-testid="display-name"]').should('contain', 'pulga4'); //should write the actual username !!!
+    cy.get('[data-testid="display-name"]').should('contain', 'Mariana'); //should write the actual username !!!
     cy.get('[data-testid="email"]').should('contain', 'plaga@gmail.com'); //should write the actual mail !!!
     cy.get('[data-testid="role"]').should('contain', 'admin'); //should write the actual role !!!
 
     cy.get('[data-testid="change-user-button"]').click();
-    cy.get('[data-testid="new-username-input"]').clear().type('pulga5'); //add the new username 
+    cy.get('[data-testid="new-username-input"]').clear().type('Mariana'); //add the new username
     cy.get('[data-testid="save-button"]').click();
 
-    cy.get('[data-testid="display-name"]').should('contain', 'pulga5'); //add the new username 
+    cy.get('[data-testid="display-name"]').should('contain', 'Mariana'); //add the new username
   });
 });

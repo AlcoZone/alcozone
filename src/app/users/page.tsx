@@ -44,7 +44,7 @@ export default function UserPage() {
       const users = response.data;
 
       const mappedUsers: UserRow[] = users
-        .filter((user: any) => user.deleted === false)  
+        .filter((user: any) => !user.deleted)
         .map((user: any) => ({
           id: user.id,
           name: user.username,
@@ -171,7 +171,7 @@ export default function UserPage() {
             </div>
           </div>
           <div className="mt-4 flex justify-center">
-            <ConfirmButtons variant="registerNewUser" onClick={handleSubmit} />
+            <ConfirmButtons variant="registerNewUser" onClick={handleSubmit} testId={"register-button"}/>
           </div>
 
           {error && (

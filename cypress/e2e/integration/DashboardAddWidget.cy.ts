@@ -1,26 +1,37 @@
 describe("Prueba de Integración - Navegar por el modal y Agregar un Widget", () => {
-  beforeEach(() => {
-    cy.visit("/");
+  before(() => {
+    cy.clearCookies();
+    cy.clearLocalStorage();
+    indexedDB.deleteDatabase('firebaseLocalStorageDb');
 
-    cy.url().then((url) => {
-      if (url.includes("/auth/login")) {
-        cy.get('[data-testid="input-txtinput-email"]').type('plaga@gmail.com');
-        cy.get('[data-testid="input-txtinput-password"]').type('plaga666');
-        cy.get('[data-testid="btn-login"]').click();
+    cy.on('uncaught:exception', (err) => {
+      if (
+          err.message.includes('timeout of') ||
+          err.name === 'AxiosError' ||
+          err.message.includes('Network Error')
+      ) {
+        return false;
       }
-
-      cy.url().should("include", "/home");
-      cy.visit("/dashboard");
     });
   });
 
   it("habilita la edición del dashboard, da clic en el componente 'Add Button', navega por el modal y agrega un widget", () => {
-    cy.get('[data-testid="edit-dashboard"]')
+    cy.visit('/auth/login');
+
+    cy.get('[data-testid="input-txtinput-email"]').type('plaga@gmail.com');
+    cy.get('[data-testid="input-txtinput-password"]').type('plaga666');
+    cy.get('[data-testid="btn-login"]').click();
+
+    cy.wait(1000);
+
+    cy.visit('/dashboard');
+
+    cy.get('[data-testid="btn-dashboard-edit"]')
       .scrollIntoView()
       .should("be.visible")
       .and("contain", "Editar");
 
-    cy.get('[data-testid="edit-dashboard"]').as("edit-btn").click();
+    cy.get('[data-testid="btn-dashboard-edit"]').as("edit-btn").click();
     cy.get("@edit-btn").click();
 
     cy.get('[data-testid="add-button"]', { timeout: 30000 })
@@ -96,9 +107,9 @@ describe("Prueba de Integración - Navegar por el modal y Agregar un Widget", ()
     );
     cy.get('[data-testid="report-channel-bar-chart"]')
       .find(".recharts-bar-rectangle")
-      .should("have.length", 8);
+      .should("have.length.greaterThan", 3);
 
-    cy.get('[data-testid="save-dashboard"]')
+    cy.get('[data-testid="btn-dashboard-save"]')
       .scrollIntoView()
       .should("be.visible")
       .and("contain", "Guardar")

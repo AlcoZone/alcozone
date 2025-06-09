@@ -103,7 +103,7 @@ const MyAccountPage = () => {
                         <ConfirmButtons
                             variant="changeUser"
                             onClick={() => openModal('username')}
-                            data-testid="change-user-button"
+                            testId="change-user-button"
                         />
                         <ConfirmButtons
                             variant="changePassword"
@@ -123,6 +123,7 @@ const MyAccountPage = () => {
 
                         {modalType === 'password' && (
                             <TextInput
+                                testId={"password"}
                                 value={currentPassword}
                                 onChange={(e) => setCurrentPassword(e.target.value)}
                                 placeholder="Contraseña actual"
@@ -137,7 +138,7 @@ const MyAccountPage = () => {
                             placeholder={modalType === 'username' ? 'Nuevo usuario' : 'Nueva contraseña'}
                             type={modalType === 'password' ? 'password' : 'text'}
                             showPasswordToggle={modalType === 'password'}
-                            data-testid="new-username-input"
+                            testId="new-username-input"
                         />
 
                         <div className="flex justify-end gap-4 mt-4">

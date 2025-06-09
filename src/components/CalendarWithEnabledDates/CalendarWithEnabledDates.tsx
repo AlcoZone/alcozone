@@ -58,10 +58,13 @@ const CalendarWithEnabledDates: React.FC<CalendarWithEnabledDatesProps> = ({
         return dates[0] ?? new Date();
     }, [enabledDateStrings]);
 
+
     return (
         <div className="flex flex-col items-center font-sans">
             <Calendar
+                // @ts-ignore
                 onChange={handleChange}
+                // @ts-ignore
                 value={value}
                 tileDisabled={tileDisabled}
                 selectRange={true}
