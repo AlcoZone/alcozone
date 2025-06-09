@@ -95,7 +95,9 @@ export const MapWidget: React.FC<MapWidgetProps> = ({ variant, data }) => {
     draw();
     map.on("zoomend moveend", draw);
 
-    return () => map.remove();
+    return () => {
+      map.remove();
+    };
   }, [variant, data, day, startHour, endHour]);
 
   return (

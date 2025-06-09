@@ -71,7 +71,7 @@ const LoginPage: React.FC = () => {
 
             <div className="w-full space-y-6 mb-8 text-lg [&_input]:h-14 [&_input]:w-full [&_input]:text-lg">
               <TextInput
-               data-testId="email"
+                testId="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Correo electrónico"
@@ -79,7 +79,7 @@ const LoginPage: React.FC = () => {
               />
               <div className="relative w-full">
                 <TextInput
-                data-testId="password"
+                testId="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Contraseña"
@@ -92,7 +92,7 @@ const LoginPage: React.FC = () => {
             <div className="w-full h-14">
               <div className="w-full h-full scale-y-120 origin-top [&_button]:w-full [&_button]:h-full [&_button]:scale-y-[0.75]">
                 <ConfirmButtons
-                  data-testId="btn-login"
+                  testId="btn-login"
                   variant="login"
                   onClick={handleLogin}
                   disabled={loadingLogin}

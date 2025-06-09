@@ -519,13 +519,13 @@ export default function DashboardPage() {
         isEditing ? "cursor-grab" : "cursor-default"
       )}
     >
-      <div className="flex justify-between items-center mb-6 gap-4">
-        <div className="flex-1">
+      <div className="flex items-center justify-between w-full mx-2">
+        <div className="flex-1 text-left">
           {isEditing ? (
             <Input
               value={draftName}
               onChange={handleNameChange}
-              className="text-xl font-semibold border-none px-2 py-1 bg-white focus-visible:ring-0 focus-visible:ring-offset-0"
+              className="text-xl font-semibold border-none px-2 py-1 bg-white focus-visible:ring-0 focus-visible:ring-offset-0 max-w-[160px]"
             />
           ) : (
             <div className="flex justify-between items-center mb-6 gap-4">
@@ -689,7 +689,14 @@ export default function DashboardPage() {
           )}
         </div>
 
-        <div className="flex-1 text-right">
+        <div className="flex-1 flex items-center justify-end gap-5">
+          {isEditing && !widgetsLoading && !widgetsError && (
+            <WidgetSelectionDialog
+              widgets={availableWidgets}
+              addedWidgetUuids={draftLayout.map((i) => i.widgetUuid)}
+              onAddWidget={handleAddWidget}
+            />
+          )}
           {hasChanges && isEditing ? (
             <Button
               onClick={handleSave}
@@ -738,13 +745,6 @@ export default function DashboardPage() {
               <Pencil className="mr-2 h-4 w-4" /> Editar
             </Button>
           )}
-          {isEditing && !widgetsLoading && !widgetsError && (
-            <WidgetSelectionDialog
-              widgets={availableWidgets}
-              addedWidgetUuids={draftLayout.map((i) => i.widgetUuid)}
-              onAddWidget={handleAddWidget}
-            />
-          )}
         </div>
       </div>
 
@@ -767,16 +767,17 @@ export default function DashboardPage() {
         onLayoutChange={(newLayout) => {
           if (isEditing) {
             setDraftLayout((prev) =>
-              newLayout.map((updated: GridItem) => {
+              newLayout.map((updated) => {
                 const original = prev.find((item) => item.name === updated.i);
+                if (!original) return original;
                 return {
                   ...original,
                   x: updated.x,
                   y: updated.y,
                   w: updated.w,
                   h: updated.h,
-                };
-              })
+                } as GridItem;
+              }).filter((item): item is GridItem => item !== undefined)
             );
           }
         }}
@@ -956,7 +957,7 @@ export default function DashboardPage() {
   );
 }
 
-export function RemoveButton({
+function RemoveButton({
   onClick,
   className = "",
 }: {

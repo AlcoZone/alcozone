@@ -31,17 +31,14 @@ const ConfirmButtonsVariants: Record<
 };
 
 type ConfirmButtonsProps = {
-  variant: keyof typeof ConfirmButtonsVariants;
-  onClick?: () => void;
-  disabled?: boolean;
+    variant: keyof typeof ConfirmButtonsVariants;
+    onClick?: () => void;
+    disabled?: boolean;
+    testId?: string;
 };
 
-const ConfirmButtons = ({
-  variant,
-  onClick,
-  disabled,
-}: ConfirmButtonsProps) => {
-  const { text, color, rounded } = ConfirmButtonsVariants[variant];
+const ConfirmButtons = ({ variant, onClick, disabled, testId }: ConfirmButtonsProps) => {
+    const { text, color, rounded } = ConfirmButtonsVariants[variant];
 
   return (
     <Button
