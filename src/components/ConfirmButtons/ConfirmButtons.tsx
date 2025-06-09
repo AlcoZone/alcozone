@@ -40,18 +40,15 @@ type ConfirmButtonsProps = {
 const ConfirmButtons = ({ variant, onClick, disabled, testId }: ConfirmButtonsProps) => {
     const { text, color, rounded } = ConfirmButtonsVariants[variant];
 
-  return (
-    <Button
-      onClick={onClick}
-      disabled={disabled}
-      data-testid={variant === "registerNewUser" ? "register-button" : undefined}
-      className={cn("cursor-pointer text-lg transition duration-500", color, {
-        "rounded-full": rounded,
-      })}
-    >
-      {text}
-    </Button>
-  );
+    return (
+        <Button
+            onClick={onClick}
+            disabled={disabled}
+            data-testid={testId}
+            className={cn("cursor-pointer text-lg transition duration-500", color, { "rounded-full": rounded })}>
+            {text}
+        </Button>
+    );
 };
 
 export default ConfirmButtons;
