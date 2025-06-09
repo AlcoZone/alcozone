@@ -6,15 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="fe832c68-9285-4b49-afa8-2909f9e1c3ca" name="Changes" comment="[Add] Upload Revision Button&#10;[Add] CSV Validation">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cypress.config.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cypress/e2e/integration/DashboardAddWidget.cy.ts" beforeDir="false" afterPath="$PROJECT_DIR$/cypress/e2e/integration/DashboardAddWidget.cy.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cypress/e2e/integration/IntegrationCreateRevision.cy.js" beforeDir="false" afterPath="$PROJECT_DIR$/cypress/e2e/integration/IntegrationCreateRevision.cy.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cypress/e2e/unit/DashboardApplyTownFilter.cy.ts" beforeDir="false" afterPath="$PROJECT_DIR$/cypress/e2e/unit/DashboardApplyTownFilter.cy.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cypress/support/commands.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cypress/support/e2e.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/auth/login/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/auth/login/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/TextInput/TextInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/TextInput/TextInput.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,7 +15,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="feature/upload-revision" />
+        <entry key="$PROJECT_DIR$" value="release/1.0.0" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -49,20 +40,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "Pruebas/AZ-67",
-    "kotlin-language-version-configured": "true",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "yarn",
-    "npm.Next.js: server-side.executor": "Run",
-    "ts.external.directory.path": "/Users/riickster/Development/Personal/ITESM/alcozone/node_modules/typescript/lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Pruebas/AZ-67&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;npm.Next.js: server-side.executor&quot;: &quot;Run&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/riickster/Development/Personal/ITESM/alcozone/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
@@ -104,10 +95,26 @@
       <workItem from="1749196746053" duration="4706000" />
       <workItem from="1749313608355" duration="2281000" />
     </task>
+    <task id="LOCAL-00001" summary="Fix: Merge Conflicts">
+      <option name="closed" value="true" />
+      <created>1749493174926</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1749493174926</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+    <option name="exactExcludedFiles">
+      <list>
+        <option value="$PROJECT_DIR$/cypress.config.js" />
+        <option value="$PROJECT_DIR$/cypress/support/e2e.js" />
+        <option value="$PROJECT_DIR$/cypress/support/commands.js" />
+      </list>
+    </option>
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -122,6 +129,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="[Add] Upload Revision Button&#10;[Add] CSV Validation" />
-    <option name="LAST_COMMIT_MESSAGE" value="[Add] Upload Revision Button&#10;[Add] CSV Validation" />
+    <MESSAGE value="Fix: Merge Conflicts" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix: Merge Conflicts" />
   </component>
 </project>
