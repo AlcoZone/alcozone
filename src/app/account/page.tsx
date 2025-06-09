@@ -12,7 +12,7 @@ import { putUpdatePassword } from '@/services/update/putUpdatePassword';
 import { Card, CardContent } from '@/components/ui/card';
 import { useAuth } from '@/providers/AuthProvider';
 
-import { EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
+import { EmailAuthProvider, reauthenticateWithCredential, updateProfile } from 'firebase/auth';
 
 const MyAccountPage = () => {
     const [modalOpen, setModalOpen] = useState(false);
@@ -32,7 +32,15 @@ const MyAccountPage = () => {
     const handleSave = async () => {
         try {
             if (modalType === 'username') {
+                if (!user) {
+                    alert('Usuario no autenticado.');
+                    return;
+                }
+                
                 await putUpdateDisplayName(modalValue);
+                
+                await updateProfile(user, { displayName: modalValue });
+                
                 updateDisplayName(modalValue);
                 alert('Nombre de usuario actualizado correctamente.');
             } else if (modalType === 'password') {
@@ -67,7 +75,7 @@ const MyAccountPage = () => {
 
     return (
         <div className="flex flex-col items-center justify-center w-[80vw] relative mt-10">
-            <Card className="w-[600px] h-[600px]  rounded-2xl justify-center">
+            <Card className="w-[600px] h-[600px] rounded-2xl justify-center">
                 <CardContent className="flex flex-col items-center text-center">
 
                     <div className="bg-[#F2F2F2] w-[140px] h-[140px] rounded-full flex justify-center items-start">
@@ -76,24 +84,31 @@ const MyAccountPage = () => {
                         </div>
                     </div>
 
-
-
-                    <h2 className="text-4xl font-bold text-black-800 mb-6 p-4">
-                        Bienvenido, {user?.displayName}
+                    <h2
+                        className="text-4xl font-bold text-black-800 mb-6 p-4"
+                        data-testid="welcome-message"
+                    >
+                        Bienvenido, <span data-testid="display-name">{user?.displayName}</span>
                     </h2>
 
-
                     <div className="bg-[#F2F2F2] rounded-lg p-4 w-[60%] mb-4">
-                        <p className="font-bold text-black-800">Correo: {email}</p>
+                        <p className="font-bold text-black-800" data-testid="email">Correo: {email}</p>
                     </div>
 
                     <div className="bg-[#F2F2F2] rounded-lg p-4 w-[60%] mb-4">
-                        <p className="font-bold text-black-800">Rol: {role}</p>
+                        <p className="font-bold text-black-800" data-testid="role">Rol: {role}</p>
                     </div>
 
                     <div className="mt-10 w-full flex justify-center gap-8 mb-4">
-                        <ConfirmButtons variant="changeUser" onClick={() => openModal('username')} />
-                        <ConfirmButtons variant="changePassword" onClick={() => openModal('password')} />
+                        <ConfirmButtons
+                            variant="changeUser"
+                            onClick={() => openModal('username')}
+                            testId="change-user-button"
+                        />
+                        <ConfirmButtons
+                            variant="changePassword"
+                            onClick={() => openModal('password')}
+                        />
                     </div>
                 </CardContent>
             </Card>
@@ -108,6 +123,7 @@ const MyAccountPage = () => {
 
                         {modalType === 'password' && (
                             <TextInput
+                                testId={"password"}
                                 value={currentPassword}
                                 onChange={(e) => setCurrentPassword(e.target.value)}
                                 placeholder="Contraseña actual"
@@ -122,6 +138,7 @@ const MyAccountPage = () => {
                             placeholder={modalType === 'username' ? 'Nuevo usuario' : 'Nueva contraseña'}
                             type={modalType === 'password' ? 'password' : 'text'}
                             showPasswordToggle={modalType === 'password'}
+                            testId="new-username-input"
                         />
 
                         <div className="flex justify-end gap-4 mt-4">
@@ -134,6 +151,7 @@ const MyAccountPage = () => {
                             <button
                                 onClick={handleSave}
                                 className="bg-blue-800 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+                                data-testid="save-button"
                             >
                                 Guardar
                             </button>

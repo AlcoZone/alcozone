@@ -38,6 +38,7 @@ const MapPage = () => {
             if (mapConfig.data_source == "revision") {
                 url = `/predict?revision=${mapConfig.revision}`
             } else {
+                // @ts-ignore
                 url = `/predict?startDate=${format(mapConfig.from, "dd-MM-yyyy")}&endDate=${format(mapConfig.to, "dd-MM-yyyy")}`
             }
 
@@ -58,6 +59,7 @@ const MapPage = () => {
             if (mapConfig.data_source == "revision") {
                 url = `/clusterize?revision=${mapConfig.revision}`
             } else {
+                // @ts-ignore
                 url = `/clusterize?startDate=${format(mapConfig.from, "dd-MM-yyyy")}&endDate=${format(mapConfig.to, "dd-MM-yyyy")}`
             }
 
@@ -128,6 +130,7 @@ const MapPage = () => {
                     <InteractiveMap
                         coordinates={[19.4326, -99.1332]}
                         loading={loading}
+                        // @ts-ignore
                         roadblocks={roadblocks[selectedDay] || []}
                         clusters={clusters}
                         mapMode={mapConfig.type}

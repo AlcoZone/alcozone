@@ -4,7 +4,26 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fe832c68-9285-4b49-afa8-2909f9e1c3ca" name="Changes" comment="[Add] Upload Revision Button&#10;[Add] CSV Validation" />
+    <list default="true" id="fe832c68-9285-4b49-afa8-2909f9e1c3ca" name="Changes" comment="[Add] Upload Revision Button&#10;[Add] CSV Validation">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cypress/e2e/ChangerUsernameTest.cy.ts" beforeDir="false" afterPath="$PROJECT_DIR$/cypress/e2e/unit/ChangerUsernameTest.cy.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cypress/e2e/RegisterUser.cy.ts" beforeDir="false" afterPath="$PROJECT_DIR$/cypress/e2e/unit/RegisterUser.cy.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cypress/e2e/WidgetRenderTest.cy.ts" beforeDir="false" afterPath="$PROJECT_DIR$/cypress/e2e/unit/WidgetRenderTest.cy.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cypress/e2e/database.cy.ts" beforeDir="false" afterPath="$PROJECT_DIR$/cypress/e2e/unit/database.cy.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cypress/e2e/integration/DashboardAddWidget.cy.ts" beforeDir="false" afterPath="$PROJECT_DIR$/cypress/e2e/integration/DashboardAddWidget.cy.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cypress/e2e/unit/DashboardApplyTownFilter.cy.ts" beforeDir="false" afterPath="$PROJECT_DIR$/cypress/e2e/unit/DashboardApplyTownFilter.cy.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/next.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/next.config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/account/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/account/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/auth/forgotPassword/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/auth/forgotPassword/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/dashboard/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dashboard/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/map/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/map/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/revisions/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/revisions/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/users/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/users/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/CalendarWithEnabledDates/CalendarWithEnabledDates.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CalendarWithEnabledDates/CalendarWithEnabledDates.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ConfirmButtons/ConfirmButtons.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ConfirmButtons/ConfirmButtons.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/TextInput/TextInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/TextInput/TextInput.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -43,7 +62,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "#46 on tests/az-11",
+    "git-widget-placeholder": "#42 on AZ-44",
     "kotlin-language-version-configured": "true",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "yarn",
@@ -54,6 +73,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/cypress/e2e/unit" />
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>

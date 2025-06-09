@@ -80,7 +80,7 @@ const LoginPage: React.FC = () => {
               />
               <div className="relative w-full">
                 <TextInput
-                testId="password"
+                  testId="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Contraseña"

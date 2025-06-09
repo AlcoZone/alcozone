@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 
 import { Responsive, WidthProvider } from "react-grid-layout";
 
@@ -721,7 +721,6 @@ export default function DashboardPage() {
               onClick={handleSave}
               disabled={isSaving}
               className="text-white bg-[#001391]/80 hover:bg-[#001391]"
-              data-testid="save-dashboard"
             >
               {isSaving ? (
                 <span className="flex items-center">
@@ -762,7 +761,6 @@ export default function DashboardPage() {
                 setIsEditing(true);
               }}
               className="text-white bg-neutral-550 hover:bg-neutral-600"
-              data-testid="edit-dashboard"
             >
               <Pencil className="mr-2 h-4 w-4" /> Editar
             </Button>

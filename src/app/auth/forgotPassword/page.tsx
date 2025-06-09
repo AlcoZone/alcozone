@@ -70,6 +70,7 @@ const ForgotPasswordPage = () => {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Correo electrónico"
               type="email"
+              testId={"email"}
             />
           </div>
 
