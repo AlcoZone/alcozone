@@ -6,8 +6,7 @@ describe('Login y verificación de menú (con advertencias controladas)', () => 
       users: '/badroutefortest1', 
       map: '/badroutefortest2',
       account: '/badroutefortest3',
-      upload: '/upload',
-      download: '/download',
+      revisions: '/revisions',
     };
   
     beforeEach(() => {

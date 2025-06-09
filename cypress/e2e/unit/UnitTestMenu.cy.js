@@ -6,25 +6,24 @@ describe('Login y verificación de menú', () => {
         users: '/users',
         map: '/map',
         account: '/account',
-        upload: '/upload',
-        download: '/download',
+        revisions: '/revisions',
       };      
   
       beforeEach(() => {
         cy.clearCookies();
         cy.clearLocalStorage();
         indexedDB.deleteDatabase('firebaseLocalStorageDb');
-      
+
         cy.on('uncaught:exception', (err) => {
           if (
             err.message.includes('timeout of') ||
             err.name === 'AxiosError' ||
             err.message.includes('Network Error')
           ) {
-            return false; 
+            return false;
           }
         });
-      });      
+      });
   
     it('Permite iniciar sesión y navegar por todos los botones del menú', () => {
       cy.visit('/auth/login');
@@ -48,5 +47,6 @@ describe('Login y verificación de menú', () => {
   
       cy.get('[data-testid="menu-btn-logout"]').click();
       cy.url({ timeout: 10000 }).should('include', '/auth/login');
+
     });
   });  
