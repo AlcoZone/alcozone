@@ -412,6 +412,15 @@ export default function DashboardPage() {
   };
 
   const handleSave = async () => {
+
+    if(draftName === "") {
+      alert("El nombre del dashboard no puede estar vacío");
+      return;
+    } else if (draftName.length > 20) {
+      alert("El nombre del dashboard no puede tener más de 20 caracteres");
+      return;
+    }
+
     let dashboardUuidToUse = selectedDashboard;
 
     if (selectedDashboard === null) {
@@ -530,6 +539,7 @@ export default function DashboardPage() {
         <div className="flex-1 text-left">
           {isEditing ? (
             <Input
+              data-testid="input-dashboard-name"
               value={draftName}
               onChange={handleNameChange}
               className="text-xl font-semibold border-none px-2 py-1 bg-white focus-visible:ring-0 focus-visible:ring-offset-0 max-w-[160px]"
@@ -539,6 +549,7 @@ export default function DashboardPage() {
               <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
                   <Button
+                    data-testid="btn-dashboard-selector"
                     variant="outline"
                     className="w-[220px] justify-between"
                   >
@@ -573,6 +584,7 @@ export default function DashboardPage() {
                                 const selected = dashboards.find(
                                   (db) => db.uuid === val
                                 );
+                                setSavedName(selected?.name || "");
                                 setDraftName(selected?.name || "");
                               }}
                               className="flex-1 flex items-center space-x-2 overflow-hidden"
@@ -597,6 +609,7 @@ export default function DashboardPage() {
                           </div>
                         ))}
                         <CommandItem
+                          data-testid="btn-new-dashboard"
                           className="text-primary font-medium mt-1 border-t pt-2 cursor-pointer"
                           onSelect={() => {
                             setOpen(false);
@@ -704,6 +717,7 @@ export default function DashboardPage() {
           )}
           {hasChanges && isEditing ? (
             <Button
+              data-testid="btn-dashboard-save"
               onClick={handleSave}
               disabled={isSaving}
               className="text-white bg-[#001391]/80 hover:bg-[#001391]"
@@ -741,6 +755,7 @@ export default function DashboardPage() {
             </Button>
           ) : (
             <Button
+              data-testid="btn-dashboard-edit"
               onClick={() => {
                 setDraftLayout([...savedLayout]);
                 setDraftName(savedName);
